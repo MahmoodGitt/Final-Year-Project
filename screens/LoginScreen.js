@@ -9,11 +9,9 @@ import React, { useState } from 'react';
 import auth from '../firebase/config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-
-	const goToHomePage = () => {};
 
 	const handleSignUp = () => {
 		createUserWithEmailAndPassword(auth, email, password)
@@ -29,6 +27,12 @@ const LoginScreen = () => {
 				console.log('code:', errorCode);
 				console.log('message', errorMessage);
 			});
+	};
+
+	const pressHandler = () => {
+		navigation.navigate('Home', {
+			name: email,
+		});
 	};
 
 	return (
@@ -47,7 +51,7 @@ const LoginScreen = () => {
 				secureTextEntry
 			/>
 			<View style={styles.buttonContainer}>
-				<TouchableOpacity onPress={() => {}} style={styles.button}>
+				<TouchableOpacity onPress={pressHandler} style={styles.button}>
 					<Text style={styles.button}>Login</Text>
 				</TouchableOpacity>
 			</View>
