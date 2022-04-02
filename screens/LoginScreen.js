@@ -4,10 +4,12 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
+	Alert,
 } from 'react-native';
 import React, { useState } from 'react';
 import auth from '../firebase/config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import CustomButtons from '../utilis/CustomButtons';
 
 const LoginScreen = ({ navigation }) => {
 	const [email, setEmail] = useState('');
@@ -30,15 +32,33 @@ const LoginScreen = ({ navigation }) => {
 	};
 
 	const pressHandler = () => {
-		navigation.navigate('Home', {
-			name: email,
-		});
+		// Conditional statement used to check if the user has not left the email and password fields blank or whitespaces
+		if (
+			(email === '' || email.match(/^ *$/) !== null) &&
+			(password === '' || password.match(/^ *$/) !== null)
+		) {
+			Alert.alert(
+				'Invalid Email/Password',
+				'Empty fields and blank spaces are not allowed',
+				[{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+			);
+		} else {
+			navigation.navigate('Home', {
+				name: email,
+			});
+		}
+		// navigation.navigate('Home', {
+		// 	name: email,
+		// });
 	};
 
 	return (
 		<View style={styles.container}>
-			<Text style={{ flex: 0.5, marginTop: 50 }}>Hello</Text>
-			<View style={styles.inputFlex}>
+			<View style={{ flex: 1, marginTop: 50 }}>
+				<Text>Hello</Text>
+			</View>
+
+			<View style={styles.formStyle}>
 				<View style={styles.inputContainer}>
 					<Text>Email</Text>
 					<TextInput
@@ -59,19 +79,20 @@ const LoginScreen = ({ navigation }) => {
 						secureTextEntry
 					/>
 				</View>
+			</View>
 
-				<View>
-					<TouchableOpacity onPress={pressHandler} style={styles.button}>
-						<Text style={styles.loginButton}>Login</Text>
-					</TouchableOpacity>
-				</View>
+			<View>
+				<CustomButtons
+					onPress={pressHandler}
+					style={styles.CustomButtons}
+				></CustomButtons>
 			</View>
 
 			<View style={styles.footer}>
 				<Text> Do you not have an account? </Text>
 				<View style={styles.registerButton}>
-					<TouchableOpacity onPress={handleSignUp} style={styles.button}>
-						<Text style={styles.button}>Create Account</Text>
+					<TouchableOpacity>
+						<Text style={{ color: 'blue' }}>Create Account</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -94,31 +115,33 @@ const styles = StyleSheet.create({
 		margin: 12,
 		borderWidth: 1,
 		padding: 10,
-		justifyContent: 'center',
-		alignItems: 'center',
 	},
 
-	inputFlex: {
+	formStyle: {
 		flex: 1,
 	},
 
 	inputContainer: {
 		flexDirection: 'row',
-		justifyContent: 'center',
+		justifyContent: 'flex-start',
 		alignItems: 'center',
 	},
 
 	// Styling the login button
 	loginButton: {
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginLeft: 70,
-		marginTop: 10,
+		marginTop: 5,
+		paddingVertical: 12,
+		paddingHorizontal: 32,
+		borderRadius: 4,
+		elevation: 3,
+		textAlign: 'center',
+		backgroundColor: 'orange',
 	},
 
 	// Styling the footer content
 	footer: {
 		flex: 2,
+		marginTop: 20,
 		flexDirection: 'row',
 	},
 });
