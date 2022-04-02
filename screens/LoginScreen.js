@@ -36,36 +36,59 @@ const LoginScreen = ({ navigation }) => {
 	};
 
 	return (
-		<View>
-			<TextInput
-				style={styles.input}
-				placeholder="Email"
-				value={email}
-				onChangeText={(text) => setEmail(text)}
-			/>
-			<TextInput
-				style={styles.input}
-				placeholder="Password"
-				onChangeText={(text) => setPassword(text)}
-				value={password}
-				secureTextEntry
-			/>
-			<View style={styles.buttonContainer}>
-				<TouchableOpacity onPress={pressHandler} style={styles.button}>
-					<Text style={styles.button}>Login</Text>
-				</TouchableOpacity>
+		<View style={styles.container}>
+			<Text style={{ flex: 0.5, marginTop: 50 }}>Hello</Text>
+			<View style={styles.inputFlex}>
+				<View style={styles.inputContainer}>
+					<Text>Email</Text>
+					<TextInput
+						style={styles.input}
+						placeholder="Email"
+						value={email}
+						onChangeText={(text) => setEmail(text)}
+					/>
+				</View>
+
+				<View style={styles.inputContainer}>
+					<Text>Passsword</Text>
+					<TextInput
+						style={styles.input}
+						placeholder="Password"
+						onChangeText={(text) => setPassword(text)}
+						value={password}
+						secureTextEntry
+					/>
+				</View>
+
+				<View>
+					<TouchableOpacity onPress={pressHandler} style={styles.button}>
+						<Text style={styles.loginButton}>Login</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 
-			<View>
-				<TouchableOpacity onPress={handleSignUp} style={styles.button}>
-					<Text style={styles.button}>Register</Text>
-				</TouchableOpacity>
+			<View style={styles.footer}>
+				<Text> Do you not have an account? </Text>
+				<View style={styles.registerButton}>
+					<TouchableOpacity onPress={handleSignUp} style={styles.button}>
+						<Text style={styles.button}>Create Account</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
+	// Styling the page
+	container: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		padding: 10,
+		flex: 1,
+	},
+
+	// Styling the input boxes
 	input: {
 		height: 40,
 		margin: 12,
@@ -73,6 +96,30 @@ const styles = StyleSheet.create({
 		padding: 10,
 		justifyContent: 'center',
 		alignItems: 'center',
+	},
+
+	inputFlex: {
+		flex: 1,
+	},
+
+	inputContainer: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+
+	// Styling the login button
+	loginButton: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginLeft: 70,
+		marginTop: 10,
+	},
+
+	// Styling the footer content
+	footer: {
+		flex: 2,
+		flexDirection: 'row',
 	},
 });
 

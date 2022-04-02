@@ -25,7 +25,16 @@ const App = () => {
 				<Stack.Screen
 					name="Login"
 					component={LoginScreen}
-					options={{ title: 'Welcome' }}
+					options={{
+						title: 'Uni Mate',
+						headerStyle: {
+							backgroundColor: '#f4511e',
+						},
+						headerTintColor: '#fff',
+						headerTitleStyle: {
+							fontWeight: 'bold',
+						},
+					}}
 				/>
 				<Stack.Screen
 					name="Home"
