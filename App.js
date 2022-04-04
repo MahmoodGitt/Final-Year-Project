@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler'; // Handles Drawer object functionality
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -5,23 +6,52 @@ import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
-// import { Home } from '../app/views/Home.';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
-// export default function App() {
-// 	return (
-// 		<View style={StyleSheet.container}>
-// 			<View style={{ backgroundColor: 'blue', flex: 0.3 }} />
-// 			<Text>Hello World!</Text>
-// 		</View>
-// 	);
-// }
+const Drawer = createDrawerNavigator();
+const HomeStack = createNativeStackNavigator();
+const LoginStack = createNativeStackNavigator();
 
-const Stack = createNativeStackNavigator();
+const HomeScreenComponentStack = () => {
+	return (
+		<HomeStack.Navigator>
+			<HomeStack.Screen
+				name="LOL"
+				component={HomeScreen}
+				options={{
+					headerShown: false,
+				}}
+			/>
+		</HomeStack.Navigator>
+	);
+};
+
+const LoginScreenComponentStack = () => {
+	return (
+		<LoginStack.Navigator>
+			<LoginStack.Screen
+				name="Login"
+				component={LoginScreen}
+				options={{
+					// headerShown: false,
+					headerTintColor: '#fff',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
+				}}
+			/>
+		</LoginStack.Navigator>
+	);
+};
 
 const App = () => {
 	return (
 		<NavigationContainer>
-			<Stack.Navigator initialRouteName="LoginScreen">
+			<Drawer.Navigator useLegacyImplementation={true} initialRouteName="Home">
+				<Drawer.Screen name="HomeScreen" component={HomeScreenComponentStack} />
+				<Drawer.Screen name="Login" component={LoginScreenComponentStack} />
+			</Drawer.Navigator>
+			{/* <Stack.Navigator initialRouteName="LoginScreen">
 				<Stack.Screen
 					name="Login"
 					component={LoginScreen}
@@ -36,12 +66,7 @@ const App = () => {
 						},
 					}}
 				/>
-				<Stack.Screen
-					name="Home"
-					component={HomeScreen}
-					options={{ title: 'Home' }}
-				/>
-			</Stack.Navigator>
+			</Stack.Navigator> */}
 		</NavigationContainer>
 	);
 };

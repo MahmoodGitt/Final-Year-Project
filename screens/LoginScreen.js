@@ -9,7 +9,7 @@ import {
 import React, { useState } from 'react';
 import auth from '../firebase/config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import CustomButtons from '../utilis/CustomButtons';
+// import CustomButtons from '../utilis/CustomButtons';
 
 const LoginScreen = ({ navigation }) => {
 	const [email, setEmail] = useState('');
@@ -82,10 +82,9 @@ const LoginScreen = ({ navigation }) => {
 			</View>
 
 			<View>
-				<CustomButtons
-					onPress={pressHandler}
-					style={styles.CustomButtons}
-				></CustomButtons>
+				<TouchableOpacity onPress={pressHandler}>
+					<Text style={{ color: 'blue' }}>Account</Text>
+				</TouchableOpacity>
 			</View>
 
 			<View style={styles.footer}>

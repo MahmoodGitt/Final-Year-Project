@@ -2,7 +2,7 @@ import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 const CustomButtons = (props) => {
 	return (
 		<TouchableOpacity style={[styles.container, props.style]}>
-			<Text style={styles.login}>Login</Text>
+			<Text style={styles.login}>Account</Text>
 		</TouchableOpacity>
 	);
 };
