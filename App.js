@@ -51,37 +51,8 @@ const App = () => {
 				<Drawer.Screen name="HomeScreen" component={HomeScreenComponentStack} />
 				<Drawer.Screen name="Login" component={LoginScreenComponentStack} />
 			</Drawer.Navigator>
-			{/* <Stack.Navigator initialRouteName="LoginScreen">
-				<Stack.Screen
-					name="Login"
-					component={LoginScreen}
-					options={{
-						title: 'Uni Mate',
-						headerStyle: {
-							backgroundColor: '#f4511e',
-						},
-						headerTintColor: '#fff',
-						headerTitleStyle: {
-							fontWeight: 'bold',
-						},
-					}}
-				/>
-			</Stack.Navigator> */}
 		</NavigationContainer>
 	);
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		height: 100,
-		padding: 20,
-		flexDirection: 'row',
-	},
-	materialButtonViolet: {
-		height: 36,
-		width: 100,
-	},
-});
