@@ -1,20 +1,49 @@
+// import {
+// 	StyleSheet,
+// 	TextInput,
+// 	View,
+// 	Text,
+// 	TouchableOpacity,
+// 	Alert,
+// } from 'react-native';
+// import React, { useState } from 'react';
+// import auth from '../firebase/config';
+// import { createUserWithEmailAndPassword } from 'firebase/auth';
+// // import CustomstartScreenButtons from '../utilis/CustomstartScreenButtons';
+
+// const LoginScreen = ({ navigation }) => {
+//
+
+import React, { useState } from 'react';
 import {
-	StyleSheet,
-	TextInput,
 	View,
 	Text,
 	TouchableOpacity,
+	TextInput,
+	Platform,
+	StyleSheet,
+	StatusBar,
 	Alert,
 } from 'react-native';
-import React, { useState } from 'react';
-import auth from '../firebase/config';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-// import CustomButtons from '../utilis/CustomButtons';
+import * as Animatable from 'react-native-animatable';
+import { LinearGradient } from 'expo-linear-gradient';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
 
+/**
+ * This functional compoenent contains the logic that handels the log-in process
+ * @param {navigation}
+ * @returns
+ */
 const LoginScreen = ({ navigation }) => {
+	// Email field holds the user's email details, and a mutator field that stores new email values
 	const [email, setEmail] = useState('');
+	// Password field holds the user's email details, and a mutator field that stores new password values
 	const [password, setPassword] = useState('');
 
+	/**
+	 * This function creates a user account
+	 */
 	const handleSignUp = () => {
 		createUserWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
@@ -30,119 +59,279 @@ const LoginScreen = ({ navigation }) => {
 				console.log('message', errorMessage);
 			});
 	};
+	const [data, setData] = React.useState({
+		username: '',
+		password: '',
+		check_textInputChange: false,
+		secureTextEntry: true,
+		isValidUser: true,
+		isValidPassword: true,
+	});
 
-	const pressHandler = () => {
-		// Conditional statement used to check if the user has not left the email and password fields blank or whitespaces
-		if (
-			(email === '' || email.match(/^ *$/) !== null) &&
-			(password === '' || password.match(/^ *$/) !== null)
-		) {
-			Alert.alert(
-				'Invalid Email/Password',
-				'Empty fields and blank spaces are not allowed',
-				[{ text: 'OK', onPress: () => console.log('OK Pressed') }]
-			);
+	const textInputChange = (val) => {
+		if (val.trim().length >= 4) {
+			setData({
+				...data,
+				username: val,
+				check_textInputChange: true,
+				isValidUser: true,
+			});
 		} else {
-			navigation.navigate('Home', {
-				name: email,
+			setData({
+				...data,
+				username: val,
+				check_textInputChange: false,
+				isValidUser: false,
 			});
 		}
-		// navigation.navigate('Home', {
-		// 	name: email,
-		// });
 	};
+
+	const handlePasswordChange = (val) => {
+		if (val.trim().length >= 8) {
+			setData({
+				...data,
+				password: val,
+				isValidPassword: true,
+			});
+		} else {
+			setData({
+				...data,
+				password: val,
+				isValidPassword: false,
+			});
+		}
+	};
+
+	const updateSecureTextEntry = () => {
+		setData({
+			...data,
+			secureTextEntry: !data.secureTextEntry,
+		});
+	};
+
+	const handleValidUser = (val) => {
+		if (val.trim().length >= 4) {
+			setData({
+				...data,
+				isValidUser: true,
+			});
+		} else {
+			setData({
+				...data,
+				isValidUser: false,
+			});
+		}
+	};
+
+	// const loginHandle = (userName, password) => {
+
+	//     const foundUser = Users.filter( item => {
+	//         return userName == item.username && password == item.password;
+	//     } );
+
+	//     if ( data.username.length == 0 || data.password.length == 0 ) {
+	//         Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+	//             {text: 'Okay'}
+	//         ]);
+	//         return;
+	//     }
+
+	//     if ( foundUser.length == 0 ) {
+	//         Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+	//             {text: 'Okay'}
+	//         ]);
+	//         return;
+	//     }
+	//     signIn(foundUser);
+	// }
 
 	return (
 		<View style={styles.container}>
-			<View style={{ flex: 1, marginTop: 50 }}>
-				<Text>Hello</Text>
+			<StatusBar backgroundColor="#009387" barStyle="light-content" />
+			<View style={styles.headerstyle}>
+				<Text style={styles.text_header}>Welcome!</Text>
 			</View>
-
-			<View style={styles.formStyle}>
-				<View style={styles.inputContainer}>
-					<Text>Email</Text>
+			<Animatable.View animation="" style={styles.footerStyle}>
+				<Text style={[styles.text_footer, {}]}>Username</Text>
+				<View style={styles.action}>
+					<FontAwesome name="user-o" size={20} />
 					<TextInput
-						style={styles.input}
-						placeholder="Email"
-						value={email}
-						onChangeText={(text) => setEmail(text)}
+						placeholder="Your Username"
+						placeholderTextColor="#666666"
+						style={styles.textInput}
+						autoCapitalize="none"
+						onChangeText={(val) => textInputChange(val)}
+						onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
 					/>
+					{data.check_textInputChange ? (
+						<Animatable.View animation="bounceIn">
+							<Feather name="check-circle" color="green" size={20} />
+						</Animatable.View>
+					) : null}
 				</View>
+				{data.isValidUser ? null : (
+					<Animatable.View animation="fadeInLeft" duration={500}>
+						<Text style={styles.errorMsg}>
+							Username must be 4 characters long.
+						</Text>
+					</Animatable.View>
+				)}
 
-				<View style={styles.inputContainer}>
-					<Text>Passsword</Text>
+				<Text
+					style={[
+						styles.text_footer,
+						{
+							marginTop: 35,
+						},
+					]}
+				>
+					Password
+				</Text>
+				<View style={styles.action}>
+					<Feather name="lock" size={20} />
 					<TextInput
-						style={styles.input}
-						placeholder="Password"
-						onChangeText={(text) => setPassword(text)}
-						value={password}
-						secureTextEntry
+						placeholder="Your Password"
+						placeholderTextColor="#666666"
+						secureTextEntry={data.secureTextEntry ? true : false}
+						style={styles.textInput}
+						autoCapitalize="none"
+						onChangeText={(val) => handlePasswordChange(val)}
 					/>
-				</View>
-			</View>
-
-			<View>
-				<TouchableOpacity onPress={pressHandler}>
-					<Text style={{ color: 'blue' }}>Account</Text>
-				</TouchableOpacity>
-			</View>
-
-			<View style={styles.footer}>
-				<Text> Do you not have an account? </Text>
-				<View style={styles.registerButton}>
-					<TouchableOpacity>
-						<Text style={{ color: 'blue' }}>Create Account</Text>
+					<TouchableOpacity onPress={updateSecureTextEntry}>
+						{data.secureTextEntry ? (
+							<Feather name="eye-off" color="grey" size={20} />
+						) : (
+							<Feather name="eye" color="grey" size={20} />
+						)}
 					</TouchableOpacity>
 				</View>
-			</View>
+				{data.isValidPassword ? null : (
+					<Animatable.View animation="fadeInLeft" duration={500}>
+						<Text style={styles.errorMsg}>
+							Password must be 8 characters long.
+						</Text>
+					</Animatable.View>
+				)}
+
+				<TouchableOpacity>
+					<Text style={{ color: '#009387', marginTop: 15 }}>
+						Forgot password?
+					</Text>
+				</TouchableOpacity>
+				<View style={styles.startScreenButton}>
+					<TouchableOpacity
+						style={styles.logIn}
+						// onPress={() => {loginHandle( data.username, data.password )}}
+					>
+						<LinearGradient
+							colors={['#08d4c4', '#01ab9d']}
+							style={styles.logIn}
+						>
+							<Text style={styles.textSign}>Sign In</Text>
+						</LinearGradient>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						onPress={() => navigation.navigate('SignUp')}
+						style={[
+							styles.logIn,
+							{
+								borderColor: '#009387',
+								borderWidth: 1,
+								marginTop: 15,
+							},
+						]}
+					>
+						<Text
+							style={[
+								styles.textSign,
+								{
+									color: '#009387',
+								},
+							]}
+						>
+							Sign Up
+						</Text>
+					</TouchableOpacity>
+				</View>
+			</Animatable.View>
 		</View>
 	);
 };
 
+export default LoginScreen;
+
 const styles = StyleSheet.create({
-	// Styling the page
 	container: {
+		flex: 1,
+		backgroundColor: '#009387',
+	},
+	headerstyle: {
+		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		padding: 10,
-		flex: 1,
+		paddingHorizontal: 1,
+		paddingBottom: 50,
 	},
-
-	// Styling the input boxes
-	input: {
-		height: 40,
-		margin: 12,
-		borderWidth: 1,
-		padding: 10,
+	footerStyle: {
+		flex: 3,
+		backgroundColor: '#fff',
+		borderTopLeftRadius: 30,
+		borderTopRightRadius: 30,
+		paddingHorizontal: 20,
+		paddingVertical: 30,
 	},
-
-	formStyle: {
-		flex: 1,
-	},
-
-	inputContainer: {
-		flexDirection: 'row',
-		justifyContent: 'flex-start',
+	text_header: {
+		color: '#fff',
+		fontWeight: 'bold',
+		fontSize: 30,
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
-
-	// Styling the login button
-	loginButton: {
-		marginTop: 5,
-		paddingVertical: 12,
-		paddingHorizontal: 32,
-		borderRadius: 4,
-		elevation: 3,
-		textAlign: 'center',
-		backgroundColor: 'orange',
+	text_footer: {
+		color: '#05375a',
+		fontSize: 18,
 	},
-
-	// Styling the footer content
-	footer: {
-		flex: 2,
-		marginTop: 20,
+	action: {
 		flexDirection: 'row',
+		marginTop: 10,
+		borderBottomWidth: 1,
+		borderBottomColor: '#f2f2f2',
+		paddingBottom: 5,
+	},
+	actionError: {
+		flexDirection: 'row',
+		marginTop: 10,
+		borderBottomWidth: 1,
+		borderBottomColor: '#FF0000',
+		paddingBottom: 5,
+	},
+
+	logIn: {
+		width: '100%',
+		height: 50,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 10,
+	},
+
+	textInput: {
+		flex: 1,
+		marginTop: Platform.OS === 'ios' ? 0 : -12,
+		paddingLeft: 10,
+		color: '#05375a',
+	},
+	errorMsg: {
+		fontSize: 14,
+		color: '#FF0000',
+	},
+
+	textSign: {
+		fontSize: 18,
+		fontWeight: 'bold',
+	},
+	startScreenButton: {
+		alignItems: 'center',
+		marginTop: 50,
 	},
 });
-
-export default LoginScreen;
