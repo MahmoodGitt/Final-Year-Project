@@ -6,7 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContent } from '@react-navigation/drawer';
+import CustomDrawerItems from './utilis/CustomDrawerItems';
 
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -47,8 +48,12 @@ const LoginScreenComponentStack = () => {
 const App = () => {
 	return (
 		<NavigationContainer>
-			<Drawer.Navigator useLegacyImplementation={true} initialRouteName="Home">
-				<Drawer.Screen name="HomeScreen" component={HomeScreenComponentStack} />
+			<Drawer.Navigator
+				drawerContent={(props) => <CustomDrawerItems {...props} />}
+				useLegacyImplementation={true}
+				initialRouteName="Home"
+			>
+				<Drawer.Screen name="Home" component={HomeScreenComponentStack} />
 				<Drawer.Screen name="Login" component={LoginScreenComponentStack} />
 			</Drawer.Navigator>
 		</NavigationContainer>
