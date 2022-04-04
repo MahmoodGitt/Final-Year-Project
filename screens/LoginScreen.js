@@ -59,29 +59,29 @@ const LoginScreen = ({ navigation }) => {
 				console.log('message', errorMessage);
 			});
 	};
-	const [data, setData] = React.useState({
+	const [data, setData] = useState({
 		username: '',
 		password: '',
 		check_textInputChange: false,
 		secureTextEntry: true,
-		isValidUser: true,
+		isValidUserName: true,
 		isValidPassword: true,
 	});
 
-	const textInputChange = (val) => {
-		if (val.trim().length >= 4) {
+	const textInputChange = (text) => {
+		if (text.trim().includes('edu')) {
 			setData({
 				...data,
-				username: val,
+				username: text,
 				check_textInputChange: true,
-				isValidUser: true,
+				isValidUserName: true,
 			});
 		} else {
 			setData({
 				...data,
-				username: val,
+				username: text,
 				check_textInputChange: false,
-				isValidUser: false,
+				isValidUserName: false,
 			});
 		}
 	};
@@ -109,17 +109,19 @@ const LoginScreen = ({ navigation }) => {
 		});
 	};
 
-	const handleValidUser = (val) => {
-		if (val.trim().length >= 4) {
+	const handleValidUser = (text) => {
+		if (text.includes('@edu')) {
 			setData({
 				...data,
-				isValidUser: true,
+				isValidUserName: true,
 			});
+			// console.log('pass');
 		} else {
 			setData({
 				...data,
-				isValidUser: false,
+				isValidUserName: false,
 			});
+			// console.log('fail');
 		}
 	};
 
@@ -160,8 +162,10 @@ const LoginScreen = ({ navigation }) => {
 						placeholderTextColor="#666666"
 						style={styles.textInput}
 						autoCapitalize="none"
-						onChangeText={(val) => textInputChange(val)}
-						onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+						onChangeText={(text) => textInputChange(text)}
+						onEndEditing={(endText) =>
+							handleValidUser(endText.nativeEvent.text)
+						}
 					/>
 					{data.check_textInputChange ? (
 						<Animatable.View animation="bounceIn">
@@ -169,10 +173,10 @@ const LoginScreen = ({ navigation }) => {
 						</Animatable.View>
 					) : null}
 				</View>
-				{data.isValidUser ? null : (
+				{data.isValidUserName ? null : (
 					<Animatable.View animation="fadeInLeft" duration={500}>
 						<Text style={styles.errorMsg}>
-							Username must be 4 characters long.
+							Username must be your organisation's email.
 						</Text>
 					</Animatable.View>
 				)}
