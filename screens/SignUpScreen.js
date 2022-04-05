@@ -14,6 +14,7 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import { Card } from 'react-native-paper';
 
 const SignUpScreen = ({ navigation }) => {
 	const [data, setData] = React.useState({
@@ -25,19 +26,42 @@ const SignUpScreen = ({ navigation }) => {
 		confirm_secureTextEntry: true,
 	});
 
-	const textInputChange = (val) => {
-		if (val.length !== 0) {
+	/**
+	 * This function checks the length of the username. Usernames are expected to belong to the user's
+	 * organisatrion such as university. Therefore, only organisitonal emails are only allowed to be registered
+	 * @param {String} text
+	 */
+	const textInputChange = (text) => {
+		if (text.length !== 7) {
 			setData({
 				...data,
-				username: val,
+				username: text,
 				check_textInputChange: true,
 			});
 		} else {
 			setData({
 				...data,
-				username: val,
+				username: text,
 				check_textInputChange: false,
 			});
+		}
+	};
+
+	const handleValidUser = (text) => {
+		if (text.includes('@edu')) {
+			setData({
+				...data,
+				isValidUserName: true,
+				check_textInputChange: true,
+			});
+			// console.log('pass');
+		} else {
+			setData({
+				...data,
+				isValidUserName: false,
+				check_textInputChange: false,
+			});
+			// console.log('fail');
 		}
 	};
 
@@ -71,12 +95,17 @@ const SignUpScreen = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<StatusBar backgroundColor="#009387" barStyle="light-content" />
+			<Card>
+				<Card.Cover
+					style={{ height: 200 }}
+					source={{ uri: 'https://picsum.photos/700' }}
+				/>
+			</Card>
 			<View style={styles.header}>
 				<Text style={styles.text_header}>Register Now!</Text>
 			</View>
 			<Animatable.View animation="fadeInUpBig" style={styles.footer}>
-				<ScrollView>
+				<View>
 					<Text style={styles.text_footer}>Username</Text>
 					<View style={styles.action}>
 						<FontAwesome name="user-o" color="#05375a" size={20} />
@@ -84,7 +113,10 @@ const SignUpScreen = ({ navigation }) => {
 							placeholder="Your Username"
 							style={styles.textInput}
 							autoCapitalize="none"
-							onChangeText={(val) => textInputChange(val)}
+							onChangeText={(text) => textInputChange(text)}
+							onEndEditing={(endText) =>
+								handleValidUser(endText.nativeEvent.text)
+							}
 						/>
 						{data.check_textInputChange ? (
 							<Animatable.View animation="bounceIn">
@@ -110,7 +142,7 @@ const SignUpScreen = ({ navigation }) => {
 							secureTextEntry={data.secureTextEntry ? true : false}
 							style={styles.textInput}
 							autoCapitalize="none"
-							onChangeText={(val) => handlePasswordChange(val)}
+							onChangeText={(text) => handlePasswordChange(text)}
 						/>
 						<TouchableOpacity onPress={updateSecureTextEntry}>
 							{data.secureTextEntry ? (
@@ -181,7 +213,7 @@ const SignUpScreen = ({ navigation }) => {
 							</Text>
 						</TouchableOpacity>
 					</View>
-				</ScrollView>
+				</View>
 			</Animatable.View>
 		</View>
 	);
@@ -195,10 +227,9 @@ const styles = StyleSheet.create({
 		backgroundColor: '#009387',
 	},
 	header: {
-		flex: 1,
-		justifyContent: 'flex-end',
-		paddingHorizontal: 20,
-		paddingBottom: 50,
+		flex: 0.3,
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	footer: {
 		flex: 3,

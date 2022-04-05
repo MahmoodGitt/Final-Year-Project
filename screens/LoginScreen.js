@@ -24,11 +24,13 @@ import {
 	StyleSheet,
 	StatusBar,
 	Alert,
+	Image,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import { Card } from 'react-native-paper';
 
 /**
  * This functional compoenent contains the logic that handels the log-in process
@@ -125,36 +127,19 @@ const LoginScreen = ({ navigation }) => {
 		}
 	};
 
-	// const loginHandle = (userName, password) => {
-
-	//     const foundUser = Users.filter( item => {
-	//         return userName == item.username && password == item.password;
-	//     } );
-
-	//     if ( data.username.length == 0 || data.password.length == 0 ) {
-	//         Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-	//             {text: 'Okay'}
-	//         ]);
-	//         return;
-	//     }
-
-	//     if ( foundUser.length == 0 ) {
-	//         Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-	//             {text: 'Okay'}
-	//         ]);
-	//         return;
-	//     }
-	//     signIn(foundUser);
-	// }
-
 	return (
 		<View style={styles.container}>
-			<StatusBar backgroundColor="#009387" barStyle="light-content" />
+			<Card>
+				<Card.Cover
+					style={{ height: 200 }}
+					source={{ uri: 'https://picsum.photos/700' }}
+				/>
+			</Card>
 			<View style={styles.headerstyle}>
 				<Text style={styles.text_header}>Welcome!</Text>
 			</View>
-			<Animatable.View animation="" style={styles.footerStyle}>
-				<Text style={[styles.text_footer, {}]}>Username</Text>
+			<Animatable.View animation="fadeInUpBig" style={styles.footerStyle}>
+				<Text style={styles.text_footer}>Username</Text>
 				<View style={styles.action}>
 					<FontAwesome name="user-o" size={20} />
 					<TextInput
@@ -226,6 +211,9 @@ const LoginScreen = ({ navigation }) => {
 					<TouchableOpacity
 						style={styles.logIn}
 						// onPress={() => {loginHandle( data.username, data.password )}}
+						onPress={() => {
+							navigation.navigate('                    ');
+						}}
 					>
 						<LinearGradient
 							colors={['#08d4c4', '#01ab9d']}
@@ -268,15 +256,20 @@ export default LoginScreen;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#009387',
+		backgroundColor: '#488529',
 	},
+
 	headerstyle: {
-		flex: 1,
+		flex: 0.3,
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingHorizontal: 1,
-		paddingBottom: 50,
 	},
+
+	headerText: {
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+
 	footerStyle: {
 		flex: 3,
 		backgroundColor: '#fff',

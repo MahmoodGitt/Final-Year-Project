@@ -26,7 +26,7 @@ const HomeScreenComponentStack = () => {
 	return (
 		<HomeStack.Navigator>
 			<HomeStack.Screen
-				name="LOL"
+				name="Home"
 				component={HomeScreen}
 				options={{
 					headerShown: false,
@@ -35,29 +35,6 @@ const HomeScreenComponentStack = () => {
 		</HomeStack.Navigator>
 	);
 };
-
-// /**
-//  * The following function contains JSX elements that sets up the navigation properties
-//  * for the Home Screen component
-//  * @returns JSX
-//  */
-// const LoginScreenComponentStack = () => {
-// 	return (
-// 		<LoginStack.Navigator>
-// 			<LoginStack.Screen
-// 				name="Login"
-// 				component={LoginScreen}
-// 				options={{
-// 					// headerShown: false,
-// 					headerTintColor: '#fff',
-// 					headerTitleStyle: {
-// 						fontWeight: 'bold',
-// 					},
-// 				}}
-// 			/>
-// 		</LoginStack.Navigator>
-// 	);
-// };
 
 const App = () => {
 	return (
