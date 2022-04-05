@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	View,
 	Text,
@@ -10,87 +10,114 @@ import {
 	ScrollView,
 	Alert,
 } from 'react-native';
+import auth from '../firebase/config';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'expo-linear-gradient';
+// import LinearGradient from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { Card } from 'react-native-paper';
 
 const SignUpScreen = ({ navigation }) => {
-	const [data, setData] = React.useState({
+	// Email field holds the user's email details, and a mutator field that stores new email values
+	// const [email, setEmail] = useState('');
+	// Password field holds the user's email details, and a mutator field that stores new password values
+	// const [password, setPassword] = useState('');
+
+	const [data, setData] = useState({
 		username: '',
 		password: '',
 		confirm_password: '',
-		check_textInputChange: false,
 		secureTextEntry: true,
+		user_textChange: false,
 		confirm_secureTextEntry: true,
 	});
 
 	/**
+	 * This function creates a user account and stores account details in Firebase. This is a Firebase API that takes three parameters,
+	 * in respective order they are : the authentication configuration, user's email and user's password
+	 */
+	const handleSignUp = () => {
+		createUserWithEmailAndPassword(auth, data.username, data.password)
+			.then((userCredential) => {
+				// Signed in
+				const user = userCredential.user;
+				// ...
+				console.log('username', user.email, 'added to Firebase');
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				console.log('code:', errorCode);
+				console.log('message', errorMessage);
+			});
+	};
+
+	/**
 	 * This function checks the length of the username. Usernames are expected to belong to the user's
-	 * organisatrion such as university. Therefore, only organisitonal emails are only allowed to be registered
+	 * organisatrion such as university. Therefore, only organisitonal emails are allowed to be registered
 	 * @param {String} text
 	 */
-	const textInputChange = (text) => {
-		if (text.length !== 7) {
-			setData({
-				...data,
-				username: text,
-				check_textInputChange: true,
-			});
-		} else {
-			setData({
-				...data,
-				username: text,
-				check_textInputChange: false,
-			});
-		}
+	const user_textChange = (text) => {
+		// if (text.length !== 7) {
+		// setData({
+		// ...data,
+		// username: text,
+		// 		user_textChange: true,
+		// });
+		// } else {
+		// 	setData({
+		// 	// 	...data,
+		// 	// 	username: text,
+		// 	// 	user_textChange: false,
+		// 	// });
+		// }
 	};
 
 	const handleValidUser = (text) => {
-		if (text.includes('@edu')) {
-			setData({
-				...data,
-				isValidUserName: true,
-				check_textInputChange: true,
-			});
-			// console.log('pass');
-		} else {
-			setData({
-				...data,
-				isValidUserName: false,
-				check_textInputChange: false,
-			});
-			// console.log('fail');
-		}
+		// if (text.includes('@edu')) {
+		// 	// setData({
+		// 	// 	...data,
+		// 	// 	isValidUserName: true,
+		// 	// 	user_textChange: true,
+		// 	// });
+		// 	// console.log('pass');
+		// } else {
+		// // 	setData({
+		// // 		...data,
+		// // 		isValidUserName: false,
+		// // 		user_textChange: false,
+		// // 	});
+		// // 	// console.log('fail');
+		// // }
 	};
 
 	const handlePasswordChange = (val) => {
-		setData({
-			...data,
-			password: val,
-		});
+		// setData({
+		// 	...data,
+		// 	password: val,
+		// });
 	};
 
 	const handleConfirmPasswordChange = (val) => {
-		setData({
-			...data,
-			confirm_password: val,
-		});
+		// setData({
+		// 	...data,
+		// 	confirm_password: val,
+		// });
 	};
 
 	const updateSecureTextEntry = () => {
-		setData({
-			...data,
-			secureTextEntry: !data.secureTextEntry,
-		});
+		// setData({
+		// 	...data,
+		// 	secureTextEntry: !data.secureTextEntry,
+		// });
 	};
 
 	const updateConfirmSecureTextEntry = () => {
-		setData({
-			...data,
-			confirm_secureTextEntry: !data.confirm_secureTextEntry,
-		});
+		// setData({
+		// 	...data,
+		// 	confirm_secureTextEntry: !data.confirm_secureTextEntry,
+		// });
 	};
 
 	return (
@@ -113,12 +140,12 @@ const SignUpScreen = ({ navigation }) => {
 							placeholder="Your Username"
 							style={styles.textInput}
 							autoCapitalize="none"
-							onChangeText={(text) => textInputChange(text)}
+							onChangeText={(text) => (data.username = text)}
 							onEndEditing={(endText) =>
 								handleValidUser(endText.nativeEvent.text)
 							}
 						/>
-						{data.check_textInputChange ? (
+						{data.user_textChange ? (
 							<Animatable.View animation="bounceIn">
 								<Feather name="check-circle" color="green" size={20} />
 							</Animatable.View>
@@ -142,7 +169,7 @@ const SignUpScreen = ({ navigation }) => {
 							secureTextEntry={data.secureTextEntry ? true : false}
 							style={styles.textInput}
 							autoCapitalize="none"
-							onChangeText={(text) => handlePasswordChange(text)}
+							onChangeText={(text) => (data.password = text)}
 						/>
 						<TouchableOpacity onPress={updateSecureTextEntry}>
 							{data.secureTextEntry ? (
@@ -181,7 +208,7 @@ const SignUpScreen = ({ navigation }) => {
 						</TouchableOpacity>
 					</View>
 					<View style={styles.button}>
-						<TouchableOpacity style={styles.signIn} onPress={() => {}}>
+						<TouchableOpacity style={styles.signIn} onPress={handleSignUp}>
 							{/* <LinearGradient
 								colors={['#08d4c4', '#01ab9d']}
 								style={styles.logIn}
@@ -209,7 +236,7 @@ const SignUpScreen = ({ navigation }) => {
 									},
 								]}
 							>
-								Sign In
+								Go back
 							</Text>
 						</TouchableOpacity>
 					</View>

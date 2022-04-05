@@ -38,29 +38,6 @@ import { Card } from 'react-native-paper';
  * @returns
  */
 const LoginScreen = ({ navigation }) => {
-	// Email field holds the user's email details, and a mutator field that stores new email values
-	const [email, setEmail] = useState('');
-	// Password field holds the user's email details, and a mutator field that stores new password values
-	const [password, setPassword] = useState('');
-
-	/**
-	 * This function creates a user account
-	 */
-	const handleSignUp = () => {
-		createUserWithEmailAndPassword(auth, email, password)
-			.then((userCredential) => {
-				// Signed in
-				const user = userCredential.user;
-				// ...
-				console.log('username ', user.email);
-			})
-			.catch((error) => {
-				const errorCode = error.code;
-				const errorMessage = error.message;
-				console.log('code:', errorCode);
-				console.log('message', errorMessage);
-			});
-	};
 	const [data, setData] = useState({
 		username: '',
 		password: '',
