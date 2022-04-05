@@ -3,7 +3,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
 import { createDrawerNavigator, DrawerContent } from '@react-navigation/drawer';
 import CustomDrawerItems from './utilis/CustomDrawerItems';
 
@@ -16,6 +15,7 @@ import StartingScreen from './screens/StartingScreen';
 // Storing the drawer object properties in constants, i.e. intialising the constants
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
+const isSignedIn = false;
 
 /**
  * The following function contains JSX elements that sets up the navigation properties
@@ -39,14 +39,17 @@ const HomeScreenComponentStack = () => {
 const App = () => {
 	return (
 		<NavigationContainer>
-			<StartingScreen />
-			{/* <Drawer.Navigator
-				drawerContent={(props) => <CustomDrawerItems {...props} />}
-				useLegacyImplementation={true}
-				initialRouteName="Home"
-			>
-				<Drawer.Screen name="Home" component={HomeScreenComponentStack} />
-			</Drawer.Navigator> */}
+			{isSignedIn ? (
+				<Drawer.Navigator
+					drawerContent={(props) => <CustomDrawerItems {...props} />}
+					useLegacyImplementation={true}
+					initialRouteName="Home"
+				>
+					<Drawer.Screen name="Home" component={HomeScreenComponentStack} />
+				</Drawer.Navigator>
+			) : (
+				<StartingScreen />
+			)}
 		</NavigationContainer>
 	);
 };
