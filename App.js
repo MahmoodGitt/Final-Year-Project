@@ -7,7 +7,7 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import { createDrawerNavigator, DrawerContent } from '@react-navigation/drawer';
 import CustomDrawerItems from './utilis/CustomDrawerItems';
 
-import LoginScreen from './screens/LoginScreen';
+// import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import StartingScreen from './screens/StartingScreen';
 

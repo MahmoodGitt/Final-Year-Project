@@ -1,4 +1,10 @@
 import React, { useState } from 'react';
+
+// Firebase Packages
+import auth from '../firebase/config';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
+// Design Packages
 import {
 	View,
 	Text,
@@ -10,8 +16,6 @@ import {
 	ScrollView,
 	Alert,
 } from 'react-native';
-import auth from '../firebase/config';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import * as Animatable from 'react-native-animatable';
 // import LinearGradient from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -34,8 +38,8 @@ const SignUpScreen = ({ navigation }) => {
 	});
 
 	/**
-	 * This function creates a user account and stores account details in Firebase. This is a Firebase API that takes three parameters,
-	 * in respective order they are : the authentication configuration, user's email and user's password
+	 * This function creates a user account and stores account details in Firebase. This is a Firebase API that passes
+	 * Firebase configuration file, new user's email address and password.
 	 */
 	const handleSignUp = () => {
 		createUserWithEmailAndPassword(auth, data.username, data.password)
