@@ -39,7 +39,7 @@ const CustomDrawerItems = (props) => {
 							)}
 							label="Create Community"
 							onPress={() => {
-								props.navigation.navigate('Create_Community');
+								props.navigation.navigate('Create Community');
 							}}
 						/>
 						<DrawerItem

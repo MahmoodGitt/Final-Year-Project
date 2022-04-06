@@ -20,6 +20,9 @@ import CreateCommunity from './screens/CreateCommunity';
 // Import login and sign up screens
 import StartingScreen from './screens/StartingScreen';
 
+// Import third-Party UI Library
+import { NativeBaseProvider } from 'native-base';
+
 // Storing the drawer object properties in constants, i.e. intialising the constants
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -48,20 +51,25 @@ const App = () => {
 	const handleDisplay = () => {};
 
 	return (
-		<NavigationContainer>
-			{userLoggedIn ? (
-				<Drawer.Navigator
-					drawerContent={(props) => <CustomDrawerItems {...props} />}
-					useLegacyImplementation={true}
-					initialRouteName="Home"
-				>
-					<Drawer.Screen name="Home" component={HomeScreen} />
-					<Drawer.Screen name="Create_Community" component={CreateCommunity} />
-				</Drawer.Navigator>
-			) : (
-				(console.log('Not signed In'), (<StartingScreen />))
-			)}
-		</NavigationContainer>
+		<NativeBaseProvider>
+			<NavigationContainer>
+				{userLoggedIn ? (
+					<Drawer.Navigator
+						drawerContent={(props) => <CustomDrawerItems {...props} />}
+						useLegacyImplementation={true}
+						initialRouteName="Home"
+					>
+						<Drawer.Screen name="Home" component={HomeScreen} />
+						<Drawer.Screen
+							name="Create Community"
+							component={CreateCommunity}
+						/>
+					</Drawer.Navigator>
+				) : (
+					(console.log('Not signed In'), (<StartingScreen />))
+				)}
+			</NavigationContainer>
+		</NativeBaseProvider>
 	);
 };
 
