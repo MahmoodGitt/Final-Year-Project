@@ -126,7 +126,7 @@ const SignUpScreen = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<Card>
+			{/* <Card>
 				<Card.Cover
 					style={{ height: 200 }}
 					source={{ uri: 'https://picsum.photos/700' }}
@@ -134,7 +134,7 @@ const SignUpScreen = ({ navigation }) => {
 			</Card>
 			<View style={styles.header}>
 				<Text style={styles.text_header}>Register Now!</Text>
-			</View>
+			</View> */}
 			<Animatable.View animation="fadeInUpBig" style={styles.footer}>
 				<View>
 					<Text style={styles.text_footer}>Username</Text>

@@ -35,6 +35,15 @@ const CustomDrawerItems = (props) => {
 						/>
 						<DrawerItem
 							icon={({ color, size }) => (
+								<Icon name="notification" color={color} size={size} />
+							)}
+							label="Create Community"
+							onPress={() => {
+								props.navigation.navigate('Create_Community');
+							}}
+						/>
+						<DrawerItem
+							icon={({ color, size }) => (
 								<Icon name="account-outline" color={color} size={size} />
 							)}
 							label="Profile"

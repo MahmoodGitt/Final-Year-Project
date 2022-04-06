@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import auth from '../firebase/config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
+// Import data from local files
+import setUserLoggedIn from '../utilis/IsUserSignedIn';
+
 // React Native Design Packages
 import {
 	View,
@@ -44,13 +47,13 @@ const LoginScreen = ({ navigation }) => {
 	 * user's email address and password
 	 */
 	const handleLogIn = () => {
-		console.log('here');
 		signInWithEmailAndPassword(auth, data.username, data.password)
 			.then((userCredential) => {
 				// Signed in
 				const user = userCredential.user;
 				// ...
 				console.log('username', user.email, ' is valid');
+				setUserLoggedIn = true;
 			})
 			.catch((error) => {
 				const errorCode = error.code;
