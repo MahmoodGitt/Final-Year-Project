@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { View, Text, StyleSheet } from 'react-native';
 
@@ -10,6 +10,45 @@ import { Card, Title, Paragraph, Button } from 'react-native-paper';
 import { Input, AddIcon } from 'native-base';
 
 const CreateCommunity = ({ navigation }) => {
+	const [data, setData] = useState({
+		university: '',
+		course: '',
+		interest: '',
+	});
+
+	const uni_changeText = (text) => {
+		if (text !== null) {
+			setData({
+				...data,
+				university: text,
+			});
+		} else {
+			console.log('invalid University name');
+		}
+	};
+
+	const course_changeText = (text) => {
+		if (text !== null) {
+			setData({
+				...data,
+				course: text,
+			});
+		} else {
+			console.log('invalid course name');
+		}
+	};
+
+	const interest_changeText = (text) => {
+		if (text !== null) {
+			setData({
+				...data,
+				interest: text,
+			});
+		} else {
+			console.log('invalid interest name');
+		}
+	};
+
 	return (
 		<DismissKeyboard>
 			<View style={styles.container}>
@@ -18,6 +57,9 @@ const CreateCommunity = ({ navigation }) => {
 					<Card.Content style={{ flexDirection: 'column' }}>
 						<Title style={{ marginRight: 5, marginTop: 5 }}>University</Title>
 						<Input
+							onChangeText={(text) => {
+								uni_changeText(text);
+							}}
 							variant="rounded"
 							mx="3"
 							placeholder="Input"
@@ -30,6 +72,9 @@ const CreateCommunity = ({ navigation }) => {
 					<Card.Content style={{ flexDirection: 'column' }}>
 						<Title style={{ marginRight: 5, marginTop: 5 }}>Course</Title>
 						<Input
+							onChangeText={(text) => {
+								course_changeText(text);
+							}}
 							variant="rounded"
 							mx="3"
 							placeholder="Input"
@@ -42,6 +87,9 @@ const CreateCommunity = ({ navigation }) => {
 					<Card.Content style={{ flexDirection: 'column' }}>
 						<Title style={{ marginRight: 5, marginTop: 5 }}>Interest</Title>
 						<Input
+							onChangeText={(text) => {
+								interest_changeText(text);
+							}}
 							variant="rounded"
 							mx="3"
 							placeholder="Input"
@@ -52,7 +100,6 @@ const CreateCommunity = ({ navigation }) => {
 						/>
 					</Card.Content>
 				</Card>
-
 				<View style={{ flex: 1, alignItems: 'center' }}>
 					<Text style={styles.post_text}>
 						Press the button to create your community
@@ -61,7 +108,7 @@ const CreateCommunity = ({ navigation }) => {
 						<Button
 							color="blue"
 							onPress={() => {
-								navigation.navigate('Home');
+								navigation.navigate('My_Community', data);
 							}}
 						>
 							Click Me
@@ -79,7 +126,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		// backgroundColor: 'white',
 	},
-
 	addButton: {
 		marginTop: 20,
 	},

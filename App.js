@@ -16,6 +16,7 @@ import CustomDrawerItems from './utilis/CustomDrawerItems';
 // Import drawer screens
 import HomeScreen from './screens/HomeScreen';
 import CreateCommunity from './screens/CreateCommunity';
+import CommunityScreen from './screens/CommunityScreen';
 
 // Import login and sign up screens
 import StartingScreen from './screens/StartingScreen';
@@ -26,7 +27,6 @@ import { NativeBaseProvider } from 'native-base';
 // Storing the drawer object properties in constants, i.e. intialising the constants
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
-const Stack = createNativeStackNavigator();
 
 /**
  * The following function contains JSX elements that sets up the navigation properties
@@ -48,8 +48,6 @@ const HomeScreenComponentStack = () => {
 };
 
 const App = () => {
-	const handleDisplay = () => {};
-
 	return (
 		<NativeBaseProvider>
 			<NavigationContainer>
@@ -61,9 +59,10 @@ const App = () => {
 					>
 						<Drawer.Screen name="Home" component={HomeScreen} />
 						<Drawer.Screen
-							name="Create Community"
+							name="Create_Community"
 							component={CreateCommunity}
 						/>
+						<Drawer.Screen name="My_Community" component={CommunityScreen} />
 					</Drawer.Navigator>
 				) : (
 					(console.log('Not signed In'), (<StartingScreen />))
