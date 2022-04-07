@@ -1,9 +1,13 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+
+// Third-Party UI Libraries
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+//
+import ReadFromDatabase from './ReadFromDatabase';
 
 const CustomDrawerItems = (props) => {
 	return (
@@ -39,6 +43,7 @@ const CustomDrawerItems = (props) => {
 							)}
 							label="My Community"
 							onPress={() => {
+								// console.log('Data from database', props.data);
 								props.navigation.navigate('My_Community');
 							}}
 						/>

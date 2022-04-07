@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // React Navigation Packages
-import { StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
@@ -11,12 +11,22 @@ import { ScrollView, View } from 'native-base';
 import { Card, Title, Paragraph, Searchbar } from 'react-native-paper';
 // import { Input, AddIcon } from 'native-base';
 
-const CommunityScreen = ({ route }) => {
-	// const test = route.params;
-	const test = route?.params;
-
-	// console.log('test', test.course);
-
+const CommunityScreen = (props) => {
+	const [data, setData] = useState({
+		// university: '',
+		course: '',
+		interest: '',
+	});
+	// const fetchData = () => {
+	// 	const database = getDatabase();
+	// 	const reference = ref(database, 'communities/');
+	// 	onValue(reference, (snapshot) => {
+	// 		setData({
+	// 			course: snapshot.val().course,
+	// 		});
+	// 		// console.log('course', snapshot.val().course);
+	// 	});
+	// };
 	return (
 		// <DismissKeyboard>
 		// {/* <View style={styles.container}> */}
@@ -28,7 +38,7 @@ const CommunityScreen = ({ route }) => {
 				<View style={styles.body}>
 					<Card>
 						<Card.Content
-							style={{ flexDirection: 'row', justifyContent: 'space-around' }}
+							style={{ flexDirection: 'row', justifyContent: 'center' }}
 						>
 							<Title
 								style={{
@@ -36,23 +46,21 @@ const CommunityScreen = ({ route }) => {
 									marginTop: 5,
 								}}
 							>
-								{test?.university}
+								<TouchableOpacity>
+									<Text style={{ fontSize: 50 }}>click</Text>
+								</TouchableOpacity>
 							</Title>
+						</Card.Content>
+						<Card.Content
+							style={{ flexDirection: 'row', justifyContent: 'center' }}
+						>
 							<Title
 								style={{
 									marginRight: 5,
 									marginTop: 5,
 								}}
 							>
-								{test?.course}
-							</Title>
-							<Title
-								style={{
-									marginRight: 5,
-									marginTop: 5,
-								}}
-							>
-								{test?.interest}
+								<Text style={{ fontSize: 20 }}>{props.data}</Text>
 							</Title>
 						</Card.Content>
 					</Card>

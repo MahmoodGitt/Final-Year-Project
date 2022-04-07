@@ -12,6 +12,7 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 // Import data from local files
 import userLoggedIn from './utilis/IsUserSignedIn';
 import CustomDrawerItems from './utilis/CustomDrawerItems';
+import ReadFromDatabase from './utilis/ReadFromDatabase';
 
 // Import drawer screens
 import HomeScreen from './screens/HomeScreen';
@@ -23,6 +24,8 @@ import StartingScreen from './screens/StartingScreen';
 
 // Import third-Party UI Library
 import { NativeBaseProvider } from 'native-base';
+
+//
 
 // Storing the drawer object properties in constants, i.e. intialising the constants
 const Drawer = createDrawerNavigator();
@@ -62,7 +65,7 @@ const App = () => {
 							name="Create_Community"
 							component={CreateCommunity}
 						/>
-						<Drawer.Screen name="My_Community" component={CommunityScreen} />
+						<Drawer.Screen name="My_Community" component={ReadFromDatabase} />
 					</Drawer.Navigator>
 				) : (
 					(console.log('Not signed In'), (<StartingScreen />))
