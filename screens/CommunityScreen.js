@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // React Native UI Packages
-import { StyleSheet, Text, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { EvilIcons, FontAwesome } from '@expo/vector-icons';
 
 // Import data from local files
@@ -25,7 +25,7 @@ const CommunityScreen = (props) => {
 
 				{/* <View styles={styles.header}> */}
 				{/* <View style={styles.body}> */}
-				<ScrollView>
+				<TouchableOpacity>
 					<Card
 						style={{
 							borderBottomColor: 'black',
@@ -79,7 +79,7 @@ const CommunityScreen = (props) => {
 							<Paragraph style={{ marginLeft: 5 }}>Like</Paragraph>
 						</Card.Content>
 					</Card>
-				</ScrollView>
+				</TouchableOpacity>
 				{/* </View> */}
 			</View>
 
