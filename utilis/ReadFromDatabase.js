@@ -13,8 +13,6 @@ const ReadFromDatabase = () => {
 		interest: '',
 	});
 
-	// const fetchData = () => {};
-
 	useEffect(() => {
 		const database = getDatabase();
 		const reference = ref(database, 'communities');

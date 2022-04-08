@@ -64,9 +64,6 @@ const CreateCommunity = ({ navigation }) => {
 		}
 	};
 
-	const userId = 'khalid';
-	const score = '13';
-
 	const storeCommunityDetails = () => {
 		try {
 			const db = getDatabase();
