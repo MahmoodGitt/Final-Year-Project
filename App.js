@@ -24,6 +24,7 @@ import StartingScreen from './screens/StartingScreen';
 
 // Import third-Party UI Library
 import { NativeBaseProvider } from 'native-base';
+import LoginScreen from './screens/LoginScreen';
 
 //
 
@@ -61,10 +62,7 @@ const App = () => {
 						initialRouteName="Home"
 					>
 						<Drawer.Screen name="Home" component={HomeScreen} />
-						<Drawer.Screen
-							name="Create_Community"
-							component={CreateCommunity}
-						/>
+						<Drawer.Screen name="Create_Community" component={LoginScreen} />
 						<Drawer.Screen name="My_Community" component={ReadFromDatabase} />
 					</Drawer.Navigator>
 				) : (

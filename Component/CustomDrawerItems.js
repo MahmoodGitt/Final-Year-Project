@@ -37,7 +37,7 @@ const CustomDrawerItems = (props) => {
 								)}
 								label="Home"
 								onPress={() => {
-									props.navigation.navigate('Home');
+									props.navigation.navigate('Login');
 								}}
 							/>
 							{/* <DrawerItem

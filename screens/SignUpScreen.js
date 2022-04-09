@@ -30,11 +30,19 @@ const SignUpScreen = ({ navigation }) => {
 
 	const [data, setData] = useState({
 		username: '',
+		email: '',
 		password: '',
 		confirm_password: '',
 		secureTextEntry: true,
 		user_textChange: false,
+		password_textChange: false,
+		email_textChange: false,
+		passwordConfirm_textChange: false,
 		confirm_secureTextEntry: true,
+		isValidUserName: true,
+		isValidUserEmail: true,
+		isValidPassowrd: true,
+		isValidConfirmPassword: true,
 	});
 
 	/**
@@ -58,70 +66,180 @@ const SignUpScreen = ({ navigation }) => {
 	};
 
 	/**
-	 * This function checks the length of the username. Usernames are expected to belong to the user's
-	 * organisatrion such as university. Therefore, only organisitonal emails are allowed to be registered
+	 * This function checks the user's text input if it is empty or has whitespaces
+	 * Referencing source of knowledge: https://stackoverflow.com/questions/10232366/how-to-check-if-a-variable-is-null-or-empty-string-or-all-whitespace-in-javascri
 	 * @param {String} text
 	 */
-	const user_textChange = (text) => {
-		// if (text.length !== 7) {
-		// setData({
-		// ...data,
-		// username: text,
-		// 		user_textChange: true,
-		// });
+	// function isEmptyOrHasSpaces(text) {
+	// 	if(text.match(/\s/){
+	// 	}
+	// })
+
+	function hasWhiteSpace(s) {
+		return /\s/.test(s);
+	}
+
+	/**
+	 * This function checks that the text which represents the username is bigger than or equal to two three characters
+	 * @param {String} text
+	 */
+	const username_textChange = (text) => {
+		if (text.trim().length >= 3) {
+			setData({
+				...data,
+				username: text,
+				user_textChange: true,
+				isValidUserName: true,
+			});
+		} else {
+			setData({
+				...data,
+				username: '',
+				user_textChange: false,
+				isValidUserName: false,
+			});
+		}
+	};
+
+	const handleValidUserName = (text) => {
+		if (data.user_textChange) {
+			setData({
+				...data,
+				isValidUserName: true,
+			});
+		} else {
+			setData({
+				...data,
+				isValidUserName: false,
+				user_textChange: false,
+			});
+		}
+	};
+
+	const email_textChange = (text) => {
+		if (text.includes('@')) {
+			setData({
+				...data,
+				email: text,
+				email_textChange: true,
+				isValidUserEmail: true,
+			});
+		} else {
+			setData({
+				...data,
+				email: '',
+				email_textChange: false,
+				isValidUserEmail: false,
+			});
+		}
+	};
+
+	const handleValidUserEmail = (text) => {
+		if (data.email_textChange) {
+			setData({
+				...data,
+				isValidUserEmail: true,
+			});
+		} else {
+			setData({
+				...data,
+				isValidUserEmail: false,
+			});
+		}
+	};
+
+	const password_textChange = (text) => {
+		if (text.length >= 6) {
+			setData({
+				...data,
+				password: text,
+				password_textChange: true,
+				isValidPassowrd: true,
+			});
+		} else {
+			setData({
+				...data,
+				isValidPassowrd: false,
+				password_textChange: false,
+			});
+		}
+	};
+
+	const handleValidUserPassword = () => {
+		if (data.password_textChange) {
+			setData({
+				...data,
+				isValidPassowrd: true,
+			});
+		} else {
+			setData({
+				...data,
+				isValidPassowrd: false,
+			});
+		}
+	};
+
+	const confirmPassword_textChange = (text) => {
+		setData({
+			...data,
+			confirm_password: text,
+			isValidConfirmPassword: true,
+		});
+		// if (text.length >= 6) {
+		// 	setData({
+		// 		...data,
+		// 		confirm_password: text,
+		// 		passwordConfirm_textChange: true,
+		// 		isValidConfirmPassword: true,
+		// 	});
 		// } else {
 		// 	setData({
-		// 	// 	...data,
-		// 	// 	username: text,
-		// 	// 	user_textChange: false,
-		// 	// });
+		// 		...data,
+		// 		passwordConfirm_textChange: false,
+		// 		isValidConfirmPassword: false,
+		// 	});
 		// }
 	};
 
-	const handleValidUser = (text) => {
-		// if (text.includes('@edu')) {
-		// 	// setData({
-		// 	// 	...data,
-		// 	// 	isValidUserName: true,
-		// 	// 	user_textChange: true,
-		// 	// });
-		// 	// console.log('pass');
-		// } else {
-		// // 	setData({
-		// // 		...data,
-		// // 		isValidUserName: false,
-		// // 		user_textChange: false,
-		// // 	});
-		// // 	// console.log('fail');
-		// // }
-	};
-
-	const handlePasswordChange = (val) => {
-		// setData({
-		// 	...data,
-		// 	password: val,
-		// });
-	};
-
-	const handleConfirmPasswordChange = (val) => {
-		// setData({
-		// 	...data,
-		// 	confirm_password: val,
-		// });
+	const handleConfirmPassword = () => {
+		if (data.confirm_password === data.password) {
+			console.log('pass', data.password);
+			console.log('confirm', data.confirm_password);
+		} else {
+			setData({
+				...data,
+				isValidConfirmPassword: false,
+			});
+		}
+		// console.log('passws', data.password);
+		// console.log('confirm', data.confirm_password);
+		// if (data.passwordConfirm_textChange) {
+		// 	if (data.password === data.confirm_password) {
+		// 		setData({
+		// 			...data,
+		// 			isValidConfirmPassword: true,
+		// 		});
+		// 	} else {
+		// 		setData({
+		// 			...data,
+		// 			isValidConfirmPassword: false,
+		// 		});
+		// 	}
+		// }
 	};
 
 	const updateSecureTextEntry = () => {
-		// setData({
-		// 	...data,
-		// 	secureTextEntry: !data.secureTextEntry,
-		// });
+		setData({
+			...data,
+			secureTextEntry: !data.secureTextEntry,
+		});
 	};
 
 	const updateConfirmSecureTextEntry = () => {
-		// setData({
-		// 	...data,
-		// 	confirm_secureTextEntry: !data.confirm_secureTextEntry,
-		// });
+		setData({
+			...data,
+			confirm_secureTextEntry: !data.confirm_secureTextEntry,
+		});
 	};
 
 	return (
@@ -132,21 +250,22 @@ const SignUpScreen = ({ navigation }) => {
 					source={{ uri: 'https://picsum.photos/700' }}
 				/>
 			</Card>
+			*/}
 			<View style={styles.header}>
 				<Text style={styles.text_header}>Register Now!</Text>
-			</View> */}
-			<Animatable.View animation="fadeInUpBig" style={styles.footer}>
+			</View>
+			<Animatable.View animation="fadeInUpBig" style={styles.form}>
 				<View>
-					<Text style={styles.text_footer}>Username</Text>
+					<Text style={styles.text}>Username</Text>
 					<View style={styles.action}>
 						<FontAwesome name="user-o" color="#05375a" size={20} />
 						<TextInput
 							placeholder="Your Username"
 							style={styles.textInput}
 							autoCapitalize="none"
-							onChangeText={(text) => (data.username = text)}
-							onEndEditing={(endText) =>
-								handleValidUser(endText.nativeEvent.text)
+							onChangeText={(text) => username_textChange(text)}
+							onEndEditing={(text) =>
+								handleValidUserName(text.nativeEvent.text)
 							}
 						/>
 						{data.user_textChange ? (
@@ -154,11 +273,77 @@ const SignUpScreen = ({ navigation }) => {
 								<Feather name="check-circle" color="green" size={20} />
 							</Animatable.View>
 						) : null}
+						{data.isValidUserName ? null : (
+							<Animatable.View animation="bounceIn">
+								<Feather name="x-circle" color="red" size={20} />
+							</Animatable.View>
+						)}
 					</View>
-
+					{data.isValidUserName ? null : (
+						<Text style={styles.errorMsg}>
+							Username must be at least three characters
+						</Text>
+					)}
 					<Text
 						style={[
-							styles.text_footer,
+							styles.text,
+							{
+								marginTop: 35,
+							},
+						]}
+					>
+						University
+					</Text>
+					<View style={styles.action}>
+						<Feather name="book" size={20} />
+						<TextInput
+							placeholder="Your Email"
+							style={styles.textInput}
+							autoCapitalize="none"
+							onChangeText={(text) => email_textChange(text)}
+							onEndEditing={(text) =>
+								handleValidUserEmail(text.nativeEvent.text)
+							}
+						/>
+					</View>
+					<Text
+						style={[
+							styles.text,
+							{
+								marginTop: 35,
+							},
+						]}
+					>
+						Email
+					</Text>
+					<View style={styles.action}>
+						<Feather name="mail" size={20} />
+						<TextInput
+							placeholder="Your Email"
+							style={styles.textInput}
+							autoCapitalize="none"
+							onChangeText={(text) => email_textChange(text)}
+							onEndEditing={(text) =>
+								handleValidUserEmail(text.nativeEvent.text)
+							}
+						/>
+						{data.email_textChange ? (
+							<Animatable.View animation="bounceIn">
+								<Feather name="check-circle" color="green" size={20} />
+							</Animatable.View>
+						) : null}
+						{data.isValidUserEmail ? null : (
+							<Animatable.View animation="bounceIn">
+								<Feather name="x-circle" color="red" size={20} />
+							</Animatable.View>
+						)}
+					</View>
+					{data.isValidUserEmail ? null : (
+						<Text style={styles.errorMsg}>Invalid email</Text>
+					)}
+					<Text
+						style={[
+							styles.text,
 							{
 								marginTop: 35,
 							},
@@ -173,7 +358,8 @@ const SignUpScreen = ({ navigation }) => {
 							secureTextEntry={data.secureTextEntry ? true : false}
 							style={styles.textInput}
 							autoCapitalize="none"
-							onChangeText={(text) => (data.password = text)}
+							onChangeText={(text) => password_textChange(text)}
+							onEndEditing={(text) => handleValidUserPassword(text)}
 						/>
 						<TouchableOpacity onPress={updateSecureTextEntry}>
 							{data.secureTextEntry ? (
@@ -183,10 +369,15 @@ const SignUpScreen = ({ navigation }) => {
 							)}
 						</TouchableOpacity>
 					</View>
+					{data.isValidPassowrd ? null : (
+						<Text style={styles.errorMsg}>
+							Password must be at least 6 characters
+						</Text>
+					)}
 
 					<Text
 						style={[
-							styles.text_footer,
+							styles.text,
 							{
 								marginTop: 35,
 							},
@@ -201,36 +392,42 @@ const SignUpScreen = ({ navigation }) => {
 							secureTextEntry={data.confirm_secureTextEntry ? true : false}
 							style={styles.textInput}
 							autoCapitalize="none"
-							onChangeText={(val) => handleConfirmPasswordChange(val)}
+							onChangeText={(text) => confirmPassword_textChange(text)}
+							onEndEditing={handleConfirmPassword}
 						/>
 						<TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-							{data.secureTextEntry ? (
+							{data.confirm_secureTextEntry ? (
 								<Feather name="eye-off" color="grey" size={20} />
 							) : (
 								<Feather name="eye" color="grey" size={20} />
 							)}
 						</TouchableOpacity>
 					</View>
+					{data.isValidConfirmPassword ? null : (
+						<Text style={styles.errorMsg}>Passwords do not match</Text>
+					)}
 					<View style={styles.button}>
 						<TouchableOpacity style={styles.signIn} onPress={handleSignUp}>
 							{/* <LinearGradient
 								colors={['#08d4c4', '#01ab9d']}
 								style={styles.logIn}
 							> */}
-							<Text style={styles.textSign}>Sign In</Text>
+							<Text
+								style={[
+									styles.textSign,
+									{
+										color: '#009387',
+									},
+								]}
+							>
+								Sign In
+							</Text>
 							{/* </LinearGradient> */}
 						</TouchableOpacity>
 
 						<TouchableOpacity
 							onPress={() => navigation.goBack()}
-							style={[
-								styles.signIn,
-								{
-									borderColor: '#009387',
-									borderWidth: 1,
-									marginTop: 15,
-								},
-							]}
+							style={styles.signIn}
 						>
 							<Text
 								style={[
@@ -262,7 +459,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	footer: {
+	form: {
 		flex: 3,
 		backgroundColor: '#fff',
 		borderTopLeftRadius: 30,
@@ -275,7 +472,7 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		fontSize: 30,
 	},
-	text_footer: {
+	text: {
 		color: '#05375a',
 		fontSize: 18,
 	},
@@ -297,7 +494,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		marginTop: Platform.OS === 'ios' ? 0 : -12,
 		paddingLeft: 10,
-		color: '#05375a',
 	},
 	errorMsg: {
 		color: '#FF0000',
@@ -313,6 +509,9 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 10,
+		borderColor: '#009387',
+		borderWidth: 1,
+		marginTop: 15,
 	},
 	textSign: {
 		fontSize: 18,

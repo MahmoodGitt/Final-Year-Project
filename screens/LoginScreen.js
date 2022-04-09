@@ -26,6 +26,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { Card } from 'react-native-paper';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 /**
  * This functional compoenent contains the logic that handels the log-in process
@@ -52,8 +53,9 @@ const LoginScreen = ({ navigation }) => {
 				// Signed in
 				const user = userCredential.user;
 				// ...
-				console.log('username', user.email, ' is valid');
-				setUserLoggedIn = true;
+				console.log('username');
+				console.log('user id is', user.uid);
+				// setUserLoggedIn = true;
 			})
 			.catch((error) => {
 				const errorCode = error.code;
