@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from './LoginScreen';
 import SignUpScreen from './SignUpScreen';
+import HomeScreen from './HomeScreen';
 
 const StartingScreenStack = createNativeStackNavigator();
 const LoginStack = createNativeStackNavigator();
@@ -17,7 +18,11 @@ const StartingScreen = ({ navigation }) => {
 				name="Login"
 				component={LoginScreen}
 			/>
-			<StartingScreenStack.Screen name="SignUp" component={SignUpScreen} />
+			<StartingScreenStack.Screen
+				options={{ animationTypeForReplace: 'pop' }}
+				name="SignUp"
+				component={SignUpScreen}
+			/>
 		</StartingScreenStack.Navigator>
 	);
 };

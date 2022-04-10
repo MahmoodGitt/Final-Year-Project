@@ -14,7 +14,7 @@ import { Card, Title, Paragraph, Avatar, Button } from 'react-native-paper';
 import { AntDesign } from '@expo/vector-icons';
 
 const HomeScreen = ({ route }) => {
-	// const userName = route.params.name;
+	// const userName = route.params.data.email;
 	const [data, setData] = useState({
 		username: '',
 	});
@@ -53,7 +53,7 @@ const HomeScreen = ({ route }) => {
 					</View>
 				</View>
 				<View>
-					<>{fetchUsername()}</>
+					{/* <>{userName.email}</> */}
 					<Text style={styles.username}>{data.username}</Text>
 				</View>
 				<Card style={styles.card}>

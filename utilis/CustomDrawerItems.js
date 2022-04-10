@@ -1,6 +1,12 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
+// Firebase services
+import { signOut } from 'firebase/auth';
+
+// Data from local files
+import auth from '../firebase/config';
+
 // Third-Party UI Libraries
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
@@ -10,6 +16,23 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ReadFromDatabase from './ReadFromDatabase';
 
 const CustomDrawerItems = (props) => {
+	// const auth = getAuth();
+
+	const userSignOut = () => {
+		signOut(auth)
+			.then(() => {
+				// Sign-out successful.
+			})
+			.catch((error) => {
+				// An error happened.
+				const errorCode = error.code;
+				const errorMessage = error.message;
+
+				console.log(errorCode);
+				console.log(errorMessage);
+			});
+	};
+
 	return (
 		<View style={{ flex: 1 }}>
 			<DrawerContentScrollView {...props}>
@@ -74,9 +97,7 @@ const CustomDrawerItems = (props) => {
 						<Icon name="exit-to-app" color={color} size={size} />
 					)}
 					label="Sign Out"
-					onPress={() => {
-						signOut();
-					}}
+					onPress={userSignOut}
 				/>
 			</Drawer.Section>
 		</View>

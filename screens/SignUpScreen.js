@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 
-// Firebase Packages
-import auth from '../firebase/config';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-
-// Design Packages
 import {
 	View,
 	Text,
@@ -16,10 +11,24 @@ import {
 	ScrollView,
 	Alert,
 } from 'react-native';
+
+// Firebase Packages
+import auth from '../firebase/config';
+import {
+	createUserWithEmailAndPassword,
+	onAuthStateChanged,
+} from 'firebase/auth';
+
+// Import data from local files
+
+// Third-Party UI Packages
+
 import * as Animatable from 'react-native-animatable';
 // import LinearGradient from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import DropDownPicker from 'react-native-dropdown-picker';
+import Autocomplete from 'react-native-autocomplete-input';
 import { Card } from 'react-native-paper';
 
 const SignUpScreen = ({ navigation }) => {
@@ -30,6 +39,7 @@ const SignUpScreen = ({ navigation }) => {
 
 	const [data, setData] = useState({
 		username: '',
+		university: '',
 		email: '',
 		password: '',
 		confirm_password: '',
@@ -43,6 +53,7 @@ const SignUpScreen = ({ navigation }) => {
 		isValidUserEmail: true,
 		isValidPassowrd: true,
 		isValidConfirmPassword: true,
+		isVisible: false,
 	});
 
 	/**
@@ -50,19 +61,44 @@ const SignUpScreen = ({ navigation }) => {
 	 * Firebase configuration file, new user's email address and password.
 	 */
 	const handleSignUp = () => {
-		createUserWithEmailAndPassword(auth, data.username, data.password)
-			.then((userCredential) => {
-				// Signed in
-				const user = userCredential.user;
-				// ...
-				console.log('username', user.email, 'added to Firebase');
-			})
-			.catch((error) => {
-				const errorCode = error.code;
-				const errorMessage = error.message;
-				console.log('code:', errorCode);
-				console.log('message', errorMessage);
-			});
+		if (data.password !== '') {
+			if (data.username !== '') {
+				if (data.email !== '') {
+					createUserWithEmailAndPassword(auth, data.email, data.password)
+						.then((userCredential) => {
+							// Signed in
+							const user = userCredential.user;
+							// ...
+							console.log('username', user.email, 'added to Firebase');
+							// navigation.navigate('Home', data);
+						})
+						.catch((error) => {
+							const errorCode = error.code;
+							const errorMessage = error.message;
+							console.log('code:', errorCode);
+							console.log('message', errorMessage);
+							Alert.alert(errorCode, errorMessage, [
+								{
+									text: 'Cancel',
+									onPress: () => console.log('Cancel Pressed'),
+									style: 'cancel',
+								},
+								{ text: 'OK', onPress: () => console.log('OK Pressed') },
+							]);
+						});
+				}
+			}
+		} else {
+			console.log('Incomplete form');
+			Alert.alert('Form Incomplete', 'Complete the form to sign up', [
+				{
+					text: 'Cancel',
+					onPress: () => console.log('Cancel Pressed'),
+					style: 'cancel',
+				},
+				{ text: 'OK', onPress: () => console.log('OK Pressed') },
+			]);
+		}
 	};
 
 	/**
@@ -127,7 +163,7 @@ const SignUpScreen = ({ navigation }) => {
 		} else {
 			setData({
 				...data,
-				email: '',
+				email: null,
 				email_textChange: false,
 				isValidUserEmail: false,
 			});
@@ -159,6 +195,7 @@ const SignUpScreen = ({ navigation }) => {
 		} else {
 			setData({
 				...data,
+				password: '',
 				isValidPassowrd: false,
 				password_textChange: false,
 			});
@@ -185,47 +222,20 @@ const SignUpScreen = ({ navigation }) => {
 			confirm_password: text,
 			isValidConfirmPassword: true,
 		});
-		// if (text.length >= 6) {
-		// 	setData({
-		// 		...data,
-		// 		confirm_password: text,
-		// 		passwordConfirm_textChange: true,
-		// 		isValidConfirmPassword: true,
-		// 	});
-		// } else {
-		// 	setData({
-		// 		...data,
-		// 		passwordConfirm_textChange: false,
-		// 		isValidConfirmPassword: false,
-		// 	});
-		// }
 	};
 
 	const handleConfirmPassword = () => {
 		if (data.confirm_password === data.password) {
+			setData({ ...data, isVisible: true });
 			console.log('pass', data.password);
 			console.log('confirm', data.confirm_password);
 		} else {
 			setData({
 				...data,
 				isValidConfirmPassword: false,
+				// confirm_password: ''
 			});
 		}
-		// console.log('passws', data.password);
-		// console.log('confirm', data.confirm_password);
-		// if (data.passwordConfirm_textChange) {
-		// 	if (data.password === data.confirm_password) {
-		// 		setData({
-		// 			...data,
-		// 			isValidConfirmPassword: true,
-		// 		});
-		// 	} else {
-		// 		setData({
-		// 			...data,
-		// 			isValidConfirmPassword: false,
-		// 		});
-		// 	}
-		// }
 	};
 
 	const updateSecureTextEntry = () => {
@@ -244,13 +254,6 @@ const SignUpScreen = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			{/* <Card>
-				<Card.Cover
-					style={{ height: 200 }}
-					source={{ uri: 'https://picsum.photos/700' }}
-				/>
-			</Card>
-			*/}
 			<View style={styles.header}>
 				<Text style={styles.text_header}>Register Now!</Text>
 			</View>
@@ -296,15 +299,6 @@ const SignUpScreen = ({ navigation }) => {
 					</Text>
 					<View style={styles.action}>
 						<Feather name="book" size={20} />
-						<TextInput
-							placeholder="Your Email"
-							style={styles.textInput}
-							autoCapitalize="none"
-							onChangeText={(text) => email_textChange(text)}
-							onEndEditing={(text) =>
-								handleValidUserEmail(text.nativeEvent.text)
-							}
-						/>
 					</View>
 					<Text
 						style={[
@@ -501,7 +495,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignItems: 'center',
-		marginTop: 50,
+		marginTop: 15,
 	},
 	signIn: {
 		width: '100%',
@@ -511,7 +505,7 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderColor: '#009387',
 		borderWidth: 1,
-		marginTop: 15,
+		marginTop: 10,
 	},
 	textSign: {
 		fontSize: 18,

@@ -15,6 +15,7 @@ import {
 	TextInput,
 	Platform,
 	StyleSheet,
+	ImageBackground,
 	StatusBar,
 	Alert,
 	Image,
@@ -35,27 +36,59 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
  */
 const LoginScreen = ({ navigation }) => {
 	const [data, setData] = useState({
-		username: '',
+		email: '',
 		password: '',
-		user_textChange: false,
+		email_textChange: false,
 		secureTextEntry: true,
-		isValidUserName: true,
+		isValidEmail: true,
 		isValidPassword: true,
 	});
+
+	const isNotEmpty = (str) => {
+		return str !== null;
+	};
+
+	const email_textChange = (text) => {
+		if (text) {
+			setData({
+				...data,
+				email: text,
+				email_textChange: true,
+			});
+		} else {
+			setData({
+				...data,
+				email: '',
+				email_textChange: false,
+				// isValidEmail: false,
+			});
+		}
+	};
+
+	const handleValidUserEmail = (text) => {
+		if (email_textChange) {
+			setData({
+				...data,
+				isValidEmail: true,
+			});
+		} else {
+			setData({
+				...data,
+				isValidEmail: false,
+			});
+		}
+	};
 
 	/**
 	 * This function checks when a user signs in to the app. The Firebase API 'signInWithEmailAndPassword()' passes the Firebase configuration file,
 	 * user's email address and password
 	 */
 	const handleLogIn = () => {
-		signInWithEmailAndPassword(auth, data.username, data.password)
+		signInWithEmailAndPassword(auth, data.email, data.password)
 			.then((userCredential) => {
 				// Signed in
 				const user = userCredential.user;
-				// ...
-				console.log('username');
-				console.log('user id is', user.uid);
-				// setUserLoggedIn = true;
+				console.log(user);
 			})
 			.catch((error) => {
 				const errorCode = error.code;
@@ -134,16 +167,17 @@ const LoginScreen = ({ navigation }) => {
 				<Text style={styles.text_header}>Welcome!</Text>
 			</View>
 			<Animatable.View animation="fadeInUpBig" style={styles.footerStyle}>
-				<Text style={styles.text_footer}>Username</Text>
+				<Text style={styles.text_footer}>Email</Text>
 				<View style={styles.action}>
-					<FontAwesome name="user-o" size={20} />
+					<Feather name="mail" size={20} />
 					<TextInput
-						placeholder="Your Username"
+						placeholder="Your Email"
 						placeholderTextColor="#666666"
 						style={styles.textInput}
 						autoCapitalize="none"
 						onChangeText={(text) => {
-							data.username = text;
+							// data.username = text;
+							email_textChange(text);
 						}}
 						onEndEditing={(endText) =>
 							handleValidUser(endText.nativeEvent.text)
@@ -155,7 +189,7 @@ const LoginScreen = ({ navigation }) => {
 						</Animatable.View>
 					) : null}
 				</View>
-				{data.isValidUserName ? null : (
+				{data.isValidEmail ? null : (
 					<Animatable.View animation="fadeInLeft" duration={500}>
 						<Text style={styles.errorMsg}>
 							Username must be your organisation's email.
