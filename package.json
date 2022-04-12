@@ -9,6 +9,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-picker/picker": "^2.4.0",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/drawer": "^6.4.1",
     "@react-navigation/native": "^6.0.8",
@@ -18,7 +19,9 @@
     "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "~1.2.0",
     "firebase": "^9.6.10",
+    "moment": "^2.29.2",
     "native-base": "^3.3.10",
+    "radio-buttons-react-native": "^1.0.4",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",

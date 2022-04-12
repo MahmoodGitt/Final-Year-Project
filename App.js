@@ -26,6 +26,7 @@ import auth from './firebase/config';
 import HomeScreen from './screens/HomeScreen';
 import CreateCommunity from './screens/CreateCommunity';
 import CommunityScreen from './screens/CommunityScreen';
+// import CommunityRoom from './screens/Communityroom';
 
 // Import login and sign up screens
 import StartingScreen from './screens/StartingScreen';
@@ -92,7 +93,7 @@ const App = () => {
 							name="Create_Community"
 							component={CreateCommunity}
 						/>
-						<Drawer.Screen name="My_Community" component={ReadFromDatabase} />
+						<Drawer.Screen name="My_Community" component={CommunityScreen} />
 					</Drawer.Navigator>
 				) : (
 					// console.log('Not signed In')

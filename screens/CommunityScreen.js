@@ -1,90 +1,87 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // React Native UI Packages
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	FlatList,
+	SafeAreaView,
+	View,
+} from 'react-native';
 import { EvilIcons, FontAwesome } from '@expo/vector-icons';
 
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
+import CommunityList from '../utilis/CommunityList';
+import keys from '../utilis/StoreKeys';
+import auth from '../firebase/config';
+
+// Import database services from Firebase
+import {
+	getDatabase,
+	ref,
+	onValue,
+	set,
+	push,
+	onChildAdded,
+	update,
+} from 'firebase/database';
 
 // Import third-Party UI Library
 import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
+import { Center } from 'native-base';
 
 const CommunityScreen = (props) => {
+	// const [data, setData] = useState({
+	// 	authorName: '',
+	// 	communityName: '',
+	// });
+
+	const [itemList, setItemList] = useState([{}]);
+	const [data, setData] = useState([]);
+
+	const updateView = () => {
+		const db = getDatabase();
+		const commentsRef = ref(db, 'users/' + auth.currentUser.uid + '/test/');
+		onChildAdded(commentsRef, (test) => {
+			addPost(test.key, test.val().communityName);
+		});
+	};
+
+	useEffect(() => {
+		updateView();
+		// setData(test);
+	}, []);
+
+	const addPost = (key, communityName) => {
+		setItemList((prevState) => {
+			console.log('before', prevState);
+			console.log('postion', prevState);
+			// if(prevState[0])
+			prevState.push({ id: key, communityName: communityName });
+			console.log('after', prevState);
+			console.log('length', itemList.length);
+			return [...prevState];
+		});
+	};
+
+	const renderItem = ({ item }) => (
+		// <View style={{ alignItems: 'center' }}>
+		// 	<Text>{item.author}</Text>
+		// </View>
+		<CommunityList item={item.communityName} />
+	);
+
 	return (
-		<DismissKeyboard>
-			<View style={styles.container}>
-				<Searchbar
-					placeholder="Search"
-					style={{
-						borderBottomColor: 'black',
-						borderBottomWidth: 1,
-						borderTopWidth: 1,
-					}}
-				/>
-
-				{/* <View styles={styles.header}> */}
-				{/* <View style={styles.body}> */}
-				<TouchableOpacity>
-					<Card
-						style={{
-							borderBottomColor: 'black',
-							borderBottomWidth: 1,
-							borderTopWidth: 1,
-							borderLeftWidth: 1,
-							borderRightWidth: 1,
-							backgroundColor: 'white',
-						}}
-					>
-						<Card.Title
-							title={['User: ', props.data]}
-							subtitle={['Studying ', props.data, ' at ', props.data]}
-							left={() => (
-								<Avatar.Image
-									source={require('../Images/profile_pic.jpg')}
-									size={50}
-								/>
-							)}
-						/>
-						<Card.Content
-							style={{
-								flexDirection: 'row',
-								justifyContent: 'flex-start',
-
-								borderBottomWidth: 1,
-								borderTopWidth: 1,
-							}}
-						>
-							<Title>
-								Description:
-								kldfkldnsklfnklsnflknewlknklanklnkldndklnklnkldnldfnklndslnkldnklndewihiehfioa{' '}
-							</Title>
-						</Card.Content>
-
-						<Card.Content
-							style={{
-								flexDirection: 'row',
-								justifyContent: 'flex-start',
-								padding: 20,
-							}}
-						>
-							<EvilIcons name="comment" size={24} color="black" />
-							<Paragraph>comment</Paragraph>
-							<FontAwesome
-								name="heart"
-								size={24}
-								color="red"
-								style={{ marginLeft: 180 }}
-							/>
-							<Paragraph style={{ marginLeft: 5 }}>Like</Paragraph>
-						</Card.Content>
-					</Card>
-				</TouchableOpacity>
-				{/* </View> */}
-			</View>
-
-			{/* </View> */}
-		</DismissKeyboard>
+		<SafeAreaView style={styles.container}>
+			<FlatList
+				data={itemList}
+				renderItem={renderItem}
+				keyExtractor={(item) => item.id}
+				extraData={itemList}
+			/>
+		</SafeAreaView>
 	);
 };
 
@@ -100,5 +97,14 @@ const styles = StyleSheet.create({
 	body: {
 		flex: 1,
 		padding: 5,
+	},
+	card: {
+		marginHorizontal: 15,
+		marginBottom: 5,
+		marginTop: 10,
+		borderBottomLeftRadius: 5,
+		borderBottomRightRadius: 5,
+		borderTopLeftRadius: 5,
+		borderTopRightRadius: 5,
 	},
 });

@@ -11,6 +11,7 @@ import auth from '../firebase/config';
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
 
 //
 import ReadFromDatabase from './ReadFromDatabase';
@@ -53,7 +54,8 @@ const CustomDrawerItems = (props) => {
 					<Drawer.Section style={styles.drawerSection}>
 						<DrawerItem
 							icon={({ color, size }) => (
-								<Icon name="home-outline" color={color} size={size} />
+								// <Icon name="home-outline" color={color} size={size} />
+								<Feather name="home" color={color} size={size} />
 							)}
 							label="Home"
 							onPress={() => {
@@ -62,7 +64,7 @@ const CustomDrawerItems = (props) => {
 						/>
 						<DrawerItem
 							icon={({ color, size }) => (
-								<Icon name="home-outline" color={color} size={size} />
+								<Feather name="users" color={color} size={size} />
 							)}
 							label="My Community"
 							onPress={() => {
@@ -72,7 +74,7 @@ const CustomDrawerItems = (props) => {
 						/>
 						<DrawerItem
 							icon={({ color, size }) => (
-								<Icon name="home-outline" color={color} size={size} />
+								<Feather name="file-plus" color={color} size={size} />
 							)}
 							label="Create Community"
 							onPress={() => {
@@ -81,17 +83,33 @@ const CustomDrawerItems = (props) => {
 						/>
 						<DrawerItem
 							icon={({ color, size }) => (
-								<Icon name="account-outline" color={color} size={size} />
+								<Feather name="settings" color={color} size={size} />
 							)}
-							label="Profile"
+							label="Settings"
 							onPress={() => {
 								// props.navigation.navigate('Login');
 							}}
 						/>
+						<DrawerItem
+							icon={({ color, size }) => (
+								<Feather name="globe" color={color} size={size} />
+							)}
+							label="Explore"
+							onPress={() => {
+								// props.navigation.navigate('Login');
+							}}
+						/>
+						<DrawerItem
+							icon={({ color, size }) => (
+								<Feather name="log-out" color={color} size={size} />
+							)}
+							label="Sign Out"
+							onPress={userSignOut}
+						/>
 					</Drawer.Section>
 				</View>
 			</DrawerContentScrollView>
-			<Drawer.Section style={styles.bottomDrawerSection}>
+			{/* <Drawer.Section style={styles.bottomDrawerSection}>
 				<DrawerItem
 					icon={({ color, size }) => (
 						<Icon name="exit-to-app" color={color} size={size} />
@@ -99,7 +117,7 @@ const CustomDrawerItems = (props) => {
 					label="Sign Out"
 					onPress={userSignOut}
 				/>
-			</Drawer.Section>
+			</Drawer.Section> */}
 		</View>
 	);
 };
