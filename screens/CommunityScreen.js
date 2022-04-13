@@ -18,15 +18,7 @@ import keys from '../utilis/StoreKeys';
 import auth from '../firebase/config';
 
 // Import database services from Firebase
-import {
-	getDatabase,
-	ref,
-	onValue,
-	set,
-	push,
-	onChildAdded,
-	update,
-} from 'firebase/database';
+import { getDatabase, ref, onChildAdded } from 'firebase/database';
 
 // Import third-Party UI Library
 import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
@@ -43,9 +35,20 @@ const CommunityScreen = ({ navigation }) => {
 
 	const updateView = () => {
 		const db = getDatabase();
-		const commentsRef = ref(db, 'users/' + auth.currentUser.uid + '/test/');
-		onChildAdded(commentsRef, (test) => {
-			addPost(test.key, test.val().communityName);
+		const commentsRef = ref(db, 'community');
+
+		onChildAdded(commentsRef, (snapshotData) => {
+			const postId = snapshotData.key;
+			const communityName = snapshotData.val().communityName;
+			const interest = snapshotData.val().interest;
+			const admin = snapshotData.val().admin;
+			const members = snapshotData.val().Members;
+			// console.log('community', communityName);
+			// console.log(interest);
+			// console.log(admin);
+			// console.log(members);
+			// console.log(postId);
+			addPost(postId, communityName, interest, admin, members);
 		});
 	};
 
@@ -54,9 +57,20 @@ const CommunityScreen = ({ navigation }) => {
 		// setData(test);
 	}, []);
 
-	const addPost = (key, communityName) => {
+	const addPost = (
+		list_postId,
+		list_communityName,
+		list_interest,
+		list_admin,
+		list_members
+	) => {
 		setItemList((prevState) => {
-			prevState.push({ id: key, communityName: communityName });
+			prevState.push({
+				id: list_postId,
+				communityName: list_communityName,
+				interest: list_interest,
+				members: list_members,
+			});
 			return [...prevState];
 		});
 	};
@@ -65,15 +79,28 @@ const CommunityScreen = ({ navigation }) => {
 		// <View style={{ alignItems: 'center' }}>
 		// 	<Text>{item.author}</Text>
 		// </View>
-		<CommunityList item={item.communityName} navigate={navigation} />
+		<CommunityList
+			// itemz={item.communityName}
+			item={[item.interest, item.communityName, item.members]}
+			// interest={item.interest}
+			members={item.members}
+			navigate={navigation}
+		/>
 	);
 
 	return (
 		<SafeAreaView style={styles.container}>
+			{/* <View>
+				<TouchableOpacity onPress={updateView} style={{ margin: 15 }}>
+					<Text style={{ fontSize: 40 }}>Click</Text>
+				</TouchableOpacity>
+			</View> */}
 			<FlatList
 				data={itemList}
 				renderItem={renderItem}
-				keyExtractor={(item) => item.id}
+				keyExtractor={(item) => {
+					return item.id;
+				}}
 				extraData={itemList}
 			/>
 		</SafeAreaView>

@@ -15,17 +15,11 @@ const CommunityList = (props) => {
 		<View style={styles.container}>
 			<Card style={styles.card}>
 				<Card.Title
-					title={['Community Name: ', props.item]}
-					subtitle={['Interest:', '']}
-					left={() => (
-						<Avatar.Image
-							source={require('../Images/profile_pic.jpg')}
-							size={50}
-						/>
-					)}
+					title={['Community: ', props.item[0]]}
+					subtitle={['Interest:', props.item[1]]}
 				/>
 				<Card.Content>
-					<Title>Members: 4</Title>
+					<Title>{['Members ', props.item[2]]}</Title>
 				</Card.Content>
 				<Card.Content>
 					<TouchableOpacity

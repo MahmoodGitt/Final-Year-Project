@@ -100,10 +100,13 @@ const CreateCommunity = ({ navigation }) => {
 		try {
 			// check user's number of posts
 			const db = getDatabase();
-			const reference = ref(db, 'users/' + auth.currentUser.uid + '/test');
+			const reference = ref(db, 'community');
 			const newPostRef = push(reference);
 			set(newPostRef, {
+				admin: auth.currentUser.uid,
 				communityName: data.communityName,
+				interest: data.interest,
+				members: 1,
 			});
 		} catch (error) {
 			console.log('Error in saving to database', error);
