@@ -8,6 +8,7 @@ import { getDatabase, ref, onValue } from 'firebase/database';
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
+import CommunityScreen from './CommunityScreen';
 
 // Third-Party  UI Packages
 import { Card, Title, Paragraph, Avatar, Button } from 'react-native-paper';

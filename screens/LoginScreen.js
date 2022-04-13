@@ -242,12 +242,12 @@ const LoginScreen = ({ navigation }) => {
 				</TouchableOpacity>
 				<View style={styles.startScreenButton}>
 					<TouchableOpacity style={styles.logIn} onPress={handleLogIn}>
-						<LinearGradient
+						{/* <LinearGradient
 							colors={['#08d4c4', '#01ab9d']}
 							style={styles.logIn}
-						>
-							<Text style={styles.textSign}>Sign In</Text>
-						</LinearGradient>
+						> */}
+						<Text style={styles.textSign}>Sign In</Text>
+						{/* </LinearGradient> */}
 					</TouchableOpacity>
 
 					<TouchableOpacity
@@ -261,16 +261,7 @@ const LoginScreen = ({ navigation }) => {
 							},
 						]}
 					>
-						<Text
-							style={[
-								styles.textSign,
-								{
-									color: '#009387',
-								},
-							]}
-						>
-							Sign Up
-						</Text>
+						<Text style={styles.textSign}>Sign Up</Text>
 					</TouchableOpacity>
 				</View>
 			</Animatable.View>
@@ -353,6 +344,7 @@ const styles = StyleSheet.create({
 	textSign: {
 		fontSize: 18,
 		fontWeight: 'bold',
+		color: '#009387',
 	},
 	startScreenButton: {
 		alignItems: 'center',

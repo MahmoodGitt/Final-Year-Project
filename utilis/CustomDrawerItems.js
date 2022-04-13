@@ -13,9 +13,6 @@ import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
-//
-import ReadFromDatabase from './ReadFromDatabase';
-
 const CustomDrawerItems = (props) => {
 	// const auth = getAuth();
 

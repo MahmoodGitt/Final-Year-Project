@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
 	View,
@@ -19,6 +19,15 @@ import {
 	onAuthStateChanged,
 } from 'firebase/auth';
 
+import {
+	getDatabase,
+	ref,
+	onValue,
+	set,
+	push,
+	onChildAdded,
+} from 'firebase/database';
+
 // Import data from local files
 
 // Third-Party UI Packages
@@ -32,11 +41,6 @@ import Autocomplete from 'react-native-autocomplete-input';
 import { Card } from 'react-native-paper';
 
 const SignUpScreen = ({ navigation }) => {
-	// Email field holds the user's email details, and a mutator field that stores new email values
-	// const [email, setEmail] = useState('');
-	// Password field holds the user's email details, and a mutator field that stores new password values
-	// const [password, setPassword] = useState('');
-
 	const [data, setData] = useState({
 		username: '',
 		university: '',
@@ -53,6 +57,7 @@ const SignUpScreen = ({ navigation }) => {
 		isValidUserEmail: true,
 		isValidPassowrd: true,
 		isValidConfirmPassword: true,
+		isValidUser: false,
 		isVisible: false,
 	});
 
@@ -68,9 +73,8 @@ const SignUpScreen = ({ navigation }) => {
 						.then((userCredential) => {
 							// Signed in
 							const user = userCredential.user;
-							// ...
 							console.log('username', user.email, 'added to Firebase');
-							// navigation.navigate('Home', data);
+							writeToDatabase();
 						})
 						.catch((error) => {
 							const errorCode = error.code;
@@ -99,6 +103,17 @@ const SignUpScreen = ({ navigation }) => {
 				{ text: 'OK', onPress: () => console.log('OK Pressed') },
 			]);
 		}
+	};
+
+	// Encapsulate the process of writing data to the database
+	const writeToDatabase = () => {
+		const db = getFirestore();
+		setDoc(doc(db, 'users/' + auth.currentUser.uid), {
+			name: data.username,
+			email: auth.currentUser.email,
+		});
+		console.log('name', data.username);
+		console.log('email', auth.currentUser.email);
 	};
 
 	/**
@@ -227,8 +242,6 @@ const SignUpScreen = ({ navigation }) => {
 	const handleConfirmPassword = () => {
 		if (data.confirm_password === data.password) {
 			setData({ ...data, isVisible: true });
-			console.log('pass', data.password);
-			console.log('confirm', data.confirm_password);
 		} else {
 			setData({
 				...data,
@@ -259,7 +272,7 @@ const SignUpScreen = ({ navigation }) => {
 			</View>
 			<Animatable.View animation="fadeInUpBig" style={styles.form}>
 				<View>
-					<Text style={styles.text}>Username</Text>
+					<Text style={styles.text}>Student Name</Text>
 					<View style={styles.action}>
 						<FontAwesome name="user-o" color="#05375a" size={20} />
 						<TextInput

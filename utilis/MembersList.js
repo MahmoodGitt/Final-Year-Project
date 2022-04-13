@@ -10,13 +10,13 @@ import DismissKeyboard from '../utilis/DismissKeyboard';
 // Import third-Party UI Library
 import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
 
-const CommunityList = (props) => {
+const MembersList = (props) => {
 	return (
 		<View style={styles.container}>
 			<Card style={styles.card}>
 				<Card.Title
-					title={['Community Name: ', props.item]}
-					subtitle={['Interest:', '']}
+					title={['Callum ', props.item]}
+					subtitle={['Interests: C#, Java', '']}
 					left={() => (
 						<Avatar.Image
 							source={require('../Images/profile_pic.jpg')}
@@ -25,16 +25,13 @@ const CommunityList = (props) => {
 					)}
 				/>
 				<Card.Content>
-					<Title>Members: 4</Title>
-				</Card.Content>
-				<Card.Content>
 					<TouchableOpacity
 						style={{ alignItems: 'center' }}
 						onPress={() => {
-							props.navigate.navigate('Members');
+							props.navigate.navigate('ChatRoom');
 						}}
 					>
-						<Text style={styles.viewBtn}>Enter</Text>
+						<Text style={styles.viewBtn}>Chat</Text>
 					</TouchableOpacity>
 				</Card.Content>
 			</Card>
@@ -42,7 +39,7 @@ const CommunityList = (props) => {
 	);
 };
 
-export default CommunityList;
+export default MembersList;
 
 const styles = StyleSheet.create({
 	container: {

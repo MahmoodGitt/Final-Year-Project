@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
-
+// React Native Packages
 import {
 	View,
 	Text,
 	StyleSheet,
 	TextInput,
 	ImageBackground,
+	TouchableWithoutFeedback,
 } from 'react-native';
+import Toast from 'react-native-root-toast';
 
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
 
-// Import database services from Firebase
+// Firebase services
 import {
 	getDatabase,
 	ref,
@@ -21,7 +23,6 @@ import {
 	push,
 	onChildAdded,
 } from 'firebase/database';
-import moment from 'moment';
 
 // Third-Party React Native UI Packages
 import {
@@ -34,6 +35,7 @@ import {
 	Colors,
 	Appbar,
 	RadioButton,
+	Snackbar,
 } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
@@ -44,16 +46,17 @@ import { Center, Column, Input } from 'native-base';
 import { setStatusBarTranslucent } from 'expo-status-bar';
 import RadioButtonRN from 'radio-buttons-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { async } from '@firebase/util';
 
 const CreateCommunity = ({ navigation }) => {
 	const [data, setData] = useState({
-		authorName: '',
 		communityName: '',
-		public: false,
+		interest: '',
 		radioBtn: '',
 		communityName_changeText: false,
 		isValidCommunityName: true,
-		isValidPublic: true,
+		interest_changeText: false,
+		isValidInterest: true,
 	});
 
 	const communityName_changeText = (text) => {
@@ -70,39 +73,26 @@ const CreateCommunity = ({ navigation }) => {
 				...data,
 				communityName: '',
 				isValidCommunityName: false,
-				progress: data.progress - data.communityProgress,
-				communityProgress: 0,
 			});
 		}
 	};
 
-	const handleCommunityProgress = () => {
-		if (data.communityName !== '') {
-			if (data.communityProgress <= 0) {
-				setData({
-					...data,
-					progress: data.progress + 0.1,
-					communityProgress: data.progress,
-				});
-			}
-		}
-	};
-
-	const publicUniversity_changeText = (text) => {
-		if (text !== null) {
+	const interest_changeText = (text) => {
+		if (text !== null && text.trim().length !== 0) {
+			//Find better condition
 			setData({
 				...data,
-				publicUniversity_changeText: text,
-				publicUniversity_changeText: true,
-				// progress: progress + 0.25,
+				interest: text,
+				interest_changeText: true,
+				isValidInterest: true,
 			});
 		} else {
 			setData({
 				...data,
-				publicUniversity_changeText: 'text',
-				publicUniversity_changeText: false,
+				interest: '',
+				interest_changeText: false,
+				isValidInterest: false,
 			});
-			console.log('invalid interest name');
 		}
 	};
 
@@ -120,107 +110,155 @@ const CreateCommunity = ({ navigation }) => {
 		}
 	};
 
-	const data1 = [
+	const optionsdata = [
 		{
-			label: 'Create a community',
+			label: 'Yes',
 		},
 		{
-			label: 'Request a study-buddy',
+			label: 'No',
 		},
 	];
 
+	const showToast = (tag) => {
+		if (tag === '1') {
+			Toast.show(
+				'Interests allow other students to find your community by searching it',
+				{
+					duration: Toast.durations.LONG,
+				}
+			);
+		} else if (tag === '2') {
+			Toast.show(
+				'Interests allow other students to find your community by searching it',
+				{
+					duration: Toast.durations.LONG,
+				}
+			);
+		}
+	};
+
 	return (
-		<View styles={styles.container}>
-			<Appbar.Header>
-				<Appbar.BackAction />
-				<Appbar.Content title="Create Community" subtitle="By" />
-			</Appbar.Header>
-			<View style={styles.progressBar}>
-				<ProgressBar progress={data.progress} color="green" />
-			</View>
-			{/* <ImageBackground
+		<DismissKeyboard>
+			<View style={styles.container}>
+				{/* <View style={{ flex: 0.1 }}> */}
+
+				<View style={styles.progressBar}>
+					<ProgressBar progress={data.progress} color="green" />
+					{/* <ImageBackground
 				source={{ uri: 'https://picsum.photos/700' }}
 				resizeMode="cover"
 				style={{ height: '100%', width: '100%' }}
 			> */}
-			<View>
-				{/* <>{userName.email}</> */}
-				<Text style={styles.username}>{data.username}</Text>
-			</View>
-			<Card style={styles.card}>
-				<Card.Content>
-					<View style={styles.text}>
-						<Text>Your subject of interest</Text>
-						<Feather
-							style={styles.helpIcon}
-							name="help-circle"
-							color="black"
-							size={15}
-						/>
-					</View>
+				</View>
+				<Card style={styles.card}>
+					<Card.Content>
+						<View style={styles.text}>
+							<Text>Your community name</Text>
+							<TouchableOpacity
+								onPress={() => {
+									showToast('1');
+								}}
+							>
+								<Feather
+									style={styles.helpIcon}
+									name="help-circle"
+									color="black"
+									size={15}
+								/>
+							</TouchableOpacity>
+						</View>
+						<View style={styles.action}>
+							<Input
+								onChangeText={(text) => {
+									communityName_changeText(text);
+								}}
+								// onEndEditing={handleCommunityProgress()}
+								variant="rounded"
+								placeholder="name..."
+								w="75%"
+								maxWidth="200px"
+								marginTop={2}
+								marginBottom={5}
+							/>
+							<TouchableOpacity style={styles.featherIcons}>
+								{data.communityName_changeText ? (
+									<Animatable.View animation="bounceIn">
+										<Feather name="check-circle" color="green" size={20} />
+									</Animatable.View>
+								) : null}
+							</TouchableOpacity>
+						</View>
+						{data.isValidCommunityName ? null : (
+							<Text style={styles.errorMsg}>Validations </Text>
+						)}
+					</Card.Content>
+					<Card.Content>
+						<View style={styles.text}>
+							<Text>Your subject of interest</Text>
+							<TouchableOpacity
+								onPress={() => {
+									showToast('2');
+								}}
+							>
+								<Feather
+									style={styles.helpIcon}
+									name="help-circle"
+									color="black"
+									size={15}
+								/>
+							</TouchableOpacity>
+						</View>
+						<View style={styles.action}>
+							<Input
+								onChangeText={(text) => {
+									interest_changeText(text);
+								}}
+								// onEndEditing={handleCommunityProgress()}
+								variant="rounded"
+								placeholder="interest..."
+								w="75%"
+								maxWidth="200px"
+								marginTop={2}
+								marginBottom={5}
+							/>
+							<TouchableOpacity style={styles.featherIcons}>
+								{data.communityName_changeText ? (
+									<Animatable.View animation="bounceIn">
+										<Feather name="check-circle" color="green" size={20} />
+									</Animatable.View>
+								) : null}
+							</TouchableOpacity>
+						</View>
+						{data.isValidCommunityName ? null : (
+							<Text style={styles.errorMsg}>Validations </Text>
+						)}
 
-					<View style={styles.action}>
-						<Input
-							onChangeText={(text) => {
-								communityName_changeText(text);
-							}}
-							// onEndEditing={handleCommunityProgress()}
-							variant="rounded"
-							placeholder="course..."
-							w="75%"
-							maxWidth="200px"
-							marginTop={2}
-							marginBottom={5}
-						/>
-						<TouchableOpacity style={styles.featherIcons}>
-							{data.communityName_changeText ? (
-								<Animatable.View animation="bounceIn">
-									<Feather name="check-circle" color="green" size={20} />
-								</Animatable.View>
-							) : null}
-						</TouchableOpacity>
-					</View>
-					{data.isValidCommunityName ? null : (
-						<Text style={styles.errorMsg}>Validations </Text>
-					)}
-
-					<View style={styles.text}>
-						<Text>I want to...</Text>
-						<Feather
-							style={styles.helpIcon}
-							name="help-circle"
-							color="black"
-							size={15}
-						/>
-					</View>
-					<View style={{ marginBottom: 20 }}>
-						<RadioButtonRN
-							data={data1}
-							selectedBtn={(dataSelected) =>
-								setData({ radioBtn: dataSelected.label })
-							}
-							icon={<Feather name="check-circle" size={25} color="#2c9dd1" />}
-						/>
-					</View>
-
-					<View style={styles.text}>
-						<Text>Open to all universities?</Text>
-						<Feather
-							style={styles.helpIcon}
-							name="help-circle"
-							color="black"
-							size={15}
-						/>
-					</View>
-				</Card.Content>
+						<View style={styles.text}>
+							<Text>Open to all universities?</Text>
+							<Feather
+								style={styles.helpIcon}
+								name="help-circle"
+								color="black"
+								size={15}
+							/>
+						</View>
+						<View style={{ marginBottom: 20 }}>
+							<RadioButtonRN
+								data={optionsdata}
+								selectedBtn={(option) => setData({ radioBtn: option.label })}
+								icon={<Feather name="check-circle" size={25} color="#2c9dd1" />}
+							/>
+						</View>
+					</Card.Content>
+				</Card>
 				<View style={styles.createButton}>
 					<TouchableOpacity onPress={storeCommunityDetails}>
 						<Feather name="plus-circle" color="blue" size={50} />
 					</TouchableOpacity>
 				</View>
-			</Card>
-			{/* </ImageBackground> */}
-		</View>
+				{/* </ImageBackground> */}
+			</View>
+		</DismissKeyboard>
 	);
 };
 export default CreateCommunity;
@@ -245,7 +283,8 @@ const styles = StyleSheet.create({
 	},
 	card: {
 		marginHorizontal: 15,
-		marginBottom: 5,
+		// marginBottom: 5,
+		marginTop: 5,
 		borderBottomLeftRadius: 5,
 		borderBottomRightRadius: 5,
 		borderTopLeftRadius: 5,
@@ -287,6 +326,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	progressBar: {
-		marginTop: 50,
+		// marginTop: 50,
+		// justifyContent: 'space-around',
 	},
 });

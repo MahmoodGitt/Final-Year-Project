@@ -12,11 +12,13 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerContent } from '@react-navigation/drawer';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
 // Import data from local files
+import Members from './screens/Members';
 // import userLoggedIn from './utilis/IsUserSignedIn';
 import CustomDrawerItems from './utilis/CustomDrawerItems';
 import ReadFromDatabase from './utilis/ReadFromDatabase';
@@ -26,14 +28,12 @@ import auth from './firebase/config';
 import HomeScreen from './screens/HomeScreen';
 import CreateCommunity from './screens/CreateCommunity';
 import CommunityScreen from './screens/CommunityScreen';
-// import CommunityRoom from './screens/Communityroom';
+import Chat from './screens/Chat';
 
-// Import login and sign up screens
 import StartingScreen from './screens/StartingScreen';
 
 // Import third-Party UI Library
 import { NativeBaseProvider } from 'native-base';
-import LoginScreen from './screens/LoginScreen';
 
 // Storing the drawer object properties in constants, i.e. intialising the constants
 const Drawer = createDrawerNavigator();
@@ -67,40 +67,40 @@ const App = () => {
 				// https://firebase.google.com/docs/reference/js/firebase.User
 				const uid = user.uid;
 				setUserLogging(true);
-				console.log('user ID', uid);
 				// ...
 			} else {
 				// User is signed out
 				// ...
 				setUserLogging(false);
-				console.log('User logged out');
 			}
 		});
 	}, []); // Empty array means to only run once.
 
 	return (
-		<NativeBaseProvider>
-			<NavigationContainer>
-				{console.log(userLoggedIn)}
-				{userLoggedIn ? (
-					<Drawer.Navigator
-						drawerContent={(props) => <CustomDrawerItems {...props} />}
-						useLegacyImplementation={true}
-						initialRouteName="Home"
-					>
-						<Drawer.Screen name="Home" component={HomeScreen} />
-						<Drawer.Screen
-							name="Create_Community"
-							component={CreateCommunity}
-						/>
-						<Drawer.Screen name="My_Community" component={CommunityScreen} />
-					</Drawer.Navigator>
-				) : (
-					// console.log('Not signed In')
-					<StartingScreen />
-				)}
-			</NavigationContainer>
-		</NativeBaseProvider>
+		<RootSiblingParent>
+			<NativeBaseProvider>
+				<NavigationContainer>
+					{userLoggedIn ? (
+						<Drawer.Navigator
+							drawerContent={(props) => <CustomDrawerItems {...props} />}
+							useLegacyImplementation={true}
+							initialRouteName="Home"
+						>
+							<Drawer.Screen name="Home" component={HomeScreen} />
+							<Drawer.Screen
+								name="Create_Community"
+								component={CreateCommunity}
+							/>
+							<Drawer.Screen name="My_Community" component={CommunityScreen} />
+							<Drawer.Screen name="Members" component={Members} />
+							<Drawer.Screen name="ChatRoom" component={Chat} />
+						</Drawer.Navigator>
+					) : (
+						<StartingScreen />
+					)}
+				</NavigationContainer>
+			</NativeBaseProvider>
+		</RootSiblingParent>
 	);
 };
 

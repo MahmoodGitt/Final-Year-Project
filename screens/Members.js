@@ -31,15 +31,10 @@ import {
 // Import third-Party UI Library
 import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
 import { Center } from 'native-base';
+import MembersList from '../utilis/MembersList';
 
-const CommunityScreen = ({ navigation }) => {
-	// const [data, setData] = useState({
-	// 	authorName: '',
-	// 	communityName: '',
-	// });
-
+const Members = ({ navigation }) => {
 	const [itemList, setItemList] = useState([{}]);
-	const [data, setData] = useState([]);
 
 	const updateView = () => {
 		const db = getDatabase();
@@ -56,7 +51,12 @@ const CommunityScreen = ({ navigation }) => {
 
 	const addPost = (key, communityName) => {
 		setItemList((prevState) => {
+			console.log('before', prevState);
+			console.log('postion', prevState);
+			// if(prevState[0])
 			prevState.push({ id: key, communityName: communityName });
+			console.log('after', prevState);
+			console.log('length', itemList.length);
 			return [...prevState];
 		});
 	};
@@ -65,11 +65,12 @@ const CommunityScreen = ({ navigation }) => {
 		// <View style={{ alignItems: 'center' }}>
 		// 	<Text>{item.author}</Text>
 		// </View>
-		<CommunityList item={item.communityName} navigate={navigation} />
+		<MembersList item={item.communityName} navigate={navigation} />
 	);
 
 	return (
 		<SafeAreaView style={styles.container}>
+			<Searchbar placeholder="Search for user" />
 			<FlatList
 				data={itemList}
 				renderItem={renderItem}
@@ -80,7 +81,7 @@ const CommunityScreen = ({ navigation }) => {
 	);
 };
 
-export default CommunityScreen;
+export default Members;
 
 const styles = StyleSheet.create({
 	container: {
