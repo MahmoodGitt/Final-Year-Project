@@ -6,6 +6,7 @@ import { signOut } from 'firebase/auth';
 
 // Data from local files
 import auth from '../firebase/config';
+import UserInformation from './UserInformation';
 
 // Third-Party UI Libraries
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
@@ -14,8 +15,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
 const CustomDrawerItems = (props) => {
-	// const auth = getAuth();
-
 	const userSignOut = () => {
 		signOut(auth)
 			.then(() => {
@@ -42,8 +41,10 @@ const CustomDrawerItems = (props) => {
 								size={50}
 							/>
 							<View style={{ marginLeft: 15, flexDirection: 'column' }}>
-								<Title style={styles.title}>John Doe</Title>
-								<Caption style={styles.caption}>@j_doe</Caption>
+								<Title style={styles.title}>{UserInformation().name}</Title>
+								<Caption style={styles.caption}>
+									{auth.currentUser.email}
+								</Caption>
 							</View>
 						</View>
 					</View>
@@ -83,9 +84,7 @@ const CustomDrawerItems = (props) => {
 								<Feather name="settings" color={color} size={size} />
 							)}
 							label="Settings"
-							onPress={() => {
-								// props.navigation.navigate('Login');
-							}}
+							// onPress={console.log('here', UserInformation())}
 						/>
 						<DrawerItem
 							icon={({ color, size }) => (

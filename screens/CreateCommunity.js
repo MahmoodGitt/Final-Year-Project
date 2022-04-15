@@ -22,6 +22,8 @@ import {
 	set,
 	push,
 	onChildAdded,
+	update,
+	child,
 } from 'firebase/database';
 
 // Third-Party React Native UI Packages
@@ -65,6 +67,7 @@ const CreateCommunity = ({ navigation }) => {
 			setData({
 				...data,
 				communityName: text,
+
 				communityName_changeText: true,
 				isValidCommunityName: true,
 			});
@@ -98,16 +101,25 @@ const CreateCommunity = ({ navigation }) => {
 
 	const storeCommunityDetails = () => {
 		try {
-			// check user's number of posts
 			const db = getDatabase();
+			// check user's number of posts
 			const reference = ref(db, 'community');
-			const newPostRef = push(reference);
-			set(newPostRef, {
+			const postKey = push(reference);
+			set(postKey, {
 				admin: auth.currentUser.uid,
 				communityName: data.communityName,
 				interest: data.interest,
-				members: 1,
 			});
+
+			// Update Subscription
+			const groups = { community: data.communityName };
+			// console.log(groups.community);
+			const keyref = push(child(ref(db), 'users/' + auth.currentUser.uid)).key;
+			// console.log(keyref);
+			const updates = {};
+			updates['/users/' + auth.currentUser.uid + '/groups/' + keyref] = groups;
+			// console.log(updates);
+			update(ref(db), updates);
 		} catch (error) {
 			console.log('Error in saving to database', error);
 		}

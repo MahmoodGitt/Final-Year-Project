@@ -25,66 +25,92 @@ import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
 import { Center } from 'native-base';
 
 const CommunityScreen = ({ navigation }) => {
-	// const [data, setData] = useState({
-	// 	authorName: '',
-	// 	communityName: '',
-	// });
-
-	const [itemList, setItemList] = useState([{}]);
+	const [itemList, setItemList] = useState([{ id: 0 }]);
 	const [data, setData] = useState([]);
+	// const [subscribe, setSubscribe] = useState('');
+	var subscribe = null;
 
 	const updateView = () => {
 		const db = getDatabase();
-		const commentsRef = ref(db, 'community');
+		const postRef = ref(db, 'community/');
 
-		onChildAdded(commentsRef, (snapshotData) => {
+		onChildAdded(postRef, (snapshotData) => {
 			const postId = snapshotData.key;
 			const communityName = snapshotData.val().communityName;
 			const interest = snapshotData.val().interest;
 			const admin = snapshotData.val().admin;
-			const members = snapshotData.val().Members;
+
 			// console.log('community', communityName);
 			// console.log(interest);
 			// console.log(admin);
-			// console.log(members);
 			// console.log(postId);
-			addPost(postId, communityName, interest, admin, members);
+			// console.log(subscribe);
+
+			if (subscribe === communityName) {
+				addPost(postId, communityName, interest, admin, true);
+			} else {
+				addPost(postId, communityName, interest, admin, false);
+			}
 		});
 	};
 
+	const checkUserSubscription = () => {
+		try {
+			const db = getDatabase(); //SHOULD MAKE THIS GLOBAL
+			const postRef = ref(db, 'users/' + auth.currentUser.uid + '/groups');
+
+			onChildAdded(postRef, (snapshotData) => {
+				if (subscribe === undefined || subscribe === null) {
+					subscribe = snapshotData.val().community;
+				}
+			});
+		} catch (error) {
+			console.log("Could not find community name in user's subscription");
+		}
+	};
+
 	useEffect(() => {
+		checkUserSubscription();
 		updateView();
-		// setData(test);
 	}, []);
 
+	/**
+	 * This function displays the data that is fetched from the database. The data belongs to the posts
+	 * which are rendered in explore page
+	 * @param {Post ID} list_postId
+	 * @param {Community_Name} list_communityName
+	 * @param {Interest} list_interest
+	 * @param {Admin} list_admin
+	 * @param {Members} list_members
+	 * @param {MemberID} list_memberId
+	 */
 	const addPost = (
 		list_postId,
 		list_communityName,
 		list_interest,
 		list_admin,
-		list_members
+		list_subs
 	) => {
 		setItemList((prevState) => {
+			if (prevState[0].id === 0) {
+				prevState.splice(0);
+			}
 			prevState.push({
 				id: list_postId,
 				communityName: list_communityName,
 				interest: list_interest,
-				members: list_members,
+				admin: list_admin,
+				subscribed: list_subs,
 			});
+
 			return [...prevState];
 		});
 	};
 
 	const renderItem = ({ item }) => (
-		// <View style={{ alignItems: 'center' }}>
-		// 	<Text>{item.author}</Text>
-		// </View>
+		// console.log(item);
 		<CommunityList
-			// itemz={item.communityName}
-			item={[item.interest, item.communityName, item.members]}
-			// interest={item.interest}
-			members={item.members}
-			navigate={navigation}
+			item={[item.interest, item.communityName, item.admin, item.subscribed]}
 		/>
 	);
 
@@ -101,7 +127,7 @@ const CommunityScreen = ({ navigation }) => {
 				keyExtractor={(item) => {
 					return item.id;
 				}}
-				extraData={itemList}
+				// extraData={itemList}
 			/>
 		</SafeAreaView>
 	);

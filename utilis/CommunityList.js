@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // React Native UI Packages
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -6,29 +6,50 @@ import { EvilIcons, FontAwesome } from '@expo/vector-icons';
 
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
+import auth from '../firebase/config';
 
 // Import third-Party UI Library
-import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
+import { Card, Title } from 'react-native-paper';
 
 const CommunityList = (props) => {
+	const [isSubscribed, setIsSubscribed] = useState(props.item[3]);
+	const [isAdmin, setIsAdmin] = useState(false);
+	const isUserAdmin = (user) => {
+		if (user === auth.currentUser.uid) {
+			setIsAdmin(true);
+		} else {
+			if (isSubscribed) {
+				setIsAdmin(true);
+			}
+		}
+	};
+
+	useEffect(() => {
+		isUserAdmin(props.item[2]);
+	});
+
 	return (
 		<View style={styles.container}>
 			<Card style={styles.card}>
 				<Card.Title
-					title={['Community: ', props.item[0]]}
-					subtitle={['Interest:', props.item[1]]}
+					title={['Community of ', props.item[0]]}
+					subtitle={['Members:']}
 				/>
 				<Card.Content>
-					<Title>{['Members ', props.item[2]]}</Title>
+					<Title>{['Interests: ', props.item[1]]}</Title>
 				</Card.Content>
 				<Card.Content>
 					<TouchableOpacity
 						style={{ alignItems: 'center' }}
-						onPress={() => {
-							props.navigate.navigate('Members');
-						}}
+						// onPress={() => {
+						// 	props.navigate.navigate('Members');
+						// }}
 					>
-						<Text style={styles.viewBtn}>Enter</Text>
+						{isAdmin ? (
+							<Text style={styles.viewBtn}>Enter</Text>
+						) : (
+							<Text style={styles.viewBtn}>Become a member</Text>
+						)}
 					</TouchableOpacity>
 				</Card.Content>
 			</Card>

@@ -40,18 +40,7 @@ const HomeScreen = ({ route }) => {
 		<DismissKeyboard>
 			<View styles={styles.container}>
 				<View style={styles.header}>
-					<Avatar.Image
-						source={require('../Images/profile_pic.jpg')}
-						size={50}
-					/>
-					<View style={styles.homeIcon}>
-						<AntDesign
-							style={styles.homeIcon}
-							name="home"
-							size={24}
-							color="black"
-						/>
-					</View>
+					<AntDesign name="home" size={24} color="black" />
 				</View>
 				<View>
 					{/* <>{userName.email}</> */}
@@ -99,13 +88,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	header: {
-		flexDirection: 'row',
-		padding: 10,
-	},
-	homeIcon: {
 		alignItems: 'center',
-		justifyContent: 'center',
-		marginHorizontal: 60,
+		padding: 10,
 	},
 	username: {
 		fontSize: 20,

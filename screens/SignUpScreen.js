@@ -26,6 +26,8 @@ import {
 	set,
 	push,
 	onChildAdded,
+	update,
+	child,
 } from 'firebase/database';
 
 // Import data from local files
@@ -60,6 +62,7 @@ const SignUpScreen = ({ navigation }) => {
 		isValidUser: false,
 		isVisible: false,
 	});
+	const [com, setCom] = useState('');
 
 	/**
 	 * This function creates a user account and stores account details in Firebase. This is a Firebase API that passes
@@ -107,13 +110,14 @@ const SignUpScreen = ({ navigation }) => {
 
 	// Encapsulate the process of writing data to the database
 	const writeToDatabase = () => {
-		const db = getFirestore();
-		setDoc(doc(db, 'users/' + auth.currentUser.uid), {
+		const db = getDatabase();
+		const reference = ref(db, 'users/' + auth.currentUser.uid);
+		// console.log(reference);
+		set(reference, {
 			name: data.username,
 			email: auth.currentUser.email,
+			groups: { intialVal: false },
 		});
-		console.log('name', data.username);
-		console.log('email', auth.currentUser.email);
 	};
 
 	/**

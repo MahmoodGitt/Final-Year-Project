@@ -34,6 +34,7 @@ import StartingScreen from './screens/StartingScreen';
 
 // Import third-Party UI Library
 import { NativeBaseProvider } from 'native-base';
+import CommunityList from './utilis/CommunityList';
 
 // Storing the drawer object properties in constants, i.e. intialising the constants
 const Drawer = createDrawerNavigator();
@@ -66,8 +67,7 @@ const App = () => {
 				// User is signed in, see docs for a list of available properties
 				// https://firebase.google.com/docs/reference/js/firebase.User
 				const uid = user.uid;
-				setUserLogging(true);
-				// ...
+				setUserLogging(true); // ...
 			} else {
 				// User is signed out
 				// ...
