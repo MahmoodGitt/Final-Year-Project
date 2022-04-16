@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Firebase Instance
 import auth from '../firebase/config';
@@ -6,19 +6,21 @@ import auth from '../firebase/config';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 const UserInformation = () => {
-	var data = null;
-	const getUserName = () => {
+	const [data, setData] = useState(null);
+
+	useEffect(() => {
 		const db = getDatabase();
 		const reference = ref(db, 'users/' + auth.currentUser.uid);
 		onValue(reference, (snapshot) => {
-			data = snapshot.val();
+			setData(snapshot.val().name);
 		});
-	};
+	}, []);
 
-	useEffect(() => {
-		getUserName;
-	});
-
-	return data;
+	if (data) {
+		return data;
+	}
+	// else {
+	// 	return console.log('Error fetching user name');
+	// }
 };
 export default UserInformation;

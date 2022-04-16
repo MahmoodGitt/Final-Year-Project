@@ -41,7 +41,7 @@ const CustomDrawerItems = (props) => {
 								size={50}
 							/>
 							<View style={{ marginLeft: 15, flexDirection: 'column' }}>
-								<Title style={styles.title}>{UserInformation().name}</Title>
+								<Title style={styles.title}>{UserInformation()}</Title>
 								<Caption style={styles.caption}>
 									{auth.currentUser.email}
 								</Caption>
@@ -62,12 +62,12 @@ const CustomDrawerItems = (props) => {
 						/>
 						<DrawerItem
 							icon={({ color, size }) => (
-								<Feather name="users" color={color} size={size} />
+								<Feather name="globe" color={color} size={size} />
 							)}
-							label="My Community"
+							label="Explore"
 							onPress={() => {
 								// console.log('Data from database', props.data);
-								props.navigation.navigate('My_Community');
+								props.navigation.navigate('Explore');
 							}}
 						/>
 						<DrawerItem
@@ -85,15 +85,6 @@ const CustomDrawerItems = (props) => {
 							)}
 							label="Settings"
 							// onPress={console.log('here', UserInformation())}
-						/>
-						<DrawerItem
-							icon={({ color, size }) => (
-								<Feather name="globe" color={color} size={size} />
-							)}
-							label="Explore"
-							onPress={() => {
-								// props.navigation.navigate('Login');
-							}}
 						/>
 						<DrawerItem
 							icon={({ color, size }) => (

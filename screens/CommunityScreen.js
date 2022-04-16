@@ -18,39 +18,38 @@ import keys from '../utilis/StoreKeys';
 import auth from '../firebase/config';
 
 // Import database services from Firebase
-import { getDatabase, ref, onChildAdded } from 'firebase/database';
+import {
+	getDatabase,
+	ref,
+	onChildAdded,
+	get,
+	child,
+	onValue,
+} from 'firebase/database';
 
 // Import third-Party UI Library
 import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
 import { Center } from 'native-base';
+import { sub } from 'react-native-reanimated';
 
 const CommunityScreen = ({ navigation }) => {
 	const [itemList, setItemList] = useState([{ id: 0 }]);
 	const [data, setData] = useState([]);
 	// const [subscribe, setSubscribe] = useState('');
-	var subscribe = null;
+	var subscribe = [];
+	var i = 0;
 
 	const updateView = () => {
 		const db = getDatabase();
+		// Retrieve all posts
 		const postRef = ref(db, 'community/');
-
 		onChildAdded(postRef, (snapshotData) => {
 			const postId = snapshotData.key;
 			const communityName = snapshotData.val().communityName;
 			const interest = snapshotData.val().interest;
 			const admin = snapshotData.val().admin;
 
-			// console.log('community', communityName);
-			// console.log(interest);
-			// console.log(admin);
-			// console.log(postId);
-			// console.log(subscribe);
-
-			if (subscribe === communityName) {
-				addPost(postId, communityName, interest, admin, true);
-			} else {
-				addPost(postId, communityName, interest, admin, false);
-			}
+			addPost(postId, communityName, interest, admin);
 		});
 	};
 
@@ -59,13 +58,14 @@ const CommunityScreen = ({ navigation }) => {
 			const db = getDatabase(); //SHOULD MAKE THIS GLOBAL
 			const postRef = ref(db, 'users/' + auth.currentUser.uid + '/groups');
 
+			// Retrieve the user's list of groups
 			onChildAdded(postRef, (snapshotData) => {
-				if (subscribe === undefined || subscribe === null) {
-					subscribe = snapshotData.val().community;
-				}
+				subscribe.push(snapshotData.val().community);
+				// subscribe = snapshotData.val();
+				// console.log(subscribe);
 			});
 		} catch (error) {
-			console.log("Could not find community name in user's subscription");
+			console.log('Empty group list');
 		}
 	};
 
@@ -82,14 +82,13 @@ const CommunityScreen = ({ navigation }) => {
 	 * @param {Interest} list_interest
 	 * @param {Admin} list_admin
 	 * @param {Members} list_members
-	 * @param {MemberID} list_memberId
+	 * @param {Subscriptions} list_subs
 	 */
 	const addPost = (
 		list_postId,
 		list_communityName,
 		list_interest,
-		list_admin,
-		list_subs
+		list_admin
 	) => {
 		setItemList((prevState) => {
 			if (prevState[0].id === 0) {
@@ -100,9 +99,7 @@ const CommunityScreen = ({ navigation }) => {
 				communityName: list_communityName,
 				interest: list_interest,
 				admin: list_admin,
-				subscribed: list_subs,
 			});
-
 			return [...prevState];
 		});
 	};
@@ -110,7 +107,8 @@ const CommunityScreen = ({ navigation }) => {
 	const renderItem = ({ item }) => (
 		// console.log(item);
 		<CommunityList
-			item={[item.interest, item.communityName, item.admin, item.subscribed]}
+			item={[item.interest, item.communityName, item.admin]}
+			nav={navigation}
 		/>
 	);
 

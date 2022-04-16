@@ -85,13 +85,14 @@ const App = () => {
 							drawerContent={(props) => <CustomDrawerItems {...props} />}
 							useLegacyImplementation={true}
 							initialRouteName="Home"
+							headerShown
 						>
 							<Drawer.Screen name="Home" component={HomeScreen} />
 							<Drawer.Screen
 								name="Create_Community"
 								component={CreateCommunity}
 							/>
-							<Drawer.Screen name="My_Community" component={CommunityScreen} />
+							<Drawer.Screen name="Explore" component={CommunityScreen} />
 							<Drawer.Screen name="Members" component={Members} />
 							<Drawer.Screen name="ChatRoom" component={Chat} />
 						</Drawer.Navigator>
