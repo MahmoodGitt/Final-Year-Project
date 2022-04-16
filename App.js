@@ -15,7 +15,7 @@ import { createDrawerNavigator, DrawerContent } from '@react-navigation/drawer';
 import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 // Import data from local files
 import Members from './screens/Members';
@@ -35,6 +35,7 @@ import StartingScreen from './screens/StartingScreen';
 // Import third-Party UI Library
 import { NativeBaseProvider } from 'native-base';
 import CommunityList from './utilis/CommunityList';
+import ExploreStack from './utilis/ExploreStack';
 
 // Storing the drawer object properties in constants, i.e. intialising the constants
 const Drawer = createDrawerNavigator();
@@ -85,16 +86,22 @@ const App = () => {
 							drawerContent={(props) => <CustomDrawerItems {...props} />}
 							useLegacyImplementation={true}
 							initialRouteName="Home"
-							headerShown
+							// headerShown = true
 						>
 							<Drawer.Screen name="Home" component={HomeScreen} />
 							<Drawer.Screen
 								name="Create_Community"
 								component={CreateCommunity}
 							/>
-							<Drawer.Screen name="Explore" component={CommunityScreen} />
-							<Drawer.Screen name="Members" component={Members} />
-							<Drawer.Screen name="ChatRoom" component={Chat} />
+							<Drawer.Screen
+								options={{
+									headerShown: false,
+								}}
+								name="ExploreStack"
+								component={ExploreStack}
+							/>
+							{/* <Drawer.Screen name="Members" component={Members} /> */}
+							{/* <Drawer.Screen name="ChatRoom" component={Chat} /> */}
 						</Drawer.Navigator>
 					) : (
 						<StartingScreen />

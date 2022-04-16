@@ -28,7 +28,7 @@ const MembersList = (props) => {
 					<TouchableOpacity
 						style={{ alignItems: 'center' }}
 						onPress={() => {
-							props.navigate.navigate('ChatRoom');
+							props.navigate.navigate('Chat');
 						}}
 					>
 						<Text style={styles.viewBtn}>Chat</Text>

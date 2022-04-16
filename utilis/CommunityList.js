@@ -70,7 +70,7 @@ const CommunityList = (props) => {
 		// console.log(isSubscribed);
 		update(ref(db), updates);
 		setModalVisible(!modalVisible);
-		props.nav.navigate('Members');
+		props.nav.navigate('Chat');
 	};
 
 	return (

@@ -67,7 +67,7 @@ const CustomDrawerItems = (props) => {
 							label="Explore"
 							onPress={() => {
 								// console.log('Data from database', props.data);
-								props.navigation.navigate('Explore');
+								props.navigation.navigate('ExploreStack');
 							}}
 						/>
 						<DrawerItem
