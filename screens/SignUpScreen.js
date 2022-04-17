@@ -75,6 +75,8 @@ const SignUpScreen = ({ navigation }) => {
 					createUserWithEmailAndPassword(auth, data.email, data.password)
 						.then((userCredential) => {
 							// Signed in
+							auth.currentUser.displayName = data.username;
+							console.log('user name', auth.currentUser.displayName);
 							const user = userCredential.user;
 							console.log('username', user.email, 'added to Firebase');
 							writeToDatabase();
@@ -271,9 +273,9 @@ const SignUpScreen = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.header}>
+			{/* <View style={styles.header}>
 				<Text style={styles.text_header}>Register Now!</Text>
-			</View>
+			</View> */}
 			<Animatable.View animation="fadeInUpBig" style={styles.form}>
 				<View>
 					<Text style={styles.text}>Student Name</Text>

@@ -34,10 +34,6 @@ import { sub } from 'react-native-reanimated';
 
 const CommunityScreen = ({ navigation }) => {
 	const [itemList, setItemList] = useState([{ id: 0 }]);
-	const [data, setData] = useState([]);
-	// const [subscribe, setSubscribe] = useState('');
-	var subscribe = [];
-	var i = 0;
 
 	const updateView = () => {
 		const db = getDatabase();
@@ -48,29 +44,14 @@ const CommunityScreen = ({ navigation }) => {
 			const communityName = snapshotData.val().communityName;
 			const interest = snapshotData.val().interest;
 			const admin = snapshotData.val().admin;
-
-			addPost(postId, communityName, interest, admin);
+			const memberID = snapshotData.val().members.memID;
+			// console.log(postId);
+			addPost(postId, communityName, interest, admin, memberID);
 		});
 	};
 
-	const checkUserSubscription = () => {
-		try {
-			const db = getDatabase(); //SHOULD MAKE THIS GLOBAL
-			const postRef = ref(db, 'users/' + auth.currentUser.uid + '/groups');
-
-			// Retrieve the user's list of groups
-			onChildAdded(postRef, (snapshotData) => {
-				subscribe.push(snapshotData.val().community);
-				// subscribe = snapshotData.val();
-				// console.log(subscribe);
-			});
-		} catch (error) {
-			console.log('Empty group list');
-		}
-	};
-
 	useEffect(() => {
-		checkUserSubscription();
+		// checkUserSubscription();
 		updateView();
 	}, []);
 
@@ -88,7 +69,8 @@ const CommunityScreen = ({ navigation }) => {
 		list_postId,
 		list_communityName,
 		list_interest,
-		list_admin
+		list_admin,
+		list_memID
 	) => {
 		setItemList((prevState) => {
 			if (prevState[0].id === 0) {
@@ -99,6 +81,7 @@ const CommunityScreen = ({ navigation }) => {
 				communityName: list_communityName,
 				interest: list_interest,
 				admin: list_admin,
+				members: list_memID,
 			});
 			return [...prevState];
 		});
@@ -107,7 +90,13 @@ const CommunityScreen = ({ navigation }) => {
 	const renderItem = ({ item }) => (
 		// console.log(item);
 		<CommunityList
-			item={[item.interest, item.communityName, item.admin]}
+			item={[
+				item.interest,
+				item.communityName,
+				item.admin,
+				item.members,
+				item.id,
+			]}
 			nav={navigation}
 		/>
 	);
@@ -120,6 +109,9 @@ const CommunityScreen = ({ navigation }) => {
 				</TouchableOpacity>
 			</View> */}
 			<FlatList
+				key={(item) => {
+					return item.id;
+				}}
 				data={itemList}
 				renderItem={renderItem}
 				keyExtractor={(item) => {

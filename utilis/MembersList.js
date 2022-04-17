@@ -11,11 +11,12 @@ import DismissKeyboard from '../utilis/DismissKeyboard';
 import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
 
 const MembersList = (props) => {
+	const username = props.item[0];
 	return (
 		<View style={styles.container}>
 			<Card style={styles.card}>
 				<Card.Title
-					title={['Callum ', props.item]}
+					title={['Callum ', username]}
 					subtitle={['Interests: C#, Java', '']}
 					left={() => (
 						<Avatar.Image

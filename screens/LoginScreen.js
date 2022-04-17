@@ -163,9 +163,9 @@ const LoginScreen = ({ navigation }) => {
 					source={{ uri: 'https://picsum.photos/700' }}
 				/>
 			</Card>
-			<View style={styles.headerstyle}>
+			{/* <View style={styles.headerstyle}>
 				<Text style={styles.text_header}>Welcome!</Text>
-			</View>
+			</View> */}
 			<Animatable.View animation="fadeInUpBig" style={styles.footerStyle}>
 				<Text style={styles.text_footer}>Email</Text>
 				<View style={styles.action}>

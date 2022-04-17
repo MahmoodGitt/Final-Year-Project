@@ -15,6 +15,7 @@ import { EvilIcons, FontAwesome } from '@expo/vector-icons';
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
+import UserInformation from './UserInformation';
 
 // Import third-Party UI Library
 import { Card, Title } from 'react-native-paper';
@@ -29,6 +30,7 @@ import {
 } from 'firebase/database';
 
 const CommunityList = (props) => {
+	const postKey = props.item[4];
 	const communityName = props.item[1];
 	const interest = props.item[0];
 	const userId = props.item[2];
@@ -36,7 +38,12 @@ const CommunityList = (props) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [isSubscribed, setIsSubscribed] = useState(subscriptionList);
 	const [isMember, setIsMember] = useState(false);
-	// var groupList = [];
+
+	/**
+	 *  Thsis function is responsible for displaying the correct button. The button's text props shows 'View' if
+	 *  the user is subscribed to the community, else the button's text shows 'Become Member'
+	 * @param {*} user
+	 */
 	const isUserAdmin = (user) => {
 		if (user === auth.currentUser.uid) {
 			setIsMember(true);
@@ -47,7 +54,7 @@ const CommunityList = (props) => {
 			onChildAdded(postRef, (snapshotData) => {
 				const groupList = snapshotData.val().community;
 				if (communityName === groupList) {
-					console.log('equal', communityName, groupList);
+					// console.log('equal', communityName, groupList);
 					setIsMember(true);
 				}
 			});
@@ -55,11 +62,14 @@ const CommunityList = (props) => {
 	};
 	useEffect(() => {
 		isUserAdmin(userId);
+
+		console.log('name', auth.currentUser.displayName);
 	}, []);
 
 	const subscribeToCommunity = () => {
 		const db = getDatabase();
-		// Update Subscription
+
+		// Update user's subscription list for new subscribers
 		const groups = { community: communityName };
 		console.log(groups.community);
 		const keyref = push(child(ref(db), 'users/' + auth.currentUser.uid)).key;
@@ -69,8 +79,29 @@ const CommunityList = (props) => {
 		// console.log(updates);
 		// console.log(isSubscribed);
 		update(ref(db), updates);
-		setModalVisible(!modalVisible);
-		props.nav.navigate('Chat');
+
+		// Update members list in community folder
+		const addMember = {
+			memID: auth.currentUser.uid,
+			memName: auth.currentUser.displayName,
+		};
+		if (addMember.memID && addMember.memName) {
+			const Memref = push(
+				child(ref(db), 'community/' + postKey + '/members/' + Memref)
+			).key;
+			const path = {};
+			path['community/' + postKey + '/members/' + Memref] = addMember;
+			update(ref(db), path);
+			console.log('path', path);
+			setModalVisible(!modalVisible);
+
+			props.nav.navigate('Members', {
+				community: communityName,
+				id: postKey,
+			});
+		} else {
+			console.log('could not subscribe member');
+		}
 	};
 
 	return (
@@ -88,7 +119,10 @@ const CommunityList = (props) => {
 						<TouchableOpacity
 							style={{ alignItems: 'center' }}
 							onPress={() => {
-								props.nav.navigate('Members');
+								props.nav.navigate('Members', {
+									community: communityName,
+									id: postKey,
+								});
 							}}
 						>
 							<Text style={styles.viewBtn}>View</Text>

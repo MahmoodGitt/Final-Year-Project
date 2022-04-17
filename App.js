@@ -92,6 +92,9 @@ const App = () => {
 							<Drawer.Screen
 								name="Create_Community"
 								component={CreateCommunity}
+								options={{
+									headerLeft: false,
+								}}
 							/>
 							<Drawer.Screen
 								options={{

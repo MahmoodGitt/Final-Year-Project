@@ -13,6 +13,7 @@ const UserInformation = () => {
 		const reference = ref(db, 'users/' + auth.currentUser.uid);
 		onValue(reference, (snapshot) => {
 			setData(snapshot.val().name);
+			auth.currentUser.displayName = snapshot.val().name;
 		});
 	}, []);
 

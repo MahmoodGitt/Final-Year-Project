@@ -9,6 +9,7 @@ import { getDatabase, ref, onValue } from 'firebase/database';
 import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
 import CommunityScreen from './CommunityScreen';
+import UserInformation from '../utilis/UserInformation';
 
 // Third-Party  UI Packages
 import { Card, Title, Paragraph, Avatar, Button } from 'react-native-paper';
@@ -21,20 +22,11 @@ const HomeScreen = ({ route }) => {
 	});
 
 	const [username, setUsername] = useState('');
-
-	const fetchUsername = () => {
-		useEffect(() => {
-			const database = getDatabase();
-			const reference = ref(database, 'users/userId');
-			onValue(reference, (snapshot) => {
-				setData({
-					...data,
-					username: snapshot.val().username,
-				});
-				console.log('user id is', auth.uid);
-			});
-		}, []);
-	};
+	UserInformation();
+	useEffect(() => {
+		setUsername(auth.currentUser.displayName);
+		// console.log(auth.currentUser.displayName);
+	}, []);
 
 	return (
 		<DismissKeyboard>
@@ -48,7 +40,7 @@ const HomeScreen = ({ route }) => {
 				</View>
 				<Card style={styles.card}>
 					<Card.Content>
-						<Title>My Communities</Title>
+						<Title> My Communities </Title>
 						<Paragraph>Display communities </Paragraph>
 					</Card.Content>
 				</Card>

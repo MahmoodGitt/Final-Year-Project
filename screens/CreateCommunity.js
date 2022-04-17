@@ -99,6 +99,18 @@ const CreateCommunity = ({ navigation }) => {
 		}
 	};
 
+	const updateAdminSubscriptionList = () => {
+		// Update admin's subscription list
+		const groups = { community: data.communityName };
+		// console.log(groups.community);
+		const keyref = push(child(ref(db), 'users/' + auth.currentUser.uid)).key;
+		// console.log(keyref);
+		const updates = {};
+		updates['/users/' + auth.currentUser.uid + '/groups/' + keyref] = groups;
+		// console.log(updates);
+		update(ref(db), updates);
+	};
+
 	const storeCommunityDetails = () => {
 		try {
 			const db = getDatabase();
@@ -109,17 +121,15 @@ const CreateCommunity = ({ navigation }) => {
 				admin: auth.currentUser.uid,
 				communityName: data.communityName,
 				interest: data.interest,
+				members: {
+					hash: {
+						memID: auth.currentUser.uid,
+						memName: auth.currentUser.displayName,
+					},
+				},
 			});
 
-			// Update Subscription
-			const groups = { community: data.communityName };
-			// console.log(groups.community);
-			const keyref = push(child(ref(db), 'users/' + auth.currentUser.uid)).key;
-			// console.log(keyref);
-			const updates = {};
-			updates['/users/' + auth.currentUser.uid + '/groups/' + keyref] = groups;
-			// console.log(updates);
-			update(ref(db), updates);
+			updateAdminSubscriptionList();
 		} catch (error) {
 			console.log('Error in saving to database', error);
 		}

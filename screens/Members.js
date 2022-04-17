@@ -26,46 +26,65 @@ import {
 	push,
 	onChildAdded,
 	update,
+	DataSnapshot,
+	child,
 } from 'firebase/database';
 
 // Import third-Party UI Library
 import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
-import { Center } from 'native-base';
+import { Center, SmallCloseIcon } from 'native-base';
 import MembersList from '../utilis/MembersList';
+import { add, Value } from 'react-native-reanimated';
 
-const Members = ({ navigation }) => {
-	const [itemList, setItemList] = useState([{}]);
+const Members = ({ navigation, route }) => {
+	const [itemList, setItemList] = useState([{ id: 0, name: 'Push' }]);
+	const [isMember, setIsMember] = useState(false);
+
+	const currentUser = auth.currentUser.uid;
+	const routeData = route.params.id;
+	const communityName = route.params.community;
+	const db = getDatabase();
 
 	const updateView = () => {
-		const db = getDatabase();
-		const commentsRef = ref(db, 'users/' + auth.currentUser.uid + '/test/');
-		onChildAdded(commentsRef, (test) => {
-			addPost(test.key, test.val().communityName);
+		const getKey = ref(db, 'community/' + routeData + '/members');
+		onChildAdded(getKey, (snapshotData) => {
+			const existingMembers = snapshotData.val().memID;
+			const memberName = snapshotData.val().memName;
+			// console.log('id', existingMembers);
+
+			if (existingMembers !== undefined) {
+				if (existingMembers !== currentUser) {
+					console.log('display', memberName);
+
+					setItemList((prevState) => {
+						console.log('before', prevState);
+
+						// remove the intial value hence it is used as placeholder/for intialisation
+						if (prevState[0] !== undefined) {
+							if (prevState[0].id === 0) {
+								prevState.splice(0);
+							}
+						}
+						prevState.push({
+							name: memberName,
+						});
+						console.log('after', prevState);
+						return [...prevState];
+					});
+				}
+			}
 		});
 	};
 
 	useEffect(() => {
 		updateView();
-		// setData(test);
 	}, []);
-
-	const addPost = (key, communityName) => {
-		setItemList((prevState) => {
-			console.log('before', prevState);
-			console.log('postion', prevState);
-			// if(prevState[0])
-			prevState.push({ id: key, communityName: communityName });
-			console.log('after', prevState);
-			console.log('length', itemList.length);
-			return [...prevState];
-		});
-	};
 
 	const renderItem = ({ item }) => (
 		// <View style={{ alignItems: 'center' }}>
 		// 	<Text>{item.author}</Text>
 		// </View>
-		<MembersList item={item.communityName} navigate={navigation} />
+		<MembersList item={[item.name]} navigate={navigation} />
 	);
 
 	return (
@@ -74,8 +93,10 @@ const Members = ({ navigation }) => {
 			<FlatList
 				data={itemList}
 				renderItem={renderItem}
-				keyExtractor={(item) => item.id}
-				extraData={itemList}
+				keyExtractor={(item) => {
+					return item.id;
+				}}
+				// extraData={itemList}
 			/>
 		</SafeAreaView>
 	);
