@@ -1,32 +1,68 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {
+	useState,
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import {
+	orderBy,
+	collection,
+	query,
+	getFirestore,
+	onSnapshot,
+	where,
+	addDoc,
+	setDoc,
+	doc,
+	updateDoc,
+	getDocs,
+} from 'firebase/firestore';
+import auth from '../firebase/config';
 
-//Third-Party UI Package
-import { Input } from 'native-base';
-const Chat = () => {
+const Chat = ({ route }) => {
 	const [messages, setMessages] = useState([]);
+	const currentUserId = route.params.currentUser;
+	const selectedUserId = route.params.selectedUser;
+	const chatroomId = route.params.chatroomId;
 
-	useEffect(() => {
-		setMessages([
-			{
-				_id: 1,
-				text: 'Hello developer',
-				createdAt: new Date(),
-				user: {
-					_id: 2,
-					name: 'React Native',
-					// avatar: 'https://placeimg.com/140/140/any',
-				},
-			},
-		]);
+	useLayoutEffect(() => {
+		const loadMessages = () => {
+			const db = getFirestore();
+			const q = query(
+				collection(db, 'chatrooms/' + chatroomId + '/messages'),
+				orderBy('createdAt', 'desc')
+			);
+			const unsubscribe = onSnapshot(q, (snapshot) =>
+				setMessages(
+					snapshot.docs.map((doc) => ({
+						_id: doc.data()._id,
+						createdAt: doc.data().createdAt.toDate(),
+						text: doc.data().text,
+						user: doc.data().user,
+					}))
+				)
+			);
+			return () => {
+				unsubscribe();
+			};
+		};
+		loadMessages();
 	}, []);
 
-	const onSend = useCallback((messages = []) => {
-		setMessages((previousMessages) =>
-			GiftedChat.append(previousMessages, messages)
-		);
+	const onSend = useCallback((msg = []) => {
+		const { _id, createdAt, text, user } = msg[0];
+		const database = getFirestore();
+		addDoc(collection(database, 'chatrooms/' + chatroomId + '/messages'), {
+			_id,
+			createdAt,
+			text,
+			user,
+		});
+
+		setMessages((prevMessages) => GiftedChat.append(prevMessages, msg));
 	}, []);
 
 	return (
@@ -34,9 +70,10 @@ const Chat = () => {
 			messages={messages}
 			onSend={(messages) => onSend(messages)}
 			user={{
-				_id: 1,
+				_id: auth?.currentUser?.uid,
 				avatar: 'https://placeimg.com/140/140/any',
 			}}
+			showAvatarForEveryMessage={true}
 		/>
 	);
 };

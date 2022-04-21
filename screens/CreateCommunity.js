@@ -60,6 +60,7 @@ const CreateCommunity = ({ navigation }) => {
 		interest_changeText: false,
 		isValidInterest: true,
 	});
+	const db = getDatabase();
 
 	const communityName_changeText = (text) => {
 		if (text !== null && text.trim().length !== 0) {
@@ -113,14 +114,15 @@ const CreateCommunity = ({ navigation }) => {
 
 	const storeCommunityDetails = () => {
 		try {
-			const db = getDatabase();
 			// check user's number of posts
 			const reference = ref(db, 'community');
+			// console.log(db);
 			const postKey = push(reference);
 			set(postKey, {
 				admin: auth.currentUser.uid,
 				communityName: data.communityName,
 				interest: data.interest,
+				// createdAt: { Time: new Date() },
 				members: {
 					hash: {
 						memID: auth.currentUser.uid,

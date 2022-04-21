@@ -119,6 +119,7 @@ const SignUpScreen = ({ navigation }) => {
 			name: data.username,
 			email: auth.currentUser.email,
 			groups: { intialVal: false },
+			friends: { username: false, chatroomId: false },
 		});
 	};
 
