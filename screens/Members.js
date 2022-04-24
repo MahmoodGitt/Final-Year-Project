@@ -23,12 +23,9 @@ import MembersList from '../utilis/MembersList';
 
 const Members = ({ navigation, route }) => {
 	const [itemList, setItemList] = useState([]);
-	const [isMember, setIsMember] = useState(false);
 
 	const currentUser = auth.currentUser.uid;
 	const routeData = route.params.id;
-	// const communityName = route.params.community;
-	const db = getDatabase();
 
 	useEffect(() => {
 		/**
@@ -50,25 +47,6 @@ const Members = ({ navigation, route }) => {
 							});
 							return [...itemList];
 						});
-						// setItemList((prevState) => {
-						// 	// remove the intial value hence it is used as placeholder/for intialisation
-						// 	// if (prevState[0] !== undefined) {
-						// 	// 	console.log(prevState);
-						// 	// 	if (prevState[0].id === 0) {
-						// 	// 		prevState.splice(0);
-						// 	// 	}
-						// 	// }
-						// 	if (prevState) {
-						// 		// prevState.push({
-						// 		// 	name: memberName,
-						// 		// 	memberId: memberId,
-						// 		// });
-						// 		console.log(prevState);
-						// 	}
-
-						// 	// console.log('after', prevState);
-						// 	return [...prevState];
-						// });
 					}
 				}
 			});
@@ -77,9 +55,6 @@ const Members = ({ navigation, route }) => {
 	}, []);
 
 	const renderItem = ({ item }) => (
-		// <View style={{ alignItems: 'center' }}>
-		// 	<Text>{item.author}</Text>
-		// </View>
 		<MembersList
 			item={[item.name, item.memberId]}
 			userId={currentUser}

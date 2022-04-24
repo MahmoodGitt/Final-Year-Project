@@ -24,8 +24,6 @@ import auth from '../firebase/config';
 
 const Chat = ({ route }) => {
 	const [messages, setMessages] = useState([]);
-	const currentUserId = route.params.currentUser;
-	const selectedUserId = route.params.selectedUser;
 	const chatroomId = route.params.chatroomId;
 
 	useLayoutEffect(() => {
