@@ -15,7 +15,14 @@ import { createDrawerNavigator, DrawerContent } from '@react-navigation/drawer';
 import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {
+	Button,
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+	ActivityIndicator,
+} from 'react-native';
 
 // Import data from local files
 import Members from './screens/Members';
@@ -36,6 +43,7 @@ import StartingScreen from './screens/StartingScreen';
 import { NativeBaseProvider } from 'native-base';
 import CommunityList from './utilis/CommunityList';
 import ExploreStack from './utilis/ExploreStack';
+import { cos } from 'react-native-reanimated';
 
 // Storing the drawer object properties in constants, i.e. intialising the constants
 const Drawer = createDrawerNavigator();
@@ -62,21 +70,36 @@ const HomeScreenComponentStack = () => {
 
 const App = () => {
 	const [userLoggedIn, setUserLogging] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
 				// User is signed in, see docs for a list of available properties
 				// https://firebase.google.com/docs/reference/js/firebase.User
 				const uid = user.uid;
+				setIsLoading(false);
 				setUserLogging(true); // ...
 			} else {
 				// User is signed out
 				// ...
+				setIsLoading(false);
 				setUserLogging(false);
 			}
 		});
 	}, []); // Empty array means to only run once.
 
+	// The purpose of the following condition is to display a loading screen while onAuthStateChanged checks the state of the user (logged in or logged out)
+
+	if (isLoading) {
+		return (
+			<View style={[styles.container, styles.horizontal]}>
+				{/* <ActivityIndicator />
+				<ActivityIndicator size="large" />
+				<ActivityIndicator size="small" color="#0000ff" /> */}
+				<ActivityIndicator size="large" color="#00ff00" />
+			</View>
+		);
+	}
 	return (
 		<RootSiblingParent>
 			<NativeBaseProvider>
@@ -114,5 +137,15 @@ const App = () => {
 		</RootSiblingParent>
 	);
 };
-
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+	},
+	horizontal: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		padding: 10,
+	},
+});
 export default App;
