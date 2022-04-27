@@ -283,7 +283,7 @@ const SignUpScreen = ({ navigation }) => {
 					<View style={styles.action}>
 						<FontAwesome name="user-o" color="#05375a" size={20} />
 						<TextInput
-							placeholder="Your Username"
+							placeholder="Your Name"
 							style={styles.textInput}
 							autoCapitalize="none"
 							onChangeText={(text) => username_textChange(text)}
@@ -422,10 +422,6 @@ const SignUpScreen = ({ navigation }) => {
 					)}
 					<View style={styles.button}>
 						<TouchableOpacity style={styles.signIn} onPress={handleSignUp}>
-							{/* <LinearGradient
-								colors={['#08d4c4', '#01ab9d']}
-								style={styles.logIn}
-							> */}
 							<Text
 								style={[
 									styles.textSign,
@@ -476,8 +472,7 @@ const styles = StyleSheet.create({
 	form: {
 		flex: 3,
 		backgroundColor: '#fff',
-		borderTopLeftRadius: 30,
-		borderTopRightRadius: 30,
+
 		paddingHorizontal: 20,
 		paddingVertical: 30,
 	},

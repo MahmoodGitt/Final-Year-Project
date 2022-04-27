@@ -44,41 +44,6 @@ const LoginScreen = ({ navigation }) => {
 		isValidPassword: true,
 	});
 
-	const isNotEmpty = (str) => {
-		return str !== null;
-	};
-
-	const email_textChange = (text) => {
-		if (text) {
-			setData({
-				...data,
-				email: text,
-				email_textChange: true,
-			});
-		} else {
-			setData({
-				...data,
-				email: '',
-				email_textChange: false,
-				// isValidEmail: false,
-			});
-		}
-	};
-
-	const handleValidUserEmail = (text) => {
-		if (email_textChange) {
-			setData({
-				...data,
-				isValidEmail: true,
-			});
-		} else {
-			setData({
-				...data,
-				isValidEmail: false,
-			});
-		}
-	};
-
 	/**
 	 * This function checks when a user signs in to the app. The Firebase API 'signInWithEmailAndPassword()' passes the Firebase configuration file,
 	 * user's email address and password
@@ -95,64 +60,12 @@ const LoginScreen = ({ navigation }) => {
 				const errorMessage = error.message;
 				console.log('code:', errorCode);
 				console.log('message', errorMessage);
+				Alert.alert(
+					'Invalid email/password',
+					'\t\t\t\t\t\t\t\t\t' + 'Try Again',
+					[{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+				);
 			});
-	};
-
-	const textInputChange = (text) => {
-		// if (text.trim().includes('edu')) {
-		// 	setData({
-		// 		...data,
-		// 		username: text,
-		// 		user_textChange: true,
-		// 		isValidUserName: true,
-		// 	});
-		// } else {
-		// 	setData({
-		// 		...data,
-		// 		username: text,
-		// 		user_textChange: false,
-		// 		isValidUserName: false,
-		// 	});
-		// }
-	};
-
-	const handlePasswordChange = (val) => {
-		// if (val.trim().length >= 8) {
-		// 	setData({
-		// 		...data,
-		// 		password: val,
-		// 		isValidPassword: true,
-		// 	});
-		// } else {
-		// 	setData({
-		// 		...data,
-		// 		password: val,
-		// 		isValidPassword: false,
-		// 	});
-		// }
-	};
-
-	const updateSecureTextEntry = () => {
-		// setData({
-		// 	...data,
-		// 	secureTextEntry: !data.secureTextEntry,
-		// });
-	};
-
-	const handleValidUser = (text) => {
-		// if (text.includes('@edu')) {
-		// 	setData({
-		// 		...data,
-		// 		isValidUserName: true,
-		// 	});
-		// 	// console.log('pass');
-		// } else {
-		// 	setData({
-		// 		...data,
-		// 		isValidUserName: false,
-		// 	});
-		// 	// console.log('fail');
-		// }
 	};
 
 	return (
@@ -175,27 +88,8 @@ const LoginScreen = ({ navigation }) => {
 						placeholderTextColor="#666666"
 						style={styles.textInput}
 						autoCapitalize="none"
-						onChangeText={(text) => {
-							// data.username = text;
-							email_textChange(text);
-						}}
-						onEndEditing={(endText) =>
-							handleValidUser(endText.nativeEvent.text)
-						}
 					/>
-					{data.user_textChange ? (
-						<Animatable.View animation="bounceIn">
-							<Feather name="check-circle" color="green" size={20} />
-						</Animatable.View>
-					) : null}
 				</View>
-				{data.isValidEmail ? null : (
-					<Animatable.View animation="fadeInLeft" duration={500}>
-						<Text style={styles.errorMsg}>
-							Username must be your organisation's email.
-						</Text>
-					</Animatable.View>
-				)}
 
 				<Text
 					style={[
@@ -212,28 +106,11 @@ const LoginScreen = ({ navigation }) => {
 					<TextInput
 						placeholder="Your Password"
 						placeholderTextColor="#666666"
-						secureTextEntry={data.secureTextEntry ? true : false}
+						secureTextEntry={true}
 						style={styles.textInput}
 						autoCapitalize="none"
-						onChangeText={(text) => {
-							data.password = text;
-						}}
 					/>
-					<TouchableOpacity onPress={updateSecureTextEntry}>
-						{data.secureTextEntry ? (
-							<Feather name="eye-off" color="grey" size={20} />
-						) : (
-							<Feather name="eye" color="grey" size={20} />
-						)}
-					</TouchableOpacity>
 				</View>
-				{data.isValidPassword ? null : (
-					<Animatable.View animation="fadeInLeft" duration={500}>
-						<Text style={styles.errorMsg}>
-							Password must be 8 characters long.
-						</Text>
-					</Animatable.View>
-				)}
 
 				<TouchableOpacity>
 					<Text style={{ color: '#009387', marginTop: 15 }}>
@@ -242,24 +119,12 @@ const LoginScreen = ({ navigation }) => {
 				</TouchableOpacity>
 				<View style={styles.startScreenButton}>
 					<TouchableOpacity style={styles.logIn} onPress={handleLogIn}>
-						{/* <LinearGradient
-							colors={['#08d4c4', '#01ab9d']}
-							style={styles.logIn}
-						> */}
 						<Text style={styles.textSign}>Sign In</Text>
-						{/* </LinearGradient> */}
 					</TouchableOpacity>
 
 					<TouchableOpacity
 						onPress={() => navigation.navigate('SignUp')}
-						style={[
-							styles.logIn,
-							{
-								borderColor: '#009387',
-								borderWidth: 1,
-								marginTop: 15,
-							},
-						]}
+						style={styles.logIn}
 					>
 						<Text style={styles.textSign}>Sign Up</Text>
 					</TouchableOpacity>
@@ -291,8 +156,7 @@ const styles = StyleSheet.create({
 	footerStyle: {
 		flex: 3,
 		backgroundColor: '#fff',
-		borderTopLeftRadius: 30,
-		borderTopRightRadius: 30,
+
 		paddingHorizontal: 20,
 		paddingVertical: 30,
 	},
@@ -328,6 +192,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 10,
+
+		borderColor: '#009387',
+		borderWidth: 1,
+		marginTop: 15,
 	},
 
 	textInput: {

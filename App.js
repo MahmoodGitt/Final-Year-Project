@@ -20,6 +20,7 @@ import {
 	StyleSheet,
 	Text,
 	View,
+	Platform,
 	TouchableOpacity,
 	ActivityIndicator,
 } from 'react-native';
@@ -89,17 +90,14 @@ const App = () => {
 	}, []); // Empty array means to only run once.
 
 	// The purpose of the following condition is to display a loading screen while onAuthStateChanged checks the state of the user (logged in or logged out)
-
 	if (isLoading) {
 		return (
 			<View style={[styles.container, styles.horizontal]}>
-				{/* <ActivityIndicator />
-				<ActivityIndicator size="large" />
-				<ActivityIndicator size="small" color="#0000ff" /> */}
-				<ActivityIndicator size="large" color="#00ff00" />
+				<ActivityIndicator size="large" color="#0000ff" />
 			</View>
 		);
 	}
+
 	return (
 		<RootSiblingParent>
 			<NativeBaseProvider>
