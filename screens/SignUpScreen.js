@@ -10,6 +10,7 @@ import {
 	StatusBar,
 	ScrollView,
 	Alert,
+	KeyboardAvoidingView,
 } from 'react-native';
 
 // Firebase Packages
@@ -26,6 +27,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import RNPickerSelect from 'react-native-picker-select';
 import SelectDropdown from 'react-native-select-dropdown';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SignUpScreen = ({ navigation }) => {
 	const [selectedUniversity, setSelectedUniversity] = useState();
@@ -282,12 +284,10 @@ const SignUpScreen = ({ navigation }) => {
 		{ label: 'Apple', value: 'apple' },
 		{ label: 'Banana', value: 'banana' },
 	];
-	return (
-		<View style={styles.container}>
-			{/* <View style={styles.header}>
-				<Text style={styles.text_header}>Register Now!</Text>
-			</View> */}
-			<Animatable.View animation="fadeInUpBig" style={styles.form}>
+
+	const renderInputs = () => {
+		return (
+			<ScrollView>
 				<View>
 					<Text style={styles.text}>Student Name</Text>
 					<View style={styles.action}>
@@ -318,17 +318,21 @@ const SignUpScreen = ({ navigation }) => {
 						</Text>
 					)}
 
-					{/* <Text style={styles.text}>University</Text> */}
-
 					{Platform.OS === 'ios' ? (
-						<View style={styles.action}>
-							<Feather name="book" size={20} />
-							<View style={{ marginLeft: 5 }}>
-								<RNPickerSelect
-									placeholder={{ label: 'Select University', value: 'Select' }}
-									onValueChange={(value) => console.log(value)}
-									items={map}
-								/>
+						<View>
+							<Text style={styles.text}>University</Text>
+							<View style={styles.action}>
+								<Feather name="book" size={20} />
+								<View style={{ marginLeft: 5 }}>
+									<RNPickerSelect
+										placeholder={{
+											label: 'Select University',
+											value: 'Select',
+										}}
+										onValueChange={(value) => console.log(value)}
+										items={map}
+									/>
+								</View>
 							</View>
 						</View>
 					) : (
@@ -454,7 +458,7 @@ const SignUpScreen = ({ navigation }) => {
 						<Text style={styles.errorMsg}>Passwords do not match</Text>
 					)}
 					<View style={styles.button}>
-						<TouchableOpacity style={styles.signIn} onPress={handleSignUp}>
+						<TouchableOpacity style={[styles.signIn]} onPress={handleSignUp}>
 							<Text
 								style={[
 									styles.textSign,
@@ -467,26 +471,30 @@ const SignUpScreen = ({ navigation }) => {
 							</Text>
 							{/* </LinearGradient> */}
 						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => navigation.goBack()}
-							style={styles.signIn}
-						>
-							<Text
-								style={[
-									styles.textSign,
-									{
-										color: '#009387',
-									},
-								]}
-							>
-								Go back
-							</Text>
-						</TouchableOpacity>
 					</View>
 				</View>
+			</ScrollView>
+		);
+	};
+	return (
+		<View style={styles.container}>
+			{/* <View style={styles.header}>
+				<Text style={styles.text_header}>Register Now!</Text>
+			</View> */}
+			<Animatable.View animation="fadeInUpBig" style={styles.form}>
+				{Platform.OS === 'ios' ? (
+					<KeyboardAvoidingView
+						behavior={Platform.OS === 'ios' ? 'padding' : null}
+						style={{ flex: 1 }}
+					>
+						{renderInputs()}
+					</KeyboardAvoidingView>
+				) : (
+					renderInputs()
+				)}
 			</Animatable.View>
 		</View>
+		// </KeyboardAvoidingView>
 	);
 };
 
@@ -504,6 +512,7 @@ const styles = StyleSheet.create({
 	},
 	form: {
 		flex: 1,
+		// height: Platform.OS === 'ios' ?  : null,
 		backgroundColor: '#fff',
 
 		paddingHorizontal: 20,
@@ -547,14 +556,14 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 	},
 	signIn: {
-		width: '100%',
+		width: '50%',
 		height: 50,
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 10,
 		borderColor: '#009387',
 		borderWidth: 1,
-		marginTop: 10,
+		marginTop: 50,
 	},
 	textSign: {
 		fontSize: 18,
