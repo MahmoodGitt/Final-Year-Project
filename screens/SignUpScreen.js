@@ -14,35 +14,21 @@ import {
 
 // Firebase Packages
 import auth from '../firebase/config';
-import {
-	createUserWithEmailAndPassword,
-	onAuthStateChanged,
-} from 'firebase/auth';
-
-import {
-	getDatabase,
-	ref,
-	onValue,
-	set,
-	push,
-	onChildAdded,
-	update,
-	child,
-} from 'firebase/database';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, set } from 'firebase/database';
 
 // Import data from local files
 
 // Third-Party UI Packages
-
 import * as Animatable from 'react-native-animatable';
 // import LinearGradient from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import DropDownPicker from 'react-native-dropdown-picker';
-import Autocomplete from 'react-native-autocomplete-input';
-import { Card } from 'react-native-paper';
+import RNPickerSelect from 'react-native-picker-select';
+import SelectDropdown from 'react-native-select-dropdown';
 
 const SignUpScreen = ({ navigation }) => {
+	const [selectedUniversity, setSelectedUniversity] = useState();
 	const [data, setData] = useState({
 		username: '',
 		university: '',
@@ -51,18 +37,19 @@ const SignUpScreen = ({ navigation }) => {
 		confirm_password: '',
 		secureTextEntry: true,
 		user_textChange: false,
+		university_textChange: false,
 		password_textChange: false,
 		email_textChange: false,
 		passwordConfirm_textChange: false,
 		confirm_secureTextEntry: true,
 		isValidUserName: true,
+		isValidUniversity: true,
 		isValidUserEmail: true,
 		isValidPassowrd: true,
 		isValidConfirmPassword: true,
 		isValidUser: false,
 		isVisible: false,
 	});
-	const [com, setCom] = useState('');
 
 	/**
 	 * This function creates a user account and stores account details in Firebase. This is a Firebase API that passes
@@ -124,20 +111,6 @@ const SignUpScreen = ({ navigation }) => {
 	};
 
 	/**
-	 * This function checks the user's text input if it is empty or has whitespaces
-	 * Referencing source of knowledge: https://stackoverflow.com/questions/10232366/how-to-check-if-a-variable-is-null-or-empty-string-or-all-whitespace-in-javascri
-	 * @param {String} text
-	 */
-	// function isEmptyOrHasSpaces(text) {
-	// 	if(text.match(/\s/){
-	// 	}
-	// })
-
-	function hasWhiteSpace(s) {
-		return /\s/.test(s);
-	}
-
-	/**
 	 * This function checks that the text which represents the username is bigger than or equal to two three characters
 	 * @param {String} text
 	 */
@@ -159,7 +132,7 @@ const SignUpScreen = ({ navigation }) => {
 		}
 	};
 
-	const handleValidUserName = (text) => {
+	const handleValidUserName = () => {
 		if (data.user_textChange) {
 			setData({
 				...data,
@@ -173,6 +146,38 @@ const SignUpScreen = ({ navigation }) => {
 			});
 		}
 	};
+
+	// const university_textChange = (text) => {
+	// 	if (text !== '' && text !== null) {
+	// 		setData({
+	// 			...data,
+	// 			university: text,
+	// 			university_textChange: true,
+	// 			isValidUniversity: true,
+	// 		});
+	// 	} else {
+	// 		setData({
+	// 			...data,
+	// 			university: '',
+	// 			university_textChange: false,
+	// 			isValidUniversity: false,
+	// 		});
+	// 	}
+	// };
+
+	// const handleValidUniversity = () => {
+	// 	if (data.university_textChange) {
+	// 		setData({
+	// 			...data,
+	// 			isValidUniversity: true,
+	// 		});
+	// 	} else {
+	// 		setData({
+	// 			...data,
+	// 			isValidUniversity: false,
+	// 		});
+	// 	}
+	// };
 
 	const email_textChange = (text) => {
 		if (text.includes('@')) {
@@ -192,7 +197,7 @@ const SignUpScreen = ({ navigation }) => {
 		}
 	};
 
-	const handleValidUserEmail = (text) => {
+	const handleValidUserEmail = () => {
 		if (data.email_textChange) {
 			setData({
 				...data,
@@ -271,7 +276,12 @@ const SignUpScreen = ({ navigation }) => {
 			confirm_secureTextEntry: !data.confirm_secureTextEntry,
 		});
 	};
+	const countries = ['Egypt', 'Canada', 'Australia', 'Ireland'];
 
+	const map = [
+		{ label: 'Apple', value: 'apple' },
+		{ label: 'Banana', value: 'banana' },
+	];
 	return (
 		<View style={styles.container}>
 			{/* <View style={styles.header}>
@@ -307,33 +317,74 @@ const SignUpScreen = ({ navigation }) => {
 							Username must be at least three characters
 						</Text>
 					)}
-					<Text
-						style={[
-							styles.text,
-							{
-								marginTop: 35,
-							},
-						]}
-					>
-						University
-					</Text>
-					<View style={styles.action}>
-						<Feather name="book" size={20} />
-					</View>
-					<Text
-						style={[
-							styles.text,
-							{
-								marginTop: 35,
-							},
-						]}
-					>
-						Email
-					</Text>
+
+					{/* <Text style={styles.text}>University</Text> */}
+
+					{Platform.OS === 'ios' ? (
+						<View style={styles.action}>
+							<Feather name="book" size={20} />
+							<View style={{ marginLeft: 5 }}>
+								<RNPickerSelect
+									placeholder={{ label: 'Select University', value: 'Select' }}
+									onValueChange={(value) => console.log(value)}
+									items={map}
+								/>
+							</View>
+						</View>
+					) : (
+						<View>
+							<View style={{ flexDirection: 'row' }}>
+								<Text style={styles.text}>University</Text>
+								<SelectDropdown
+									data={countries}
+									defaultButtonText={'Select University'}
+									// defaultValueByIndex={1} // use default value by index or default value
+									// defaultValue={'Canada'} // use default value by index or default value
+									onSelect={(selectedItem, index) => {
+										console.log(selectedItem, index);
+										setData({ ...data, university: selectedItem });
+									}}
+									buttonTextAfterSelection={(selectedItem, index) => {
+										return selectedItem;
+									}}
+									rowTextForSelection={(item, index) => {
+										return item;
+									}}
+									buttonStyle={styles.dropDownPicker}
+									buttonTextStyle={{
+										color: '#05375a',
+										fontSize: 18,
+									}}
+									renderDropdownIcon={(isOpened) => {
+										return (
+											<FontAwesome
+												name={isOpened ? 'chevron-up' : 'chevron-down'}
+												color={'#444'}
+												size={18}
+											/>
+										);
+									}}
+								/>
+							</View>
+
+							<View style={styles.action}>
+								<Feather name="book" size={20} />
+								<View style={{ marginLeft: 5 }}>
+									<TextInput
+										value={data.university}
+										style={styles.textInput}
+										autoCapitalize="none"
+									/>
+								</View>
+							</View>
+						</View>
+					)}
+
+					<Text style={styles.text}>Email</Text>
 					<View style={styles.action}>
 						<Feather name="mail" size={20} />
 						<TextInput
-							placeholder="Your Email"
+							placeholder={'Your Email'}
 							style={styles.textInput}
 							autoCapitalize="none"
 							onChangeText={(text) => email_textChange(text)}
@@ -355,16 +406,7 @@ const SignUpScreen = ({ navigation }) => {
 					{data.isValidUserEmail ? null : (
 						<Text style={styles.errorMsg}>Invalid email</Text>
 					)}
-					<Text
-						style={[
-							styles.text,
-							{
-								marginTop: 35,
-							},
-						]}
-					>
-						Password
-					</Text>
+					<Text style={styles.text}>Password</Text>
 					<View style={styles.action}>
 						<Feather name="lock" color="#05375a" size={20} />
 						<TextInput
@@ -389,16 +431,7 @@ const SignUpScreen = ({ navigation }) => {
 						</Text>
 					)}
 
-					<Text
-						style={[
-							styles.text,
-							{
-								marginTop: 35,
-							},
-						]}
-					>
-						Confirm Password
-					</Text>
+					<Text style={styles.text}>Confirm Password</Text>
 					<View style={styles.action}>
 						<Feather name="lock" color="#05375a" size={20} />
 						<TextInput
@@ -470,7 +503,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	form: {
-		flex: 3,
+		flex: 1,
 		backgroundColor: '#fff',
 
 		paddingHorizontal: 20,
@@ -484,6 +517,7 @@ const styles = StyleSheet.create({
 	text: {
 		color: '#05375a',
 		fontSize: 18,
+		marginTop: 35,
 	},
 	action: {
 		flexDirection: 'row',
@@ -525,5 +559,14 @@ const styles = StyleSheet.create({
 	textSign: {
 		fontSize: 18,
 		fontWeight: 'bold',
+	},
+	dropDownPicker: {
+		width: '60%',
+		height: 30,
+		backgroundColor: '#FFF',
+		borderRadius: 8,
+		borderWidth: 1,
+		marginHorizontal: 20,
+		marginTop: 30,
 	},
 });
