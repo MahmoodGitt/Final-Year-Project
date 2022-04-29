@@ -544,7 +544,7 @@ const styles = StyleSheet.create({
 	},
 	textInput: {
 		flex: 1,
-		marginTop: Platform.OS === 'ios' ? 0 : -12,
+		marginTop: Platform.OS === 'ios' ? 0 : -5,
 		paddingLeft: 10,
 	},
 	errorMsg: {
