@@ -33,6 +33,7 @@ import {
 	TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
 import { KeyboardAvoidingView } from 'native-base';
+import { useAnimatedGestureHandler } from 'react-native-reanimated';
 
 /**
  * This functional compoenent contains the logic that handels the log-in process
@@ -40,25 +41,19 @@ import { KeyboardAvoidingView } from 'native-base';
  * @returns
  */
 const LoginScreen = ({ navigation }) => {
-	const [data, setData] = useState({
-		email: '',
-		password: '',
-		email_textChange: false,
-		secureTextEntry: true,
-		isValidEmail: true,
-		isValidPassword: true,
-	});
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 
 	/**
 	 * This function checks when a user signs in to the app. The Firebase API 'signInWithEmailAndPassword()' passes the Firebase configuration file,
 	 * user's email address and password
 	 */
 	const handleLogIn = () => {
-		signInWithEmailAndPassword(auth, data.email, data.password)
+		signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
-				// Signed in
-				const user = userCredential.user;
-				console.log(user);
+				// The details of the signed in user
+				// const user = userCredential.user;
+				// console.log(user);
 			})
 			.catch((error) => {
 				const errorCode = error.code;
@@ -82,9 +77,6 @@ const LoginScreen = ({ navigation }) => {
 						source={{ uri: 'https://picsum.photos/700' }}
 					/>
 				</Card>
-				{/* <View style={styles.headerstyle}>
-				<Text style={styles.text_header}>Welcome!</Text>
-			</View> */}
 
 				<Animatable.View animation="fadeInUpBig" style={styles.formStyle}>
 					<ScrollView>
@@ -97,6 +89,9 @@ const LoginScreen = ({ navigation }) => {
 									placeholderTextColor="#666666"
 									style={styles.textInput}
 									autoCapitalize="none"
+									onChangeText={(text) => {
+										setEmail(text);
+									}}
 								/>
 							</View>
 
@@ -118,6 +113,9 @@ const LoginScreen = ({ navigation }) => {
 									secureTextEntry={true}
 									style={styles.textInput}
 									autoCapitalize="none"
+									onChangeText={(text) => {
+										setPassword(text);
+									}}
 								/>
 							</View>
 
