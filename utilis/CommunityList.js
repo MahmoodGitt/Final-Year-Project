@@ -95,9 +95,9 @@ const CommunityList = (props) => {
 			console.log('path', path);
 			setModalVisible(!modalVisible);
 
-			props.nav.navigate('Members', {
-				community: communityName,
-				id: postKey,
+			props.nav.navigate('CommunityTopTab', {
+				screen: 'Members',
+				params: { id: postKey, community: communityName },
 			});
 		} else {
 			console.log('could not subscribe member');
@@ -119,9 +119,15 @@ const CommunityList = (props) => {
 						<TouchableOpacity
 							style={{ alignItems: 'center' }}
 							onPress={() => {
-								props.nav.navigate('Members', {
-									community: communityName,
-									id: postKey,
+								props.nav.navigate('CommunityTopTab', {
+									screen: 'Members',
+									params: {
+										id: postKey,
+										community: communityName,
+										nav: props.nav,
+									},
+									// community: communityName,
+									// id: postKey,
 								});
 							}}
 						>

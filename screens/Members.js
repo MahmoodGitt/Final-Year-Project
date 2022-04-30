@@ -28,6 +28,8 @@ const Members = ({ navigation, route }) => {
 	const routeData = route.params.id;
 
 	useEffect(() => {
+		// console.log('in members');
+		// console.log(route.params.nav);
 		/**
 		 * Display members apart from current user
 		 */
@@ -58,13 +60,13 @@ const Members = ({ navigation, route }) => {
 		<MembersList
 			item={[item.name, item.memberId]}
 			userId={currentUser}
-			navigate={navigation}
+			navigate={route.params.nav}
 		/>
 	);
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<Searchbar placeholder="Search for user" />
+			{/* <Searchbar placeholder="Search for user" /> */}
 			<FlatList
 				data={itemList}
 				renderItem={renderItem}

@@ -49,6 +49,21 @@ import { cos } from 'react-native-reanimated';
 // Storing the drawer object properties in constants, i.e. intialising the constants
 const Drawer = createDrawerNavigator();
 const HomeStack = createNativeStackNavigator();
+//
+import {
+	// en,
+	// nl,
+	// de,
+	// pl,
+	// pt,
+	enGB,
+	registerTranslation,
+} from 'react-native-paper-dates';
+// registerTranslation('en', en)
+// registerTranslation('nl', nl)
+// registerTranslation('pl', pl)
+// registerTranslation('pt', pt)
+// registerTranslation('de', de)
 
 /**
  * The following function contains JSX elements that sets up the navigation properties
@@ -70,6 +85,7 @@ const HomeScreenComponentStack = () => {
 };
 
 const App = () => {
+	registerTranslation('en-GB', enGB);
 	const [userLoggedIn, setUserLogging] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {

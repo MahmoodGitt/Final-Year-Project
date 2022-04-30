@@ -104,7 +104,12 @@ const CommunityScreen = ({ navigation }) => {
 	return (
 		<SafeAreaView style={styles.container}>
 			{/* <View>
-				<TouchableOpacity onPress={updateView} style={{ margin: 15 }}>
+				<TouchableOpacity 	onPress={() =>
+						navigation.navigate('CommunityTopTab', {
+							screen: 'Members',
+							params: { user: 'jane' },
+						})
+					} style={{ margin: 15 }}>
 					<Text style={{ fontSize: 40 }}>Click</Text>
 				</TouchableOpacity>
 			</View> */}
