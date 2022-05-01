@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // React Native Packages
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
@@ -24,12 +24,11 @@ import { Card } from 'react-native-paper';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 import { Input } from 'native-base';
-
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { event } from 'react-native-reanimated';
+import Feather from 'react-native-vector-icons/Feather';
 
 const CreateEvents = ({ navigation }) => {
-	const [date, setDate] = useState(new Date(1598051730000));
+	const [date, setDate] = useState(new Date());
 	const [eventData, setEventData] = useState({
 		name: '',
 		day: 0,
@@ -38,17 +37,19 @@ const CreateEvents = ({ navigation }) => {
 	});
 	const [mode, setMode] = useState('date');
 	const [show, setShow] = useState(false);
-	const [arr, setarr] = useState([]);
-	// useEffect(() => {
-	// 	onChange(null, new Date(1598051730000));
-	// }, []);
 
-	const onChange = (event, selectedDate) => {
+	useEffect(() => {
+		console.log(date.getDate());
+		console.log(date.getHours());
+	}, []);
+
+	const onChange = async (event, selectedDate) => {
 		const currentDate = selectedDate;
+		setDate(currentDate);
 
-		// setDate(currentDate);
-		// setShow(false);
-		// console.log;
+		// console.log('Date ', date.getDate());
+		// await console.log(selectedDate.getHours());
+		// await console.log(selectedDate.getMinutes());
 	};
 
 	const showMode = (currentMode) => {
@@ -65,174 +66,205 @@ const CreateEvents = ({ navigation }) => {
 	};
 
 	const eventdate = () => {
-		if (date.getDate() < 10 || date.getMonth() + 1 < 10) {
-			if (date.getDate() < 10 && date.getMonth() + 1 < 10) {
-				return (
-					'0' +
-					date.getDate().toString() +
-					'/' +
-					'0' +
-					(date.getMonth() + 1).toString() +
-					'/' +
-					date.getFullYear().toString()
-				);
-			} else if (date.getMonth() + 1 < 10) {
-				return (
-					date.getDate().toString() +
-					'/' +
-					'0' +
-					(date.getMonth() + 1).toString() +
-					'/' +
-					date.getFullYear().toString()
-				);
-			} else if (date.getDate() < 10) {
-				return (
-					'0' +
-					date.getDate().toString() +
-					'/' +
-					(date.getMonth() + 1).toString() +
-					'/' +
-					date.getFullYear().toString()
-				);
-			}
-		} else {
-			return (
-				date.getDate().toString() +
-				'/' +
-				(date.getMonth() + 1).toString() +
-				'/' +
-				date.getFullYear().toString()
-			);
-		}
+		// console.log('Date ', date.getDate());
+		// if (date.getDate() < 10 || date.getMonth() + 1 < 10) {
+		// 	if (date.getDate() < 10 && date.getMonth() + 1 < 10) {
+		// 		return (
+		// 			'0' +
+		// 			date.getDate().toString() +
+		// 			'/' +
+		// 			'0' +
+		// 			(date.getMonth() + 1).toString() +
+		// 			'/' +
+		// 			date.getFullYear().toString()
+		// 		);
+		// 	} else if (date.getMonth() + 1 < 10) {
+		// 		return (
+		// 			date.getDate().toString() +
+		// 			'/' +
+		// 			'0' +
+		// 			(date.getMonth() + 1).toString() +
+		// 			'/' +
+		// 			date.getFullYear().toString()
+		// 		);
+		// 	} else if (date.getDate() < 10) {
+		// 		return (
+		// 			'0' +
+		// 			date.getDate().toString() +
+		// 			'/' +
+		// 			(date.getMonth() + 1).toString() +
+		// 			'/' +
+		// 			date.getFullYear().toString()
+		// 		);
+		// 	}
+		// } else {
+		// 	return (
+		// 		date.getDate().toString() +
+		// 		'/' +
+		// 		(date.getMonth() + 1).toString() +
+		// 		'/' +
+		// 		date.getFullYear().toString()
+		// 	);
+		// }
 	};
 
 	const getAccurateTime = () => {
-		if (date.getHours() < 12) {
-			return 'am';
-		} else {
-			return '';
+		if (date.getHours()) {
+			if (date.getHours() < 12) {
+				return 'am';
+			} else {
+				return '';
+			}
 		}
 	};
 
 	const eventTime = () => {
-		if (date.getHours() < 10 || date.getMinutes() < 10) {
-			if (date.getHours() < 10 && date.getMinutes() < 10) {
-				return '0' + date.getHours() + ':' + '0' + date.getMinutes();
-			} //
-			if (date.getHours() < 10) {
-				return '0' + date.getHours() + ':' + date.getMinutes();
+		if (date.getHours()) {
+			if (date.getHours() < 10 || date.getMinutes() < 10) {
+				if (date.getHours() < 10 && date.getMinutes() < 10) {
+					return '0' + date.getHours() + ':' + '0' + date.getMinutes();
+				} //
+				if (date.getHours() < 10) {
+					return '0' + date.getHours() + ':' + date.getMinutes();
+				}
+				if (date.getMinutes() < 10) {
+					return date.getHours() + ':' + '0' + date.getMinutes();
+				}
+			} else {
+				return date.getHours() + ':' + date.getMinutes();
 			}
-			if (date.getMinutes() < 10) {
-				return date.getHours() + ':' + '0' + date.getMinutes();
-			}
-		} else {
-			return date.getHours() + ':' + date.getMinutes();
 		}
+	};
+
+	const renderDateAndTimePicker = () => {
+		return <View></View>;
 	};
 
 	return (
 		<DismissKeyboard>
-			<Animatable.View animation="fadeInUpBig" style={styles.container}>
-				<Card style={styles.card}>
-					<ScrollView>
-						{/* <View style={styles.header}>
-					<Text style={styles.headerText}>Create Your Own Community</Text>
-				</View> */}
-						<TouchableOpacity style={styles.header} onPress={() => {}}>
-							<Text style={styles.headerText}> Create Event</Text>
-						</TouchableOpacity>
+			<ScrollView>
+				<Animatable.View animation="fadeInUpBig" style={styles.container}>
+					<Card style={styles.card}>
 						<View style={styles.formStyle}>
-							<Card.Content>
+							<Card.Content style={styles.cardContent}>
 								<View style={styles.inputLabels}>
-									<Text style={styles.text}>Event - </Text>
-									<Input
-										variant="unstyled"
-										background={'amber.50'}
-										placeholder="Event Name..."
-										textAlign={'center'}
-										width={200}
-									/>
+									<Text style={styles.text}>Activity</Text>
 								</View>
+								<Input
+									style={styles.inputBox}
+									multiline={true}
+									// numberOfLines={5}
+									variant="unstyled"
+									background={'amber.50'}
+									placeholder="Event Name..."
+									textAlign={'left'}
+									width={200}
+								/>
 								<View style={styles.action}></View>
 							</Card.Content>
-							<Card.Content>
+							<Card.Content style={styles.cardContent}>
 								<View style={styles.inputLabels}>
-									<Text style={styles.text}>Date - </Text>
-									<Input
-										editable={false}
-										value={eventdate()}
-										variant="unstyled"
-										background={'amber.50'}
-										placeholder="Event Date..."
-										textAlign={'center'}
-										width={200}
-									/>
+									<Text style={styles.text}>Date</Text>
+									<TouchableOpacity onPress={showDatepicker}>
+										<Feather
+											style={{ margin: 5 }}
+											name="calendar"
+											color="red"
+											size={30}
+										/>
+									</TouchableOpacity>
 								</View>
-								<View style={styles.action}></View>
-							</Card.Content>
-							<Card.Content>
-								<View style={styles.inputLabels}>
-									<Text style={styles.text}>Time - </Text>
-									<Input
-										editable={false}
-										value={eventTime() + ' ' + getAccurateTime()}
-										variant="unstyled"
-										background={'amber.50'}
-										placeholder="Event Time..."
-										textAlign={'center'}
-										width={200}
-									/>
-								</View>
-								<View style={styles.action}></View>
-							</Card.Content>
-							<Card.Content>
-								<View style={styles.inputLabels}>
-									<Text style={styles.text}>Location - </Text>
+								<Input
+									style={styles.inputBox}
+									editable={false}
+									value={eventdate()}
+									variant="unstyled"
+									background={'amber.50'}
+									placeholder="Event Date..."
+									textAlign={'center'}
+									width={200}
+								/>
 
-									<Input
-										variant="unstyled"
-										background={'amber.50'}
-										placeholder="Event Place..."
-										textAlign={'center'}
-										width={200}
-										height={50}
-									/>
-								</View>
 								<View style={styles.action}></View>
 							</Card.Content>
-							<Card.Content style={styles.dateAndTimePicker}>
-								<TouchableOpacity onPress={showTimepicker}>
-									<Text style={styles.pickerText}>Select Time</Text>
-								</TouchableOpacity>
+							{show && (
+								<DateTimePicker
+									// style={{ height: 150, width: 150 }}
+									display={Platform.OS === 'ios' ? 'spinner' : 'spinner'}
+									testID="dateTimePicker"
+									value={date}
+									mode={mode}
+									is24Hour={true}
+									onChange={
+										Platform.OS === 'ios'
+											? (e, currentDate) => {
+													setDate(currentDate);
+													// console.log(currentDate.getTime());
+													console.log(currentDate.getMinutes());
+													console.log(currentDate.getHours());
+											  }
+											: null
+									}
+								/>
+							)}
+							{Platform.OS === 'ios' ? (
+								show ? (
+									<Card.Content style={{ alignItems: 'center' }}>
+										<TouchableOpacity
+											onPress={() => {
+												setShow(!show);
+											}}
+										>
+											<Text style={[styles.text, { color: 'red', margin: 20 }]}>
+												Close
+											</Text>
+										</TouchableOpacity>
+									</Card.Content>
+								) : null
+							) : null}
+							<Card.Content style={styles.cardContent}>
+								<View style={styles.inputLabels}>
+									<Text style={styles.text}>Time</Text>
 
-								<TouchableOpacity onPress={showDatepicker}>
-									<Text style={styles.pickerText}>Select Date</Text>
-								</TouchableOpacity>
+									<TouchableOpacity onPress={showTimepicker}>
+										<Feather
+											style={{ margin: 5 }}
+											name="clock"
+											color="red"
+											size={30}
+										/>
+									</TouchableOpacity>
+								</View>
+								<Input
+									style={styles.inputBox}
+									editable={false}
+									value={eventTime() + ' ' + getAccurateTime()}
+									variant="unstyled"
+									background={'amber.50'}
+									placeholder="Event Time..."
+									textAlign={'center'}
+									width={200}
+								/>
+								<View style={styles.action}></View>
 							</Card.Content>
-							{/* <Card.Content> */}
-							<Text>selected</Text>
-
-							{/* </Card.Content> */}
+							<Card.Content style={styles.cardContent}>
+								<View style={styles.inputLabels}>
+									<Text style={styles.text}>Location</Text>
+								</View>
+								<Input
+									variant="unstyled"
+									background={'amber.50'}
+									placeholder="Event Place..."
+									textAlign={'center'}
+									width={200}
+									height={50}
+								/>
+								<View style={styles.action}></View>
+							</Card.Content>
 						</View>
-						{show && (
-							<DateTimePicker
-								// style={{ width: 90 }}
-								display="spinner"
-								testID="dateTimePicker"
-								value={date}
-								mode={mode}
-								is24Hour={true}
-								onChange={(e, currentDate) => {
-									setDate(currentDate);
-									// console.log(currentDate.getTime());
-									console.log(currentDate.getMinutes());
-									console.log(currentDate.getHours());
-								}}
-							/>
-						)}
-					</ScrollView>
-				</Card>
-			</Animatable.View>
+					</Card>
+				</Animatable.View>
+			</ScrollView>
 		</DismissKeyboard>
 	);
 };
@@ -249,11 +281,14 @@ const styles = StyleSheet.create({
 	headerText: { fontWeight: 'bold', fontSize: 15 },
 	formStyle: {
 		marginTop: 30,
-		alignItems: 'flex-start',
+		// alignItems: 'center',
+	},
+	cardContent: {
+		alignItems: 'center',
 	},
 
 	card: {
-		flex: 3,
+		flex: 1,
 		backgroundColor: 'white',
 		borderBottomLeftRadius: 5,
 		borderBottomRightRadius: 5,
@@ -263,13 +298,13 @@ const styles = StyleSheet.create({
 	},
 	inputLabels: {
 		flexDirection: 'row',
+		marginBottom: 15,
 	},
-
 	action: {
-		flexDirection: 'row',
 		marginTop: 3,
 		marginBottom: 15,
 		borderBottomColor: '#f2f2f2',
+		borderBottomWidth: 20,
 	},
 	dateAndTimePicker: {
 		flexDirection: 'row',
@@ -277,6 +312,7 @@ const styles = StyleSheet.create({
 	text: {
 		fontWeight: 'bold',
 		fontSize: 30,
+		marginLeft: 30,
 	},
 	pickerText: {
 		fontWeight: 'bold',
