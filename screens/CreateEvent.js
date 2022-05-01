@@ -29,6 +29,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 const CreateEvents = ({ navigation }) => {
 	const [date, setDate] = useState(new Date());
+	const [dateAndTime, setDateAndTime] = useState(new Date(1598051730000));
 	const [eventData, setEventData] = useState({
 		name: '',
 		day: 0,
@@ -38,18 +39,25 @@ const CreateEvents = ({ navigation }) => {
 	const [mode, setMode] = useState('date');
 	const [show, setShow] = useState(false);
 
-	useEffect(() => {
-		console.log(date.getDate());
-		console.log(date.getHours());
-	}, []);
+	// useEffect(() => {
+	// 	console.log(date.getDate());
+	// 	console.log(date.Hours());
+	// }, []);
 
 	const onChange = async (event, selectedDate) => {
 		const currentDate = selectedDate;
-		setDate(currentDate);
+		// setDate(currentDate);
 
 		// console.log('Date ', date.getDate());
-		// await console.log(selectedDate.getHours());
-		// await console.log(selectedDate.getMinutes());
+		console.log(selectedDate.getDate());
+		// console.log(selectedDate.getMinutes());
+		passVal(selectedDate);
+		// setShow(false);
+	};
+
+	const passVal = (e) => {
+		setDate(e);
+		console.log('Date ', e.getDate());
 	};
 
 	const showMode = (currentMode) => {
@@ -66,46 +74,46 @@ const CreateEvents = ({ navigation }) => {
 	};
 
 	const eventdate = () => {
-		// console.log('Date ', date.getDate());
-		// if (date.getDate() < 10 || date.getMonth() + 1 < 10) {
-		// 	if (date.getDate() < 10 && date.getMonth() + 1 < 10) {
-		// 		return (
-		// 			'0' +
-		// 			date.getDate().toString() +
-		// 			'/' +
-		// 			'0' +
-		// 			(date.getMonth() + 1).toString() +
-		// 			'/' +
-		// 			date.getFullYear().toString()
-		// 		);
-		// 	} else if (date.getMonth() + 1 < 10) {
-		// 		return (
-		// 			date.getDate().toString() +
-		// 			'/' +
-		// 			'0' +
-		// 			(date.getMonth() + 1).toString() +
-		// 			'/' +
-		// 			date.getFullYear().toString()
-		// 		);
-		// 	} else if (date.getDate() < 10) {
-		// 		return (
-		// 			'0' +
-		// 			date.getDate().toString() +
-		// 			'/' +
-		// 			(date.getMonth() + 1).toString() +
-		// 			'/' +
-		// 			date.getFullYear().toString()
-		// 		);
-		// 	}
-		// } else {
-		// 	return (
-		// 		date.getDate().toString() +
-		// 		'/' +
-		// 		(date.getMonth() + 1).toString() +
-		// 		'/' +
-		// 		date.getFullYear().toString()
-		// 	);
-		// }
+		console.log('Date ', date.getDate());
+		if (date.getDate() < 10 || date.getMonth() + 1 < 10) {
+			if (dateAndTime.getDate() < 10 && date.getMonth() + 1 < 10) {
+				return (
+					'0' +
+					date.getDate().toString() +
+					'/' +
+					'0' +
+					(date.getMonth() + 1).toString() +
+					'/' +
+					date.getFullYear().toString()
+				);
+			} else if (date.getMonth() + 1 < 10) {
+				return (
+					date.getDate().toString() +
+					'/' +
+					'0' +
+					(date.getMonth() + 1).toString() +
+					'/' +
+					date.getFullYear().toString()
+				);
+			} else if (date.getDate() < 10) {
+				return (
+					'0' +
+					date.getDate().toString() +
+					'/' +
+					(date.getMonth() + 1).toString() +
+					'/' +
+					date.getFullYear().toString()
+				);
+			}
+		} else {
+			return (
+				dateAndTime.getDate().toString() +
+				'/' +
+				(dateAndTime.getMonth() + 1).toString() +
+				'/' +
+				dateAndTime.getFullYear().toString()
+			);
+		}
 	};
 
 	const getAccurateTime = () => {
@@ -174,8 +182,8 @@ const CreateEvents = ({ navigation }) => {
 										/>
 									</TouchableOpacity>
 								</View>
+								<Text style={styles.iconHintText}>Tap Calender Icon</Text>
 								<Input
-									style={styles.inputBox}
 									editable={false}
 									value={eventdate()}
 									variant="unstyled"
@@ -187,41 +195,7 @@ const CreateEvents = ({ navigation }) => {
 
 								<View style={styles.action}></View>
 							</Card.Content>
-							{show && (
-								<DateTimePicker
-									// style={{ height: 150, width: 150 }}
-									display={Platform.OS === 'ios' ? 'spinner' : 'spinner'}
-									testID="dateTimePicker"
-									value={date}
-									mode={mode}
-									is24Hour={true}
-									onChange={
-										Platform.OS === 'ios'
-											? (e, currentDate) => {
-													setDate(currentDate);
-													// console.log(currentDate.getTime());
-													console.log(currentDate.getMinutes());
-													console.log(currentDate.getHours());
-											  }
-											: null
-									}
-								/>
-							)}
-							{Platform.OS === 'ios' ? (
-								show ? (
-									<Card.Content style={{ alignItems: 'center' }}>
-										<TouchableOpacity
-											onPress={() => {
-												setShow(!show);
-											}}
-										>
-											<Text style={[styles.text, { color: 'red', margin: 20 }]}>
-												Close
-											</Text>
-										</TouchableOpacity>
-									</Card.Content>
-								) : null
-							) : null}
+
 							<Card.Content style={styles.cardContent}>
 								<View style={styles.inputLabels}>
 									<Text style={styles.text}>Time</Text>
@@ -235,6 +209,7 @@ const CreateEvents = ({ navigation }) => {
 										/>
 									</TouchableOpacity>
 								</View>
+								<Text style={styles.iconHintText}>Tap Clock Icon</Text>
 								<Input
 									style={styles.inputBox}
 									editable={false}
@@ -245,8 +220,54 @@ const CreateEvents = ({ navigation }) => {
 									textAlign={'center'}
 									width={200}
 								/>
+
 								<View style={styles.action}></View>
 							</Card.Content>
+							{show && (
+								<DateTimePicker
+									// style={{ height: 150, width: 150 }}
+									display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+									testID="dateTimePicker"
+									value={date}
+									mode={mode}
+									is24Hour={true}
+									onChange={
+										Platform.OS === 'ios'
+											? (e, currentDate) => {
+													setDate(currentDate);
+													// console.log(currentDate.getTime());
+													console.log(currentDate.getMinutes());
+													console.log(currentDate.getHours());
+											  }
+											: (e, currentDate) => {
+													if (currentDate === undefined) {
+														console.log('error');
+														// setShow(false);
+													} else {
+														console.log('no error');
+														setDate(currentDate);
+														console.log(currentDate);
+														setShow(false);
+													}
+											  }
+									}
+								/>
+							)}
+							{Platform.OS === 'ios' ? (
+								show ? (
+									<Card.Content style={{ alignItems: 'center' }}>
+										<TouchableOpacity
+											onPress={() => {
+												setShow(!show);
+											}}
+										>
+											<Text style={[styles.text, { color: 'red', margin: 15 }]}>
+												Close
+											</Text>
+										</TouchableOpacity>
+									</Card.Content>
+								) : null
+							) : null}
 							<Card.Content style={styles.cardContent}>
 								<View style={styles.inputLabels}>
 									<Text style={styles.text}>Location</Text>
@@ -300,9 +321,13 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		marginBottom: 15,
 	},
+	iconHintText: {
+		fontSize: 10,
+		margin: 5,
+	},
 	action: {
 		marginTop: 3,
-		marginBottom: 15,
+		// marginBottom: 1,
 		borderBottomColor: '#f2f2f2',
 		borderBottomWidth: 20,
 	},
