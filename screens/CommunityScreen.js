@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 
 // React Native UI Packages
 import {
@@ -50,7 +50,7 @@ const CommunityScreen = ({ navigation }) => {
 		});
 	};
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		// checkUserSubscription();
 		updateView();
 	}, []);

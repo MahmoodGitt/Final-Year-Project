@@ -10,25 +10,17 @@ import {
 	Alert,
 	Pressable,
 	Modal,
+	SafeAreaView,
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
+import GlobalKeys from '../utilis/GlobalKeys';
 
 // Firebase services
-import {
-	getDatabase,
-	ref,
-	onValue,
-	set,
-	push,
-	onChildAdded,
-	update,
-	child,
-	get,
-} from 'firebase/database';
+import { getDatabase, ref, onChildAdded } from 'firebase/database';
 
 // Third-Party React Native UI Packages
 import {
@@ -57,397 +49,45 @@ import { checkActionCode } from 'firebase/auth';
 import { block } from 'react-native-reanimated';
 
 const Events = ({ navigation }) => {
-	const [data, setData] = useState({
-		communityName: '',
-		interest: '',
-		communityName_changeText: false,
-		isValidCommunityName: true,
-		interest_changeText: false,
-		isValidInterest: true,
-		isAllCommunityDataValid: false,
-		isAllInterestDataValid: false,
-	});
-
-	const [radioBtn, setRadioBtn] = useState('');
-	const [progressBarData, setProgressBarData] = useState({
-		nameProgress: 0,
-		interestProgress: 0,
-		publicProgress: 0,
-	});
-	const [modalVisible, setModalVisible] = useState(false);
-	const [modaltext, setModaltext] = useState('');
-	const database = getDatabase();
-
-	const communityExist = () => {
-		const database = getDatabase();
-
-		onChildAdded(ref(database, 'community'), (snapshotData) => {
-			console.log('comparing this name ', snapshotData.val().communityName);
-			if (
-				snapshotData.val().communityName ===
-				data.communityName.trim().toLowerCase()
-			) {
-				console.log(
-					snapshotData.val().communityName,
-					' is similar to ',
-					data.communityName.toLowerCase()
-				);
-				setData({
-					...data,
-					isValidCommunityName: false,
-					communityName_changeText: false,
-					isAllCommunityDataValid: false,
-				});
-			} else {
-				setData({
-					...data,
-					isAllCommunityDataValid: true,
-				});
-			}
+	const [itemList, setItemList] = useState([{ id: 0 }]);
+	const updateView = () => {
+		const db = getDatabase();
+		// Retrieve all events
+		const postRef = ref(db, 'events');
+		onChildAdded(postRef, (snapshotData) => {
+			// console.log(snapshotData.val());
 		});
-
-		isValidCommunityName();
-	};
-	const communityName_changeText = (text) => {
-		if (text !== null && text.trim().length !== 0) {
-			//Find better condition
-			setData({
-				...data,
-				communityName: text,
-				communityName_changeText: true,
-				isValidCommunityName: true,
-			});
-		} else {
-			setData({
-				...data,
-				communityName: '',
-				communityName_changeText: false,
-				// isValidCommunityName: false,
-			});
-
-			setProgressBarData({
-				...progressBarData,
-				nameProgress: 0,
-			});
-		}
 	};
 
-	const isValidCommunityName = () => {
-		if (data.communityName.trim().length !== 0) {
-			if (progressBarData.nameProgress !== 0.3) {
-				setProgressBarData({
-					...progressBarData,
-					nameProgress: 0.3,
-				});
-			}
-		}
-	};
-
-	const interest_changeText = (text) => {
-		if (text !== null && text.trim().length !== 0) {
-			//Find better condition
-			setData({
-				...data,
-				interest: text,
-				interest_changeText: true,
-				isValidInterest: true,
-				isAllInterestDataValid: true,
-			});
-		} else {
-			setData({
-				...data,
-				interest: '',
-				interest_changeText: false,
-				isValidInterest: false,
-				isAllInterestDataValid: false,
-			});
-
-			setProgressBarData({
-				...progressBarData,
-				interestProgress: 0,
-			});
-		}
-	};
-
-	const isValidInterest = () => {
-		if (data.interest.trim().length !== 0) {
-			if (progressBarData.interestProgress !== 0.3) {
-				setProgressBarData({
-					...progressBarData,
-					interestProgress: 0.3,
-				});
-			}
-		}
-	};
-
-	const updateAdminSubscriptionList = () => {
-		// Update admin's subscription list
-		const groups = { community: data.communityName };
-		// console.log(groups.community);
-		const keyref = push(
-			child(ref(database), 'users/' + auth.currentUser.uid)
-		).key;
-		// console.log(keyref);
-		const updates = {};
-		updates['/users/' + auth.currentUser.uid + '/groups/' + keyref] = groups;
-		// console.log(updates);
-		update(ref(database), updates);
-	};
-
-	const storeCommunityDetails = () => {
-		try {
-			if (data.isAllCommunityDataValid) {
-				if (data.isAllInterestDataValid) {
-					if (radioBtn === 'Yes' || radioBtn === 'No') {
-						// check user's number of posts
-						const reference = ref(database, 'community');
-						// console.log(database);
-						const postKey = push(reference);
-						const date = [
-							{
-								day: new Date().getDate(),
-								month: new Date().getUTCMonth(),
-								year: new Date().getFullYear(),
-							},
-						];
-						set(postKey, {
-							admin: auth.currentUser.uid,
-							communityName: data.communityName.trim().toLowerCase(),
-							interest: data.interest,
-							isPublic: radioBtn,
-							createdAt: date,
-							members: {
-								hash: {
-									memID: auth.currentUser.uid,
-									memName: auth.currentUser.displayName,
-								},
-							},
-						});
-
-						// Reset form after sucessfully submitting
-						setData({
-							...data,
-							communityName: '',
-							interest: '',
-						});
-						setRadioBtn('');
-						setProgressBarData({
-							...progressBarData,
-							nameProgress: 0,
-							publicProgress: 0,
-							interestProgress: 0,
-						});
-
-						// Update user's subscription list
-						updateAdminSubscriptionList();
-						navigation.navigate('Home');
-					}
-				}
-			} else {
-				Alert.alert('Incomplete Form', '\t\t\t\t\t\t\t\t\t' + 'Try Again', [
-					{ text: 'OK', onPress: () => console.log('OK Pressed') },
-				]);
-			}
-		} catch (error) {
-			console.log('Error in saving community to database', error);
-			Alert.alert('Incomplete Form', '\t\t\t\t\t\t\t\t\t' + 'Try Again', [
-				{ text: 'OK', onPress: () => console.log('OK Pressed') },
-			]);
-		}
-	};
-
-	const optionsdata = [
-		{
-			label: 'Yes',
-		},
-		{
-			label: 'No',
-		},
-	];
-
-	const selectedOption = (option) => {
-		setRadioBtn(option.label);
-		// console.log(radioBtn);
-
-		if (progressBarData.publicProgress !== 0.3) {
-			setProgressBarData({
-				...progressBarData,
-				publicProgress: 0.4,
-			});
-		}
-	};
-
-	const showToast = (tag) => {
-		if (tag === '1') {
-			Toast.show(
-				'Interests allow other students to find your community by searching it',
-				{
-					duration: Toast.durations.LONG,
-				}
-			);
-		} else if (tag === '2') {
-			Toast.show(
-				'Interests allow other students to find your community by searching it',
-				{
-					duration: Toast.durations.LONG,
-				}
-			);
-		}
-	};
-
-	const renderModal = () => {
-		return (
-			<View style={styles.modalCenterView}>
-				<Modal
-					animationType="slide"
-					transparent={true}
-					visible={modalVisible}
-					onRequestClose={() => {
-						Alert.alert('Modal has been closed.');
-						setModalVisible(!modalVisible);
-					}}
-				>
-					<View style={styles.modalCenterView}>
-						<View style={styles.modalDisplay}>
-							<Text style={styles.modalText}>
-								Selecting 'Yes' allows students from different universities to
-								join your community. If you only prefer students from your
-								university to join then select 'No.'
-							</Text>
-
-							<View
-								style={{
-									flexDirection: 'row',
-								}}
-							>
-								<Pressable
-									// style={[styles.modalbutton, styles.buttonCloseModal]}  closeModalButton
-									style={[styles.closeModalButton, styles.buttonCloseModal]}
-									onPress={() => setModalVisible(!modalVisible)}
-								>
-									<Text style={styles.textStyle}>OK</Text>
-								</Pressable>
-							</View>
-						</View>
-					</View>
-				</Modal>
-			</View>
-		);
-	};
+	useEffect(() => {
+		updateView();
+	});
 
 	return (
 		<DismissKeyboard>
-			<Animatable.View animation="fadeInUpBig" style={styles.container}>
-				<Card style={styles.card}>
-					<ScrollView>
-						{/* <View style={styles.header}>
-							<Text style={styles.headerText}>Create Your Own Community</Text>
-						</View> */}
-						<TouchableOpacity style={styles.header} onPress={() => {}}>
-							<Text style={styles.headerText}> Create Event</Text>
-						</TouchableOpacity>
-						<View style={styles.progressBar}>
-							<ProgressBar
-								style={styles.progressBar}
-								progress={
-									progressBarData.interestProgress +
-									progressBarData.nameProgress +
-									progressBarData.publicProgress
-								}
-								color="green"
-							/>
-						</View>
-						<View style={styles.formStyle}>
-							<Card.Content>
-								<View style={{ flexDirection: 'row' }}>
-									<Text style={styles.text}>Community Name</Text>
-								</View>
-								<View style={styles.action}>
-									<Input
-										value={data.communityName}
-										onChangeText={(text) => {
-											communityName_changeText(text);
-										}}
-										onEndEditing={(text) => {
-											communityExist(text);
-										}}
-										variant="rounded"
-										placeholder="Name..."
-										width={250}
-										// maxWidth="200px"
-										marginTop={2}
-										marginBottom={5}
-									/>
-
-									<TouchableOpacity style={styles.featherIcons}>
-										{data.communityName_changeText ? (
-											<Animatable.View animation="bounceIn">
-												<Feather name="check-circle" color="green" size={20} />
-											</Animatable.View>
-										) : null}
-									</TouchableOpacity>
-								</View>
-								{data.isValidCommunityName ? null : (
-									<Text style={styles.errorMsg}>Name already exists</Text>
-								)}
-							</Card.Content>
-							<Card.Content>
-								<View style={{ flexDirection: 'row' }}>
-									<Text style={styles.text}>Your Interest</Text>
-								</View>
-								<View style={styles.action}>
-									<Input
-										value={data.interest}
-										onChangeText={(text) => {
-											interest_changeText(text);
-										}}
-										onEndEditing={isValidInterest}
-										variant="rounded"
-										placeholder="Interest..."
-										width={250}
-										// maxWidth="200px"
-										marginTop={2}
-										marginBottom={5}
-									/>
-								</View>
-
-								<View style={{ flexDirection: 'row' }}>
-									<Text style={styles.text}>Public Community</Text>
-									{renderModal()}
-									<Pressable
-										style={styles.modalbutton}
-										onPress={() => setModalVisible(true)}
-									>
-										<Feather
-											style={styles.helpIcon}
-											name="help-circle"
-											color="black"
-											size={20}
-										/>
-									</Pressable>
-								</View>
-								<View style={{ marginBottom: 20 }}>
-									<RadioButtonRN
-										data={optionsdata}
-										selectedBtn={(option) => selectedOption(option)}
-										icon={
-											<Feather name="check-circle" size={25} color="#2c9dd1" />
-										}
-									/>
-								</View>
-							</Card.Content>
-
-							<Card.Content>
-								<View style={styles.createButton}>
-									<TouchableOpacity onPress={storeCommunityDetails}>
-										<Feather name="plus-circle" color="blue" size={50} />
-									</TouchableOpacity>
-								</View>
-							</Card.Content>
-						</View>
-					</ScrollView>
-				</Card>
-			</Animatable.View>
+			<SafeAreaView style={styles.container}>
+				{/* <View>
+				<TouchableOpacity 	onPress={() =>
+						navigation.navigate('CommunityTopTab', {
+							screen: 'Members',
+							params: { user: 'jane' },
+						})
+					} style={{ margin: 15 }}>
+					<Text style={{ fontSize: 40 }}>Click</Text>
+				</TouchableOpacity>
+			</View> */}
+				{/* <FlatList
+					key={(item) => {
+						return item.id;
+					}}
+					data={itemList}
+					renderItem={renderItem}
+					keyExtractor={(item) => {
+						return item.id;
+					}}
+					// extraData={itemList}
+				/> */}
+			</SafeAreaView>
 		</DismissKeyboard>
 	);
 };

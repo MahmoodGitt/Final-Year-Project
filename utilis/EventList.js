@@ -63,7 +63,7 @@ const CommunityList = (props) => {
 	useEffect(() => {
 		isUserAdmin(userId);
 
-		console.log('name', auth.currentUser.displayName);
+		// console.log('name', auth.currentUser.displayName);
 	}, []);
 
 	const subscribeToCommunity = () => {

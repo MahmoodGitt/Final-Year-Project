@@ -12,6 +12,7 @@ import {
 
 // Import data from local files
 import auth from '../firebase/config';
+import keys from '../utilis/getGlobalKeys';
 
 // Import database services from Firebase
 import { getDatabase, ref, get, onChildAdded } from 'firebase/database';
@@ -26,6 +27,13 @@ const Members = ({ navigation, route }) => {
 
 	const currentUser = auth.currentUser.uid;
 	const routeData = route.params.id;
+
+	keys.forEach((e) => {
+		if (e.communityName !== 'test') {
+			console.log('values', e.communityName);
+		}
+	});
+	// console.log('My array is done ', keys);
 
 	useEffect(() => {
 		// console.log('in members');

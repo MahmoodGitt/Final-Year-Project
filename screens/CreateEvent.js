@@ -5,6 +5,7 @@ import { View, Text, StyleSheet, Platform, Alert } from 'react-native';
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
+import keys from '../utilis/getGlobalKeys';
 
 // Firebase services
 import {
@@ -150,6 +151,17 @@ const CreateEvents = ({ navigation }) => {
 		const activity = eventData.activity;
 		const postcode = eventData.postcode;
 		let validator = false;
+		let communityName = '';
+		let postId = '';
+
+		keys.forEach((e) => {
+			if (e.communityName !== 'test' && e.postId !== 'test') {
+				// console.log('name', e.communityName);
+				// console.log('key', e.postId);
+				communityName = e.communityName;
+				postId = e.postId;
+			}
+		});
 
 		if (activity.trim().length !== 0 || activity !== '') {
 			console.log('activity', activity);
@@ -190,6 +202,8 @@ const CreateEvents = ({ navigation }) => {
 							month: month,
 							year: year,
 							createdAt: date,
+							communityName: communityName,
+							postId: postId,
 						});
 					}
 				}
@@ -205,7 +219,7 @@ const CreateEvents = ({ navigation }) => {
 
 	return (
 		<KeyboardAvoidingView
-			behavior={Platform.OS === 'ios' ? 'position' : null}
+			behavior={Platform.OS === 'ios' ? 'padding' : null}
 			// keyboardVerticalOffset={Platform.select({ ios: 64 })}
 			style={styles.container}
 		>

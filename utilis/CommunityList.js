@@ -16,6 +16,8 @@ import { EvilIcons, FontAwesome } from '@expo/vector-icons';
 import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
 import UserInformation from './UserInformation';
+import GlobalKeys from './GlobalKeys';
+import keys from './getGlobalKeys';
 
 // Import third-Party UI Library
 import { Card, Title } from 'react-native-paper';
@@ -28,6 +30,8 @@ import {
 	child,
 	onChildAdded,
 } from 'firebase/database';
+import Events from '../screens/Events';
+import Members from '../screens/Members';
 
 const CommunityList = (props) => {
 	const postKey = props.item[4];
@@ -38,6 +42,12 @@ const CommunityList = (props) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [isSubscribed, setIsSubscribed] = useState(subscriptionList);
 	const [isMember, setIsMember] = useState(false);
+
+	// Store community name and post ID
+
+	keys.push(GlobalKeys(communityName, postKey));
+	console.log('my array ', keys);
+	// console.log('fetch key ', GetKeys());
 
 	/**
 	 *  Thsis function is responsible for displaying the correct button. The button's text props shows 'View' if
