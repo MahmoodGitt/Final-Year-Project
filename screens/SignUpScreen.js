@@ -19,6 +19,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { getDatabase, ref, set } from 'firebase/database';
 
 // Import data from local files
+import university from '../utilis/ListOfUniversities';
 
 // Third-Party UI Packages
 import * as Animatable from 'react-native-animatable';
@@ -278,7 +279,6 @@ const SignUpScreen = ({ navigation }) => {
 			confirm_secureTextEntry: !data.confirm_secureTextEntry,
 		});
 	};
-	const countries = ['Egypt', 'Canada', 'Australia', 'Ireland'];
 
 	const map = [
 		{ label: 'Apple', value: 'apple' },
@@ -340,7 +340,7 @@ const SignUpScreen = ({ navigation }) => {
 							<View style={{ flexDirection: 'row' }}>
 								<Text style={styles.text}>University</Text>
 								<SelectDropdown
-									data={countries}
+									data={university}
 									defaultButtonText={'Select University'}
 									// defaultValueByIndex={1} // use default value by index or default value
 									// defaultValue={'Canada'} // use default value by index or default value

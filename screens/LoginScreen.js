@@ -58,8 +58,8 @@ const LoginScreen = ({ navigation }) => {
 			.catch((error) => {
 				const errorCode = error.code;
 				const errorMessage = error.message;
-				console.log('code:', errorCode);
-				console.log('message', errorMessage);
+				// console.log('code:', errorCode);
+				// console.log('message', errorMessage);
 				Alert.alert(
 					'Invalid email/password',
 					'\t\t\t\t\t\t\t\t\t' + 'Try Again',

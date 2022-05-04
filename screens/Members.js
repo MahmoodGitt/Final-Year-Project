@@ -28,11 +28,6 @@ const Members = ({ navigation, route }) => {
 	const currentUser = auth.currentUser.uid;
 	const routeData = route.params.id;
 
-	keys.forEach((e) => {
-		if (e.communityName !== 'test') {
-			console.log('values', e.communityName);
-		}
-	});
 	// console.log('My array is done ', keys);
 
 	useEffect(() => {
@@ -78,8 +73,8 @@ const Members = ({ navigation, route }) => {
 			<FlatList
 				data={itemList}
 				renderItem={renderItem}
-				keyExtractor={(item) => {
-					return item.id;
+				keyExtractor={(item, index) => {
+					return index.toString();
 				}}
 				// extraData={itemList}
 			/>

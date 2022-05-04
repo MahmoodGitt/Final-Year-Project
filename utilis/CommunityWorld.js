@@ -17,7 +17,6 @@ const CommunityWorldTabs = ({ props }) => {
 	return (
 		<Tab.Navigator>
 			<Tab.Screen name="Members" component={Members} />
-
 			<Tab.Screen name="Events" component={Events} />
 			<Tab.Screen name="Create Event" component={CreateEvents} />
 		</Tab.Navigator>

@@ -19,7 +19,7 @@ const GlobalKeys = (communiyName, postId) => {
 			}
 		}
 	}, []);
-	return key;
+	return key.communityName;
 
 	// console.log('key is ', key);
 };

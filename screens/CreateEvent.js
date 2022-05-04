@@ -25,13 +25,16 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Input, KeyboardAvoidingView, Row } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Feather from 'react-native-vector-icons/Feather';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import eventHashKey from '../utilis/GlobalEventKey';
 
 const CreateEvents = ({ navigation }) => {
 	const [checkTime, setCheckTime] = useState(false);
 	const [checkDate, setCheckDate] = useState(false);
 	const [date, setDate] = useState(new Date());
-	const [dateAndTime, setDateAndTime] = useState(new Date(1598051730000));
-	// const [      ]
+	const [formattedTime, setFormattedTime] = useState('');
+	const [formattedDate, setFormattedDate] = useState('');
+	const [postCreatedDate, setPostCreatedDate] = useState('');
 	const [eventData, setEventData] = useState({
 		activity: '',
 		address: '',
@@ -40,16 +43,12 @@ const CreateEvents = ({ navigation }) => {
 	const [mode, setMode] = useState('date');
 	const [show, setShow] = useState(false);
 
-	const onChange = async (event, selectedDate) => {
-		const currentDate = selectedDate;
-		// setDate(currentDate);
-
-		// console.log('Date ', date.getDate());
-		// console.log(selectedDate.getDate());
-		// // console.log(selectedDate.getMinutes());
-		// passVal(selectedDate);
-		// // setShow(false);
-	};
+	useEffect(() => {
+		setPostCreatedDate(eventDate(new Date()) + ' - ' + eventTime(new Date()));
+		setFormattedDate(eventDate(date));
+		setFormattedTime(eventTime(date));
+		// console.log(postCreatedDate);
+	});
 
 	const showMode = (currentMode) => {
 		setShow(true);
@@ -66,7 +65,7 @@ const CreateEvents = ({ navigation }) => {
 		setCheckTime(true);
 	};
 
-	const eventdate = () => {
+	const eventDate = (date) => {
 		if (date.getDate() < 10 || date.getMonth() + 1 < 10) {
 			if (date.getDate() < 10 && date.getMonth() + 1 < 10) {
 				return (
@@ -141,27 +140,11 @@ const CreateEvents = ({ navigation }) => {
 	};
 
 	const createEvent = () => {
-		const hours = date.getHours();
-		const minutes = date.getMinutes().toString();
-		const day = date.getDate().toString();
-		const month = (date.getMonth() + 1).toString();
-		const year = date.getFullYear().toString();
-
 		const address = eventData.address;
 		const activity = eventData.activity;
 		const postcode = eventData.postcode;
-		let validator = false;
-		let communityName = '';
-		let postId = '';
 
-		keys.forEach((e) => {
-			if (e.communityName !== 'test' && e.postId !== 'test') {
-				// console.log('name', e.communityName);
-				// console.log('key', e.postId);
-				communityName = e.communityName;
-				postId = e.postId;
-			}
-		});
+		let validator = false;
 
 		if (activity.trim().length !== 0 || activity !== '') {
 			console.log('activity', activity);
@@ -169,41 +152,29 @@ const CreateEvents = ({ navigation }) => {
 				console.log('address', address);
 				if (postcode.trim().length !== 0 || postcode !== '') {
 					console.log('postcode', postcode);
-					if (day !== undefined && hours !== undefined) {
-						console.log(address);
-						console.log(activity);
-						console.log(postcode);
-						console.log('time', day);
-						console.log('hours', hours);
+					if (formattedDate !== '' && formattedTime !== '') {
+						// console.log(address);
+						// console.log(activity);
+						// console.log(postcode);
+						// console.log('time', formattedTime);
+						// console.log('date', formattedDate);
 
 						validator = true;
 
-						// Store event datatbase
+						// Store event details in  datatbase
 						const database = getDatabase();
-
-						const reference = ref(database, 'events');
-						// console.log(database);
+						const reference = ref(database, 'events/');
 						const postKey = push(reference);
-						const date = [
-							{
-								day: new Date().getDate(),
-								month: new Date().getUTCMonth() + 1,
-								year: new Date().getFullYear(),
-							},
-						];
+
 						set(postKey, {
-							admin: auth.currentUser.uid,
+							admin: auth.currentUser.displayName,
 							activity: activity.trim().toLowerCase(),
 							address: address.trim().toLowerCase(),
 							postcode: postcode.trim().toLowerCase(),
-							minutes: minutes,
-							hours: hours,
-							day: day,
-							month: month,
-							year: year,
-							createdAt: date,
-							communityName: communityName,
-							postId: postId,
+							date: formattedDate,
+							time: formattedTime,
+							createdAt: postCreatedDate,
+							communityName: keys[0],
 						});
 					}
 				}
@@ -218,180 +189,171 @@ const CreateEvents = ({ navigation }) => {
 	};
 
 	return (
-		<KeyboardAvoidingView
-			behavior={Platform.OS === 'ios' ? 'padding' : null}
-			// keyboardVerticalOffset={Platform.select({ ios: 64 })}
-			style={styles.container}
-		>
-			{/* <DismissKeyboard> */}
-			<ScrollView>
-				<View style={styles.card}>
-					<View style={styles.formStyle}>
-						<View style={styles.cardContent}>
-							<View style={styles.inputLabels}>
-								<Text style={styles.text}>Activity</Text>
-							</View>
-							<Input
-								style={styles.inputBox}
-								multiline={true}
-								variant="underlined"
-								background={'coolGray.50'}
-								placeholder="Description..."
-								textAlign={'left'}
-								width={200}
-								onChangeText={(Userinput) => {
-									setEventData({ ...eventData, activity: Userinput });
-								}}
-							/>
-							<View style={styles.action}></View>
+		// <KeyboardAvoidingView
+		// 	behavior={Platform.OS === 'ios' ? 'padding' : null}
+		// 	// keyboardVerticalOffset={Platform.select({ ios: 64 })}
+		// 	style={styles.container}
+		// >
+		<KeyboardAwareScrollView>
+			<View style={styles.card}>
+				<View style={styles.formStyle}>
+					<View style={styles.cardContent}>
+						<View style={styles.inputLabels}>
+							<Text style={styles.text}>Activity</Text>
 						</View>
-						<View style={styles.cardContent}>
-							<View style={styles.inputLabels}>
-								<Text style={styles.text}>Date</Text>
-								<TouchableOpacity onPress={showDatepicker}>
-									<Feather
-										style={{ margin: 5 }}
-										name="calendar"
-										color="red"
-										size={30}
-									/>
-								</TouchableOpacity>
-							</View>
-							<Text style={styles.iconHintText}>Tap Calender Icon</Text>
-							<Input
-								editable={false}
-								value={checkDate === true ? eventdate() : ''}
-								variant="unstyled"
-								background={'amber.50'}
-								placeholder="Event Date..."
-								textAlign={'center'}
-								width={200}
-							/>
-
-							<View style={styles.action}></View>
+						<Input
+							style={styles.inputBox}
+							multiline={true}
+							variant="underlined"
+							background={'coolGray.50'}
+							placeholder="Description..."
+							textAlign={'left'}
+							width={200}
+							onChangeText={(Userinput) => {
+								setEventData({ ...eventData, activity: Userinput });
+							}}
+						/>
+						<View style={styles.action}></View>
+					</View>
+					<View style={styles.cardContent}>
+						<View style={styles.inputLabels}>
+							<Text style={styles.text}>Date</Text>
+							<TouchableOpacity onPress={showDatepicker}>
+								<Feather
+									style={{ margin: 5 }}
+									name="calendar"
+									color="red"
+									size={30}
+								/>
+							</TouchableOpacity>
 						</View>
-
-						<View style={styles.cardContent}>
-							<View style={styles.inputLabels}>
-								<Text style={styles.text}>Time</Text>
-
-								<TouchableOpacity onPress={showTimepicker}>
-									<Feather
-										style={{ margin: 5 }}
-										name="clock"
-										color="red"
-										size={30}
-									/>
-								</TouchableOpacity>
-							</View>
-							<Text style={styles.iconHintText}>Tap Clock Icon</Text>
-							<Input
-								style={styles.inputBox}
-								editable={false}
-								value={
-									checkTime === true
-										? eventTime() + ' ' + getAccurateTime()
-										: ''
-								}
-								variant="unstyled"
-								background={'amber.50'}
-								placeholder="Event Time..."
-								textAlign={'center'}
-								width={200}
-							/>
-							<View style={styles.action}></View>
-						</View>
-						{show && (
-							<DateTimePicker
-								// style={{ height: 150, width: 150 }}
-								display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-								testID="dateTimePicker"
-								value={date}
-								mode={mode}
-								is24Hour={true}
-								onChange={
-									Platform.OS === 'ios'
-										? (e, currentDate) => {
-												setDate(currentDate);
-
-												// console.log(currentDate.getTime());
-												// console.log(currentDate.getMinutes());
-												// console.log(currentDate.getHours());
-										  }
-										: (e, currentDate) => {
-												if (currentDate === undefined) {
-													console.log('error with Android Date Picker');
-													// setShow(false);
-												} else {
-													// console.log('no error');
-													setDate(currentDate);
-													setCheckTime(true);
-													setCheckDate(true);
-													setShow(false);
-												}
-										  }
-								}
-							/>
-						)}
-						{Platform.OS === 'ios' ? (
-							show ? (
-								<View style={{ alignItems: 'center' }}>
-									<TouchableOpacity
-										onPress={() => {
-											setShow(!show);
-										}}
-									>
-										<Text style={[styles.text, { color: 'red', margin: 15 }]}>
-											Close
-										</Text>
-									</TouchableOpacity>
-								</View>
-							) : null
-						) : null}
+						<Text style={styles.iconHintText}>Tap Calender Icon</Text>
+						<Input
+							editable={false}
+							value={checkDate === true ? eventDate(date) : ''}
+							variant="unstyled"
+							background={'amber.50'}
+							placeholder="Event Date..."
+							textAlign={'center'}
+							width={200}
+						/>
+						<View style={styles.action}></View>
 					</View>
 
-					<DismissKeyboard>
-						<View style={styles.locationDetailsForm}>
-							<View style={styles.locationLabel}>
-								<Text style={styles.locationTextForm}>Address</Text>
-								<Input
-									multiline={true}
-									variant="underlined"
-									background={'coolGray.50'}
-									placeholder="Address..."
-									textAlign={'left'}
-									width={200}
-									marginBottom={5}
-									onChangeText={(Userinput) => {
-										setEventData({ ...eventData, address: Userinput });
-									}}
+					<View style={styles.cardContent}>
+						<View style={styles.inputLabels}>
+							<Text style={styles.text}>Time</Text>
+							<TouchableOpacity onPress={showTimepicker}>
+								<Feather
+									style={{ margin: 5 }}
+									name="clock"
+									color="red"
+									size={30}
 								/>
-							</View>
-							<View style={styles.locationLabel}>
-								<Text style={styles.locationTextForm}>Postcode</Text>
-								<Input
-									variant="underlined"
-									background={'coolGray.50'}
-									placeholder="PostCode..."
-									textAlign={'left'}
-									width={200}
-									marginBottom={5}
-									onChangeText={(Userinput) => {
-										setEventData({ ...eventData, postcode: Userinput });
-									}}
-								/>
-							</View>
+							</TouchableOpacity>
 						</View>
-					</DismissKeyboard>
-					<View style={styles.createBTNContainer}>
-						<Text style={styles.textBTN}> Tap to post event</Text>
-						<TouchableOpacity style={styles.createBTN} onPress={createEvent}>
-							<Feather name="plus-circle" color="green" size={50} />
-						</TouchableOpacity>
+						<Text style={styles.iconHintText}>Tap Clock Icon</Text>
+						<Input
+							style={styles.inputBox}
+							editable={false}
+							value={
+								checkTime === true ? eventTime() + ' ' + getAccurateTime() : ''
+							}
+							variant="unstyled"
+							background={'amber.50'}
+							placeholder="Event Time..."
+							textAlign={'center'}
+							width={200}
+						/>
+						<View style={styles.action}></View>
+					</View>
+					{show && (
+						<DateTimePicker
+							// style={{ height: 150, width: 150 }}
+							display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+							testID="dateTimePicker"
+							value={date}
+							mode={mode}
+							is24Hour={true}
+							onChange={
+								Platform.OS === 'ios'
+									? (e, currentDate) => {
+											setDate(currentDate);
+
+											// console.log(currentDate.getTime());
+											// console.log(currentDate.getMinutes());
+											// console.log(currentDate.getHours());
+									  }
+									: (e, currentDate) => {
+											if (currentDate === undefined) {
+												console.log('error with Android Date Picker');
+												// setShow(false);
+											} else {
+												// console.log('no error');
+												setDate(currentDate);
+												setCheckTime(true);
+												setCheckDate(true);
+												setShow(false);
+											}
+									  }
+							}
+						/>
+					)}
+					{Platform.OS === 'ios' ? (
+						show ? (
+							<View style={{ alignItems: 'center' }}>
+								<TouchableOpacity
+									onPress={() => {
+										setShow(!show);
+									}}
+								>
+									<Text style={[styles.text, { color: 'red', margin: 15 }]}>
+										Close
+									</Text>
+								</TouchableOpacity>
+							</View>
+						) : null
+					) : null}
+				</View>
+				<View style={styles.locationDetailsForm}>
+					<View style={styles.locationLabel}>
+						<Text style={styles.locationTextForm}>Address</Text>
+						<Input
+							multiline={true}
+							variant="underlined"
+							background={'coolGray.50'}
+							placeholder="Address..."
+							textAlign={'left'}
+							width={200}
+							marginBottom={5}
+							onChangeText={(Userinput) => {
+								setEventData({ ...eventData, address: Userinput });
+							}}
+						/>
+					</View>
+					<View style={styles.locationLabel}>
+						<Text style={styles.locationTextForm}>Postcode</Text>
+						<Input
+							variant="underlined"
+							background={'coolGray.50'}
+							placeholder="PostCode..."
+							textAlign={'left'}
+							width={200}
+							marginBottom={5}
+							onChangeText={(Userinput) => {
+								setEventData({ ...eventData, postcode: Userinput });
+							}}
+						/>
 					</View>
 				</View>
-			</ScrollView>
-		</KeyboardAvoidingView>
+				<View style={styles.createBTNContainer}>
+					<Text style={styles.textBTN}> Tap to post event</Text>
+					<TouchableOpacity style={styles.createBTN} onPress={createEvent}>
+						<Feather name="plus-circle" color="green" size={50} />
+					</TouchableOpacity>
+				</View>
+			</View>
+		</KeyboardAwareScrollView>
 	);
 };
 export default CreateEvents;

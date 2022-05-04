@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 
 // Firebase services
 import { signOut } from 'firebase/auth';
@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
 const CustomDrawerItems = (props) => {
-	const userSignOut = () => {
+	const handleSignOut = () => {
 		signOut(auth)
 			.then(() => {
 				// Sign-out successful.
@@ -24,9 +24,11 @@ const CustomDrawerItems = (props) => {
 				// An error happened.
 				const errorCode = error.code;
 				const errorMessage = error.message;
-
-				console.log(errorCode);
-				console.log(errorMessage);
+				Alert.alert('Could not Sign out', 'Try Again', [
+					{ text: 'OK', onPress: () => console.log('OK Pressed') },
+				]);
+				// console.log(errorCode);
+				// console.log(errorMessage);
 			});
 	};
 
@@ -91,7 +93,7 @@ const CustomDrawerItems = (props) => {
 								<Feather name="log-out" color={color} size={size} />
 							)}
 							label="Sign Out"
-							onPress={userSignOut}
+							onPress={handleSignOut}
 						/>
 					</Drawer.Section>
 				</View>
@@ -102,7 +104,7 @@ const CustomDrawerItems = (props) => {
 						<Icon name="exit-to-app" color={color} size={size} />
 					)}
 					label="Sign Out"
-					onPress={userSignOut}
+					onPress={handleSignOut}
 				/>
 			</Drawer.Section> */}
 		</View>

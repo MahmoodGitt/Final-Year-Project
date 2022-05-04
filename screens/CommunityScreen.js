@@ -114,15 +114,11 @@ const CommunityScreen = ({ navigation }) => {
 				</TouchableOpacity>
 			</View> */}
 			<FlatList
-				key={(item) => {
-					return item.id;
-				}}
 				data={itemList}
 				renderItem={renderItem}
-				keyExtractor={(item) => {
-					return item.id;
+				keyExtractor={(item, index) => {
+					return index.toString();
 				}}
-				// extraData={itemList}
 			/>
 		</SafeAreaView>
 	);

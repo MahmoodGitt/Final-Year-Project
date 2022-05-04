@@ -91,8 +91,6 @@ const App = () => {
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
-				// User is signed in, see docs for a list of available properties
-				// https://firebase.google.com/docs/reference/js/firebase.User
 				const uid = user.uid;
 				setIsLoading(false);
 				setUserLogging(true); // ...
@@ -137,8 +135,6 @@ const App = () => {
 								name="ExploreStack"
 								component={ExploreStack}
 							/>
-							{/* <Drawer.Screen name="Members" component={Members} /> */}
-							{/* <Drawer.Screen name="ChatRoom" component={Chat} /> */}
 						</Drawer.Navigator>
 					) : (
 						<StartingScreen />

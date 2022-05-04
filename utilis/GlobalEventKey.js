@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-var keys = [];
+var eventHashKey = [];
 
-export default keys;
+export default eventHashKey;

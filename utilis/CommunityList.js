@@ -17,6 +17,7 @@ import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
 import UserInformation from './UserInformation';
 import GlobalKeys from './GlobalKeys';
+// import array from './getGlobalKeys';
 import keys from './getGlobalKeys';
 
 // Import third-Party UI Library
@@ -45,9 +46,9 @@ const CommunityList = (props) => {
 
 	// Store community name and post ID
 
-	keys.push(GlobalKeys(communityName, postKey));
-	console.log('my array ', keys);
-	// console.log('fetch key ', GetKeys());
+	// keys.push(GlobalKeys(communityName, postKey));
+
+	// console.log('my array ', keys);
 
 	/**
 	 *  Thsis function is responsible for displaying the correct button. The button's text props shows 'View' if
@@ -73,7 +74,7 @@ const CommunityList = (props) => {
 	useEffect(() => {
 		isUserAdmin(userId);
 
-		console.log('name', auth.currentUser.displayName);
+		// console.log('name', auth.currentUser.displayName);
 	}, []);
 
 	const subscribeToCommunity = () => {
@@ -81,7 +82,7 @@ const CommunityList = (props) => {
 
 		// Update user's subscription list for new subscribers
 		const groups = { community: communityName };
-		console.log(groups.community);
+		// console.log(groups.community);
 		const keyref = push(child(ref(db), 'users/' + auth.currentUser.uid)).key;
 		// console.log(keyref);
 		const updates = {};
@@ -102,7 +103,7 @@ const CommunityList = (props) => {
 			const path = {};
 			path['community/' + postKey + '/members/' + Memref] = addMember;
 			update(ref(db), path);
-			console.log('path', path);
+			// console.log('path', path);
 			setModalVisible(!modalVisible);
 
 			props.nav.navigate('CommunityTopTab', {
@@ -129,6 +130,11 @@ const CommunityList = (props) => {
 						<TouchableOpacity
 							style={{ alignItems: 'center' }}
 							onPress={() => {
+								// Maybe not the best coding approach but works
+								keys.splice(0);
+								keys.push(communityName);
+
+								console.log('my array ', keys[0]);
 								props.nav.navigate('CommunityTopTab', {
 									screen: 'Members',
 									params: {
@@ -136,8 +142,6 @@ const CommunityList = (props) => {
 										community: communityName,
 										nav: props.nav,
 									},
-									// community: communityName,
-									// id: postKey,
 								});
 							}}
 						>

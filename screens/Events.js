@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from 'react';
 // React Native Packages
-import {
-	View,
-	Text,
-	StyleSheet,
-	TextInput,
-	ImageBackground,
-	TouchableWithoutFeedback,
-	Alert,
-	Pressable,
-	Modal,
-	SafeAreaView,
-} from 'react-native';
-import Toast from 'react-native-root-toast';
+import { FlatList, StyleSheet, SafeAreaView } from 'react-native';
 
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
-import GlobalKeys from '../utilis/GlobalKeys';
+import keys from '../utilis/getGlobalKeys';
+import EventList from '../utilis/EventList';
 
 // Firebase services
 import { getDatabase, ref, onChildAdded } from 'firebase/database';
@@ -44,29 +33,108 @@ import { Center, Column, Input } from 'native-base';
 import { setStatusBarTranslucent } from 'expo-status-bar';
 import RadioButtonRN from 'radio-buttons-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { async } from '@firebase/util';
+import { async, validateCallback } from '@firebase/util';
 import { checkActionCode } from 'firebase/auth';
 import { block } from 'react-native-reanimated';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import eventHashKey from '../utilis/GlobalEventKey';
+import { min } from 'moment';
 
 const Events = ({ navigation }) => {
 	const [itemList, setItemList] = useState([{ id: 0 }]);
+
 	const updateView = () => {
 		const db = getDatabase();
 		// Retrieve all events
-		const postRef = ref(db, 'events');
+		const postRef = ref(db, 'events/');
+		// console.log('ref', postRef);
 		onChildAdded(postRef, (snapshotData) => {
-			// console.log(snapshotData.val());
+			// console.log('snap', snapshotData.val());
+
+			if (snapshotData.val().communityName === keys[0]) {
+				console.log('snap', snapshotData.val());
+
+				const username = snapshotData.val().admin;
+				const activity = snapshotData.val().activity;
+				const address = snapshotData.val().address;
+				const postcode = snapshotData.val().postcode;
+				const date = snapshotData.val().date;
+				const time = snapshotData.val().time;
+				const createdAt = snapshotData.val().createdAt;
+				addEventPost(
+					username,
+					activity,
+					address,
+					postcode,
+					date,
+					time,
+					createdAt
+				);
+			}
+		});
+	};
+
+	const addEventPost = (
+		username,
+		activity,
+		address,
+		postcode,
+		date,
+		time,
+		createdAt
+	) => {
+		setItemList((prevState) => {
+			if (prevState[0].id === 0) {
+				prevState.splice(0);
+			}
+			prevState.push({
+				username: username,
+				activity: activity,
+				address: address,
+				postcode: postcode,
+				date: date,
+				time: time,
+				createdAt: createdAt,
+			});
+			return [...prevState];
 		});
 	};
 
 	useEffect(() => {
 		updateView();
-	});
+		// console.log('community name', keys, '\n');
+	}, []);
+
+	const renderItem = ({ item }) => (
+		// console.log('flat list', item);
+		<EventList
+			item={[
+				item.activity,
+				item.address,
+				item.postcode,
+				item.date,
+				item.time,
+				item.createdAt,
+				item.username,
+			]}
+		/>
+	);
+
+	// <CommunityList
+	// 	item={[
+	// 		item.interest,
+	// 		item.communityName,
+	// 		item.admin,
+	// 		item.members,
+	// 		item.id,
+	// 	]}
+	// 	nav={navigation}
+	// />
+	// );
 
 	return (
-		<DismissKeyboard>
-			<SafeAreaView style={styles.container}>
-				{/* <View>
+		<SafeAreaView style={styles.container}>
+			{/* <View>
 				<TouchableOpacity 	onPress={() =>
 						navigation.navigate('CommunityTopTab', {
 							screen: 'Members',
@@ -76,19 +144,17 @@ const Events = ({ navigation }) => {
 					<Text style={{ fontSize: 40 }}>Click</Text>
 				</TouchableOpacity>
 			</View> */}
-				{/* <FlatList
-					key={(item) => {
-						return item.id;
-					}}
-					data={itemList}
-					renderItem={renderItem}
-					keyExtractor={(item) => {
-						return item.id;
-					}}
-					// extraData={itemList}
-				/> */}
-			</SafeAreaView>
-		</DismissKeyboard>
+			<FlatList
+				// key={(item) => {
+				// 	return item.in;
+				// }}
+				data={itemList}
+				renderItem={renderItem}
+				keyExtractor={(item, index) => {
+					return index.toString();
+				}}
+			/>
+		</SafeAreaView>
 	);
 };
 export default Events;

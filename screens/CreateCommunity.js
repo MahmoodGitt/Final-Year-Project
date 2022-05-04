@@ -55,6 +55,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { async } from '@firebase/util';
 import { checkActionCode } from 'firebase/auth';
 import { block } from 'react-native-reanimated';
+import { useDrawerStatus } from '@react-navigation/drawer';
 
 const CreateCommunity = ({ navigation }) => {
 	const [data, setData] = useState({
