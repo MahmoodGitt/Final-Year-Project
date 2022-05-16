@@ -1,28 +1,17 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 
 // React Native UI Packages
-import {
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	FlatList,
-	SafeAreaView,
-	View,
-} from 'react-native';
+import { StyleSheet, FlatList, SafeAreaView } from 'react-native';
 
 // Import data from local files
 import auth from '../firebase/config';
-import keys from '../utilis/getGlobalKeys';
-
-// Import database services from Firebase
-import { getDatabase, ref, get, onChildAdded } from 'firebase/database';
-
-// Import third-Party UI Library
-import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
-
 import MembersList from '../utilis/MembersList';
 
-const Members = ({ navigation, route }) => {
+// Import database services from Firebase
+import { getDatabase, ref, onChildAdded } from 'firebase/database';
+
+const Members = ({ route }) => {
 	const [itemList, setItemList] = useState([]);
 
 	const currentUser = auth.currentUser.uid;

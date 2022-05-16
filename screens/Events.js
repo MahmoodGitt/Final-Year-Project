@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, SafeAreaView } from 'react-native';
 
 // Import data from local files
-import DismissKeyboard from '../utilis/DismissKeyboard';
-import auth from '../firebase/config';
 import keys from '../utilis/getGlobalKeys';
 import EventList from '../utilis/EventList';
 
@@ -12,35 +10,8 @@ import EventList from '../utilis/EventList';
 import { getDatabase, ref, onChildAdded } from 'firebase/database';
 
 // Third-Party React Native UI Packages
-import {
-	Card,
-	Title,
-	Paragraph,
-	Button,
-	Avatar,
-	ProgressBar,
-	Colors,
-	Appbar,
-	RadioButton,
-	Snackbar,
-} from 'react-native-paper';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { AntDesign } from '@expo/vector-icons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import * as Animatable from 'react-native-animatable';
-import Feather from 'react-native-vector-icons/Feather';
-import { Center, Column, Input } from 'native-base';
-import { setStatusBarTranslucent } from 'expo-status-bar';
-import RadioButtonRN from 'radio-buttons-react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { async, validateCallback } from '@firebase/util';
-import { checkActionCode } from 'firebase/auth';
-import { block } from 'react-native-reanimated';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import eventHashKey from '../utilis/GlobalEventKey';
-import { min } from 'moment';
 
-const Events = ({ navigation }) => {
+const Events = () => {
 	const [itemList, setItemList] = useState([{ id: 0 }]);
 
 	const updateView = () => {
@@ -134,16 +105,6 @@ const Events = ({ navigation }) => {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			{/* <View>
-				<TouchableOpacity 	onPress={() =>
-						navigation.navigate('CommunityTopTab', {
-							screen: 'Members',
-							params: { user: 'jane' },
-						})
-					} style={{ margin: 15 }}>
-					<Text style={{ fontSize: 40 }}>Click</Text>
-				</TouchableOpacity>
-			</View> */}
 			<FlatList
 				// key={(item) => {
 				// 	return item.in;

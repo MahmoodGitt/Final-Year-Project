@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
 	View,
@@ -7,7 +7,6 @@ import {
 	TextInput,
 	Platform,
 	StyleSheet,
-	StatusBar,
 	ScrollView,
 	Alert,
 	KeyboardAvoidingView,
@@ -18,20 +17,13 @@ import auth from '../firebase/config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { getDatabase, ref, set } from 'firebase/database';
 
-// Import data from local files
-import university from '../utilis/ListOfUniversities';
-
 // Third-Party UI Packages
 import * as Animatable from 'react-native-animatable';
 // import LinearGradient from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import RNPickerSelect from 'react-native-picker-select';
-import SelectDropdown from 'react-native-select-dropdown';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-const SignUpScreen = ({ navigation }) => {
-	const [selectedUniversity, setSelectedUniversity] = useState();
+const SignUpScreen = () => {
 	const [data, setData] = useState({
 		username: '',
 		university: '',
@@ -280,11 +272,6 @@ const SignUpScreen = ({ navigation }) => {
 		});
 	};
 
-	const map = [
-		{ label: 'Apple', value: 'apple' },
-		{ label: 'Banana', value: 'banana' },
-	];
-
 	const renderInputs = () => {
 		return (
 			<ScrollView>
@@ -318,7 +305,7 @@ const SignUpScreen = ({ navigation }) => {
 						</Text>
 					)}
 
-					{Platform.OS === 'ios' ? (
+					{/* {Platform.OS === 'ios' ? (
 						<View>
 							<Text style={styles.text}>University</Text>
 							<View style={styles.action}>
@@ -382,7 +369,7 @@ const SignUpScreen = ({ navigation }) => {
 								</View>
 							</View>
 						</View>
-					)}
+					)} */}
 
 					<Text style={styles.text}>Email</Text>
 					<View style={styles.action}>

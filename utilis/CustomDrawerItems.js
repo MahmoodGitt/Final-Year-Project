@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 
@@ -11,7 +13,6 @@ import UserInformation from './UserInformation';
 // Third-Party UI Libraries
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
 const CustomDrawerItems = (props) => {
@@ -20,15 +21,11 @@ const CustomDrawerItems = (props) => {
 			.then(() => {
 				// Sign-out successful.
 			})
-			.catch((error) => {
+			.catch(() => {
 				// An error happened.
-				const errorCode = error.code;
-				const errorMessage = error.message;
 				Alert.alert('Could not Sign out', 'Try Again', [
 					{ text: 'OK', onPress: () => console.log('OK Pressed') },
 				]);
-				// console.log(errorCode);
-				// console.log(errorMessage);
 			});
 	};
 
@@ -81,13 +78,13 @@ const CustomDrawerItems = (props) => {
 								props.navigation.navigate('Create_Community');
 							}}
 						/>
-						<DrawerItem
+						{/* <DrawerItem
 							icon={({ color, size }) => (
 								<Feather name="settings" color={color} size={size} />
 							)}
 							label="Settings"
 							// onPress={console.log('here', UserInformation())}
-						/>
+						/> */}
 						<DrawerItem
 							icon={({ color, size }) => (
 								<Feather name="log-out" color={color} size={size} />

@@ -3,12 +3,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from './LoginScreen';
 import SignUpScreen from './SignUpScreen';
-import HomeScreen from './HomeScreen';
 
 const StartingScreenStack = createNativeStackNavigator();
-const LoginStack = createNativeStackNavigator();
 
-const StartingScreen = ({ navigation }) => {
+const StartingScreen = () => {
 	return (
 		<StartingScreenStack.Navigator>
 			<StartingScreenStack.Screen

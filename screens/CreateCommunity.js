@@ -1,17 +1,9 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
 // React Native Packages
-import {
-	View,
-	Text,
-	StyleSheet,
-	TextInput,
-	ImageBackground,
-	TouchableWithoutFeedback,
-	Alert,
-	Pressable,
-	Modal,
-} from 'react-native';
-import Toast from 'react-native-root-toast';
+import { View, Text, StyleSheet, Alert, Pressable, Modal } from 'react-native';
 
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
@@ -21,41 +13,19 @@ import auth from '../firebase/config';
 import {
 	getDatabase,
 	ref,
-	onValue,
 	set,
 	push,
 	onChildAdded,
 	update,
 	child,
-	get,
 } from 'firebase/database';
 
 // Third-Party React Native UI Packages
-import {
-	Card,
-	Title,
-	Paragraph,
-	Button,
-	Avatar,
-	ProgressBar,
-	Colors,
-	Appbar,
-	RadioButton,
-	Snackbar,
-} from 'react-native-paper';
+import { Card, ProgressBar } from 'react-native-paper';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { AntDesign } from '@expo/vector-icons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
-import { Center, Column, Input } from 'native-base';
-import { setStatusBarTranslucent } from 'expo-status-bar';
 import RadioButtonRN from 'radio-buttons-react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { async } from '@firebase/util';
-import { checkActionCode } from 'firebase/auth';
-import { block } from 'react-native-reanimated';
-import { useDrawerStatus } from '@react-navigation/drawer';
 
 const CreateCommunity = ({ navigation }) => {
 	const [data, setData] = useState({
@@ -76,7 +46,6 @@ const CreateCommunity = ({ navigation }) => {
 		publicProgress: 0,
 	});
 	const [modalVisible, setModalVisible] = useState(false);
-	const [modaltext, setModaltext] = useState('');
 	const database = getDatabase();
 
 	const communityExist = () => {
@@ -285,25 +254,7 @@ const CreateCommunity = ({ navigation }) => {
 		}
 	};
 
-	const showToast = (tag) => {
-		if (tag === '1') {
-			Toast.show(
-				'Interests allow other students to find your community by searching it',
-				{
-					duration: Toast.durations.LONG,
-				}
-			);
-		} else if (tag === '2') {
-			Toast.show(
-				'Interests allow other students to find your community by searching it',
-				{
-					duration: Toast.durations.LONG,
-				}
-			);
-		}
-	};
-
-	const renderModal = (text) => {
+	const renderModal = () => {
 		return (
 			<View style={styles.modalCenterView}>
 				<Modal

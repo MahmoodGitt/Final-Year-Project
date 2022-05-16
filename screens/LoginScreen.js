@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 
 // FireBase Packages
@@ -15,31 +16,21 @@ import {
 	TextInput,
 	Platform,
 	StyleSheet,
-	ImageBackground,
-	StatusBar,
 	Alert,
-	Image,
 } from 'react-native';
 
 // Third-Party React Native Design Packages
 import * as Animatable from 'react-native-animatable';
-import { LinearGradient } from 'expo-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { Card } from 'react-native-paper';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import {
-	ScrollView,
-	TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
-import { KeyboardAvoidingView } from 'native-base';
-import { useAnimatedGestureHandler } from 'react-native-reanimated';
+import { ScrollView } from 'react-native-gesture-handler';
 
 /**
  * This functional compoenent contains the logic that handels the log-in process
  * @param {navigation}
  * @returns
  */
+// eslint-disable-next-line react/prop-types
 const LoginScreen = ({ navigation }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -50,14 +41,15 @@ const LoginScreen = ({ navigation }) => {
 	 */
 	const handleLogIn = () => {
 		signInWithEmailAndPassword(auth, email, password)
-			.then((userCredential) => {
+			.then(() => {
 				// The details of the signed in user
 				// const user = userCredential.user;
 				// console.log(user);
 			})
+			// eslint-disable-next-line no-unused-vars
 			.catch((error) => {
-				const errorCode = error.code;
-				const errorMessage = error.message;
+				// const errorCode = error.code;
+				// const errorMessage = error.message;
 				// console.log('code:', errorCode);
 				// console.log('message', errorMessage);
 				Alert.alert(

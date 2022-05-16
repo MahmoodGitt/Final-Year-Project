@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 
 // React Native UI Packages
@@ -10,19 +11,13 @@ import {
 	Modal,
 	Pressable,
 } from 'react-native';
-import { EvilIcons, FontAwesome } from '@expo/vector-icons';
-
 // Import data from local files
-import DismissKeyboard from '../utilis/DismissKeyboard';
 import auth from '../firebase/config';
-import UserInformation from './UserInformation';
-import GlobalKeys from './GlobalKeys';
 // import array from './getGlobalKeys';
 import keys from './getGlobalKeys';
 
 // Import third-Party UI Library
 import { Card, Title } from 'react-native-paper';
-import Feather from 'react-native-vector-icons/Feather';
 import {
 	getDatabase,
 	ref,
@@ -31,24 +26,14 @@ import {
 	child,
 	onChildAdded,
 } from 'firebase/database';
-import Events from '../screens/Events';
-import Members from '../screens/Members';
 
 const CommunityList = (props) => {
 	const postKey = props.item[4];
 	const communityName = props.item[1];
 	const interest = props.item[0];
 	const userId = props.item[2];
-	const subscriptionList = props.item[3];
 	const [modalVisible, setModalVisible] = useState(false);
-	const [isSubscribed, setIsSubscribed] = useState(subscriptionList);
 	const [isMember, setIsMember] = useState(false);
-
-	// Store community name and post ID
-
-	// keys.push(GlobalKeys(communityName, postKey));
-
-	// console.log('my array ', keys);
 
 	/**
 	 *  Thsis function is responsible for displaying the correct button. The button's text props shows 'View' if

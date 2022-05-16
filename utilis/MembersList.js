@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react/prop-types */
+/* eslint-disable no-undef */
+import React from 'react';
 
 // Import data from local files
 import auth from '../firebase/config';
@@ -7,18 +9,14 @@ import auth from '../firebase/config';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // Import third-Party UI Library
-import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
-import { getDatabase, push, ref, get, update } from 'firebase/database';
+import { Card, Avatar } from 'react-native-paper';
+import { getDatabase, ref, get, update } from 'firebase/database';
 import { doc, collection, getFirestore, setDoc } from 'firebase/firestore';
 
 const MembersList = (props) => {
 	const selectedUserName = props.item[0];
 	const selectedUserId = props.item[1];
 	const currentUserId = props.userId;
-	const [sender, setSender] = useState('');
-	const [receiver, setReceiver] = useState('');
-	const [key, setkey] = useState('');
-	const [isFriend, setIsFriend] = useState(false);
 
 	const findChatRoom = async () => {
 		// Check if current user and selected user are friends

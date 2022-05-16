@@ -1,36 +1,16 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useLayoutEffect, useState } from 'react';
 
 // React Native UI Packages
-import {
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	FlatList,
-	SafeAreaView,
-	View,
-} from 'react-native';
-import { EvilIcons, FontAwesome } from '@expo/vector-icons';
+import { StyleSheet, FlatList, SafeAreaView } from 'react-native';
 
 // Import data from local files
-import DismissKeyboard from '../utilis/DismissKeyboard';
 import CommunityList from '../utilis/CommunityList';
-import keys from '../utilis/StoreKeys';
-import auth from '../firebase/config';
 
 // Import database services from Firebase
-import {
-	getDatabase,
-	ref,
-	onChildAdded,
-	get,
-	child,
-	onValue,
-} from 'firebase/database';
+import { getDatabase, ref, onChildAdded } from 'firebase/database';
 
 // Import third-Party UI Library
-import { Card, Title, Avatar, Searchbar, Paragraph } from 'react-native-paper';
-import { Center } from 'native-base';
-import { sub } from 'react-native-reanimated';
 
 const CommunityScreen = ({ navigation }) => {
 	const [itemList, setItemList] = useState([{ id: 0 }]);

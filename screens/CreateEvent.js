@@ -270,7 +270,7 @@ const CreateEvents = ({ navigation }) => {
 					{show && (
 						<DateTimePicker
 							// style={{ height: 150, width: 150 }}
-							display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+							display={Platform.OS === 'ios' ? 'default' : 'default'}
 							testID="dateTimePicker"
 							value={date}
 							mode={mode}

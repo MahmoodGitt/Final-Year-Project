@@ -1,32 +1,26 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // Firebase database services
-import { getDatabase, ref, onValue } from 'firebase/database';
 
 // Import data from local files
 import DismissKeyboard from '../utilis/DismissKeyboard';
-import auth from '../firebase/config';
-import CommunityScreen from './CommunityScreen';
 import UserInformation from '../utilis/UserInformation';
 
 // Third-Party  UI Packages
-import { Card, Title, Paragraph, Avatar, Button } from 'react-native-paper';
+import { Card, Title, Paragraph, Avatar } from 'react-native-paper';
 import { AntDesign } from '@expo/vector-icons';
 
-const HomeScreen = ({ route }) => {
+const HomeScreen = () => {
 	// const userName = route.params.data.email;
+	// eslint-disable-next-line no-unused-vars
 	const [data, setData] = useState({
 		username: '',
 	});
 
-	const [username, setUsername] = useState('');
 	UserInformation();
-	useEffect(() => {
-		setUsername(auth.currentUser.displayName);
-		// console.log(auth.currentUser.displayName);
-	}, []);
 
 	return (
 		<DismissKeyboard>

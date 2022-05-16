@@ -1,24 +1,14 @@
-import React, {
-	useState,
-	useCallback,
-	useEffect,
-	useLayoutEffect,
-} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+/* eslint-disable react/prop-types */
+import React, { useState, useCallback, useLayoutEffect } from 'react';
 
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { GiftedChat } from 'react-native-gifted-chat';
 import {
 	orderBy,
 	collection,
 	query,
 	getFirestore,
 	onSnapshot,
-	where,
 	addDoc,
-	setDoc,
-	doc,
-	updateDoc,
-	getDocs,
 } from 'firebase/firestore';
 import auth from '../firebase/config';
 
@@ -77,20 +67,3 @@ const Chat = ({ route }) => {
 };
 
 export default Chat;
-
-const styles = StyleSheet.create({
-	container: { flex: 1 },
-	header: { flex: 0.5 },
-	footer: {
-		flex: 0.2,
-	},
-
-	card: {
-		marginHorizontal: 15,
-		marginBottom: 5,
-		borderBottomLeftRadius: 5,
-		borderBottomRightRadius: 5,
-		borderTopLeftRadius: 5,
-		borderTopRightRadius: 5,
-	},
-});
